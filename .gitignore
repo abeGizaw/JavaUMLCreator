@@ -197,6 +197,7 @@ fabric.properties
 .idea/codestream.xml
 
 .idea
+.idea/*
 
 ### Java ###
 # Compiled class file
