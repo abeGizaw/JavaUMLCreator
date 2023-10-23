@@ -4,19 +4,19 @@
 Specified in pom.xml
 
 ## Contributors
-YOUR_NAME, YOUR_NAME, YOUR_NAME
+Abe Gizaw, Ari Duvall, Kiana Fan
 
 ## Team Member's Engineering Notebooks (one per person)
-- NAME: LINK
-- NAME: LINK
-- NAME: LINK
+- Abe Gizaw: LINK
+- Ari Duvall: LINK
+- Kiana Fan: LINK
 
 ## Features
 
 
-| Developer | Style Check | Principle Check | Pattern Check | A Feature (optional) |
-|:----------|:------------|:----------------|:--------------|:---------------------|
-| NAME      |             |                 |               |                      |
-| NAME      |             |                 |               |                      |
-| NAME      |             |                 |               |                      |
+| Developer  | Style Check | Principle Check | Pattern Check | A Feature (optional) |
+|:-----------|:------------|:----------------|:--------------|:---------------------|
+| Abe Gizaw  |             |                 |               |                      |
+| Ari Duvall |             |                 |               |                      |
+| Kiana Fan  |             |                 |               |                      |
 
