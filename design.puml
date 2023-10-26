@@ -1,3 +1,144 @@
 @startuml
-note "Replace this with your work" as N1
+package presentation {
++class Main {
+-saver: Saver
++Main()
+-promptUserForClasses(): String
+-promptUserForChecks(): String
+-lint(): void
+-prettyPrint(List<Error>): void
+-saveToFile(message: String): void
+}
+note left of Main::lint
+    calls prettyPrint()
+end note
+}
+
+package domain {
++class AdapterPattern extends Check {
++AdapterPattern(classNode: ClassNode, classReader: ClassReader)
+}
+
++abstract class Check {
+-classNode: ClassNode
+-classReader: ClassReader
++Check(classNode: ClassNode, classReader: ClassReader)
++{abstract}run(): List<Error>
+}
+
++enum CheckType {
+HIDDEN_FIELDS,
+NAMING_CONVENTIONS,
+MAGIC_NUMBERS,
+INTERFACE_OVER_IMPLEMENTATION,
+COMPOSITION_OVER_INHERITANCE,
+PLK,
+TEMPLATE,
+STRATEGY,
+ADAPTER
+}
+
++interface ClassNode {
+}
+
++interface ClassReader {
+}
+
++class CompositionOverInheritance extends Check {
++CompositionOverInheritance(classNode: ClassNode, classReader: ClassReader)
+}
+
++class Error {
+-lineNumber: int
+-checkType: CheckType
+-message: String
++Error(lineNumber: int, checkType: CheckType, message: String)
++getLineNumber(): int
++getCheckType(): CheckType
++getMessage(): String
+}
+
++class HiddenFields extends Check {
++HiddenFields(classNode: ClassNode, classReader: ClassReader)
+}
+
++class InterfaceOverImplementation extends Check {
++InterfaceOverImplementation(classNode: ClassNode, classReader: ClassReader)
+}
+
++class Linter {
+-checkTypeToCheck: Map<CheckType, Check>
++Linter(classNode: ClassNode, classReader: ClassReader)
++runSelectedChecks(List<CheckType>): List<Error>
+}
+
++class MagicNumbers extends Check {
++MagicNumbers(classNode: ClassNode, classReader: ClassReader)
+}
+
++class MyASMClassNode implements ClassNode {
+}
+
++class MyASMClassReader implements ClassReader {
+}
+
++class NamingConventions extends Check {
++NamingConventions(classNode: ClassNode, classReader: ClassReader)
+}
+
++class PrincipleOfLeastKnowledge extends Check {
++PrincipleOfLeastKnowledge(classNode: ClassNode, classReader: ClassReader)
+}
+
++class StrategyPattern extends Check {
++StrategyPattern(classNode: ClassNode, classReader: ClassReader)
+}
+
++class TemplateMethodPattern extends Check {
++TemplateMethodPattern(classNode: ClassNode, classReader: ClassReader)
+}
+}
+
+package datasource {
++class ErrorSaver implements Saver {
++saveError(message: String): void
+}
+
++interface Saver {
++{abstract} saveError(message: String): void
+}
+}
+
+package org.objectweb.asm {
++class ClassNode {
+}
+
++class ClassReader {
+}
+}
+
+Check ..> Error
+Check --> domain.ClassNode
+Check --> domain.ClassReader
+
+domain.MyASMClassNode ..> org.objectweb.asm.ClassNode
+
+domain.MyASMClassReader ..> org.objectweb.asm.ClassReader
+
+Error --> CheckType
+
+Linter --> Check
+Linter ..> Check
+Linter --> CheckType
+Linter ..> CheckType
+Linter ..> Error
+Linter ..> domain.ClassNode
+Linter ..> domain.ClassReader
+
+Main .down.> CheckType
+Main .down.> Error
+Main .down.> Linter
+Main .down.> domain.ClassNode
+Main .down.> domain.ClassReader
+Main -down-> Saver
 @enduml
