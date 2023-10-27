@@ -7,7 +7,7 @@ Specified in pom.xml
 Abe Gizaw, Ari Duvall, Kiana Fan
 
 ## Team Member's Engineering Notebooks (one per person)
-- Abe Gizaw: LINK
+- Abe Gizaw: https://docs.google.com/document/d/1QntoazmMmmHKF5ooFJrvxNsr07hzkH83dWjOtmInolo/edit?usp=sharing
 - Ari Duvall: LINK
 - Kiana Fan: https://docs.google.com/document/d/1X2C_6SXm9CsafaTf-roLYZjLglgAG-YzNeLyp9Adk88/edit?usp=sharing
 
