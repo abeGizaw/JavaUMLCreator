@@ -15,8 +15,8 @@ import java.util.*;
 public class DirtyFieldHiding {
     public void run() {
         Scanner keyboard = new Scanner(System.in);
+        System.out.print("Enter FilePath (Style Check): ");
         // target/classes/domain/FieldMock.class
-        System.out.print("Enter FilePath: ");
         String filePath = keyboard.nextLine();
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             ClassReader myReader = new ClassReader(fileInputStream);
