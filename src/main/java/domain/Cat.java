@@ -7,11 +7,15 @@ public class Cat extends Animal{
     private final String food = "Purina";
 
     public final String BED  = "fluffy";
+    private Chair chair;
 
-    Cat (String name, int age, String breed){
+    Furniture furniture;
+
+    Cat (String name, int age, String breed, Chair c){
         super(name, age, breed);
         Ability =  "MEEOOOW";
         toys = 4;
+        chair = c;
         HasBirthday();
     }
 

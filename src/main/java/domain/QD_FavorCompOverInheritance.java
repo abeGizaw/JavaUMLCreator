@@ -24,6 +24,4 @@ public class QD_FavorCompOverInheritance {
         }
         System.out.println();
     }
-
-
 }
