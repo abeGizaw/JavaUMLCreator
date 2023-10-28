@@ -19,7 +19,8 @@ public class QD_FavorCompOverInheritance {
     public static void checkForInheritance(ClassNode classNode){
         System.out.println("Class: " + classNode.name);
         String superName = classNode.superName;
-        if (!superName.equals("java/lang/Object")){
+        String[] parts = classNode.superName.split("/");
+        if (!parts[0].isEmpty() && !parts[0].equals("java") ){
             System.out.println("Consider composition instead of inheritance. This extends " + superName );
         }
         System.out.println();
