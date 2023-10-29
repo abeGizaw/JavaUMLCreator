@@ -17,4 +17,10 @@ public class FinalLocalVariablesTestClass {
         c = 129834;
         return x;
     }
+
+    public void testMethod2() {
+        int x = 1;
+        x = 2;
+        int y = 3;
+    }
 }

@@ -26,6 +26,7 @@ public class QDFinalLocalVariables {
 
     private static void checkForFinalLocalVariables(ClassNode classNode) {
         for (MethodNode methodNode : classNode.methods) {
+            System.out.printf("Method: %s\n", methodNode.name);
             checkMethodForFinalLocalVariables(methodNode);
         }
     }
