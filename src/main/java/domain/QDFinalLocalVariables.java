@@ -2,16 +2,13 @@ package domain;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
 import java.util.*;
 
 public class QDFinalLocalVariables {
     private static final Set<Integer> storeOpcodes = Set.of(Opcodes.ISTORE, Opcodes.LSTORE, Opcodes.FSTORE, Opcodes.DSTORE, Opcodes.ASTORE);
-    private static final Set<Integer> loadOpcodes = Set.of(Opcodes.ILOAD, Opcodes.LLOAD, Opcodes.FLOAD, Opcodes.DLOAD, Opcodes.ALOAD);
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
@@ -34,11 +31,26 @@ public class QDFinalLocalVariables {
     }
 
     private static void checkMethodForFinalLocalVariables(MethodNode methodNode) {
-        Set<String> notFinalLocalVariables = new HashSet();
+        Set<Integer> storedOperands = new HashSet<>();
+        Set<Integer> storedOnceOperands = new HashSet();
         for (AbstractInsnNode insn : methodNode.instructions) {
             if (storeOpcodes.contains(insn.getOpcode())) {
-                System.out.println("local variable");
+                int operand = ((VarInsnNode) insn).var;
+                if (storedOnceOperands.contains(operand)) {
+                    storedOnceOperands.remove(operand);
+                } else {
+                    storedOperands.add(operand);
+                    storedOnceOperands.add(operand);
+                }
             }
         }
+
+        for (LocalVariableNode localVariableNode : methodNode.localVariables) {
+            if (storedOnceOperands.contains(localVariableNode.index)) {
+                System.out.printf("%s can be final since the value is not changed.\n", localVariableNode.name);
+            }
+        }
+
+        // TODO: doesn't work with different variable scopes, like variables in if statements since the locations get reused after the if statement ends (maybe something recursive or a stack?)
     }
 }
