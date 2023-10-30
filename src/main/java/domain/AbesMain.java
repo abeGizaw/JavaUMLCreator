@@ -11,6 +11,9 @@ public class AbesMain {
         designPrinciple.run();
 
         DirtyTemplateMethod designPattern = new DirtyTemplateMethod();
+        // target/classes/domain/templatemethodmocks/CorrectTemplateMethodMock.class
+        // target/classes/domain/templatemethodmocks/NoFinalTemplateMethodMock.class
+        // target/classes/domain/templatemethodmocks/NoAbstractTemplateMock.class
         designPattern.run();
     }
 }
