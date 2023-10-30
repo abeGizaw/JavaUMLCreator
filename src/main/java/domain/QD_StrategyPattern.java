@@ -12,7 +12,7 @@ import java.util.List;
 public class QD_StrategyPattern {
 
     public static void main(String[] args) throws IOException {
-        String className = "domain/Cat";
+        String className = "domain/catBad";
         ClassReader reader = new ClassReader(className);
         ClassNode classNode = new ClassNode();
         reader.accept(classNode, ClassReader.EXPAND_FRAMES);
@@ -45,17 +45,38 @@ public class QD_StrategyPattern {
         }
     }
 
+//    We want to flag when the strategy pattern is used so I need to invert this.
+//    This means I want to flag that the strategy pattern is being used when
+//      field is user defined class that is abstract
+//      there is a setter for this strategy field
+//            Setter is a method that takes in the Strategy type and assigns the field to the value brought in
+
+//    add interface
+
     private static void processClassAsField(ClassNode classNode, String originalName) {
         System.out.println("Processing Class As Field: " + classNode.name);
 //        System.out.println("	public? "
 //                + ((classNode.access & Opcodes.ACC_PUBLIC) != 0));
 //        System.out.println("	abstract? "
 //                + ((classNode.access & Opcodes.ACC_ABSTRACT) != 0));
-        if ((classNode.access & Opcodes.ACC_ABSTRACT) == 0){
-            System.out.printf("Class %s has field of %s as a concrete class. To allow for proper use of strategy pattern try storing an abstract type as a field.\n", originalName, classNode.name);
+        if (((classNode.access & Opcodes.ACC_ABSTRACT) != 0) || ((classNode.access & Opcodes.ACC_INTERFACE) != 0)){
+            System.out.printf("Class %s has field of %s as a abstract class or interface.", originalName, classNode.name );
         }
         System.out.println();
     }
+
+//        public static boolean isFieldSet(MethodNode methodNode, String fieldName) {
+//        for (AbstractInsnNode instruction : methodNode.instructions) {
+//            if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
+//                FieldInsnNode fieldInsn = (FieldInsnNode) instruction;
+//                if (fieldInsn.name.equals(fieldName)) {
+//                    // This instruction sets the field value.
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
 
 }

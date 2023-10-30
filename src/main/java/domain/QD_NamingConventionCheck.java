@@ -19,7 +19,7 @@ import java.util.List;
 
 public class QD_NamingConventionCheck {
     public static void main(String[] args) throws IOException {
-        String className = "domain/Cat";
+        String className = "domain/Chair";
         ClassReader reader = new ClassReader(className);
         ClassNode classNode = new ClassNode();
         reader.accept(classNode, ClassReader.EXPAND_FRAMES);
@@ -33,8 +33,8 @@ public class QD_NamingConventionCheck {
         String name = parts[parts.length - 1];
         System.out.println("Class: " + name);
 
-        if (!Character.isUpperCase(name.charAt(0))) {
-            System.out.println("    Invalid Name: Must start with capital letter. " + name);
+        if (!validPascalCase(name)) {
+            System.out.println("    Invalid Name: Must be in PascalCase. " + name);
         }
         System.out.println();
 
@@ -45,16 +45,15 @@ public class QD_NamingConventionCheck {
         List<FieldNode> fields = (List<FieldNode>) classNode.fields;
         System.out.println("Fields");
         for (FieldNode field : fields) {
-
-            if ((field.access & Opcodes.ACC_FINAL) != 0) {
+            if (((field.access & Opcodes.ACC_FINAL) != 0) && ((field.access & Opcodes.ACC_STATIC) != 0)) {
                 if (!field.name.matches("[A-Z]+")) {
-                    System.out.println("    Invalid Field Name: Final Fields must be in all caps.   " + field.name);
+                    System.out.println("    Invalid Field Name: Static Final Fields must be in all caps.   " + field.name);
                     invalidFliedNames.add(field);
                 }
 
             } else {
-                if (!Character.isLowerCase(field.name.charAt(0))) {
-                    System.out.println("    Invalid Field Name: Must start with a lowercase letter.   " + field.name);
+                if (!validCamelCase(field.name)) {
+                    System.out.println("    Invalid Field Name: Must be in camelCase   " + field.name);
                     invalidFliedNames.add(field);
                 }
             }
@@ -68,12 +67,21 @@ public class QD_NamingConventionCheck {
         List<MethodNode> invalidMethods = new ArrayList<>();
         System.out.println("Methods  ");
         for (MethodNode method : methods) {
-            if (!Character.isLowerCase(method.name.charAt(0)) && !method.name.equals("<init>")) {
-                System.out.println("    Invalid method name: Must be lowercase.  " + method.name);
+            if (!validCamelCase(method.name) && !method.name.equals("<init>")) {
+                System.out.println("    Invalid method name: Must be in camelCase.  " + method.name);
                 invalidMethods.add(method);
             }
         }
         System.out.println("    Total Invalid Method names: " + invalidMethods.size());
 
     }
+
+    private static boolean validCamelCase (String name){
+        return name.matches("^(?:[a-z]+[A-Z]?[a-zA-Z]*)+$");
+    }
+
+    private static boolean validPascalCase(String name){
+        return name.matches("^[A-Z][a-z]+(?:[A-Z][a-z]+)*$");
+    }
+
 }

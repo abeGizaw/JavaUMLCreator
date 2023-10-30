@@ -1,22 +1,27 @@
 package domain;
 
-public class Cat extends Animal{
+public class catBad extends Animal{
 
     private String Ability;
     private int toys;
-    private final String food = "Purina";
+    private static final String food = "Purina";
 
-    public final String BED  = "fluffy";
+    public static final String BED  = "fluffy";
+
+    private final String var = "help";
+    private final String BADVAR = "table";
     private Chair chair;
 
     Furniture furniture;
+    Furniture strategyFurniture;
 
-    Cat (String name, int age, String breed, Chair c){
+    catBad(String name, int age, String breed, Chair c){
         super(name, age, breed);
         Ability =  "MEEOOOW";
         toys = 4;
         chair = c;
         HasBirthday();
+        furniture = new Chair("oak");
     }
 
     public int HasBirthday(){
@@ -43,6 +48,12 @@ public class Cat extends Animal{
         toys++;
         System.out.println("Total toys: " + toys);
         return toys;
+    }
+    public void nothing(){}
+
+    public void setFurnitureStrat(Furniture f){
+        strategyFurniture = f;
+
     }
 
 }

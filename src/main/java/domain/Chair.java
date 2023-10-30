@@ -2,6 +2,8 @@ package domain;
 
 public class Chair implements Furniture{
     final int numLegs;
+    static final boolean leatherMaterail = false;
+    static final boolean CLOTH = true;
     String wood;
 
     Chair (String woodType){
@@ -15,4 +17,6 @@ public class Chair implements Furniture{
     public void sit() {
         System.out.println("Sitting");
     }
+
+    private void STandIng (){}
 }
