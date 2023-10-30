@@ -33,8 +33,6 @@ public class DirtyInterfaceNotImplementation {
                 throw new RuntimeException(e);
             }
         }
-
-
         return invalidUses;
     }
 
@@ -61,5 +59,4 @@ public class DirtyInterfaceNotImplementation {
 
         return false;
     }
-
 }

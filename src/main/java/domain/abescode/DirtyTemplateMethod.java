@@ -24,7 +24,6 @@ public class DirtyTemplateMethod {
                 return true;
             }
         }
-
         return false;
     }
 

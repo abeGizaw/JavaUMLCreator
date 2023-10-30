@@ -25,7 +25,6 @@ public class AbesMain {
             System.err.println("Error reading package \n");
         }
 
-
         ConvertASMToUML aLevel = new ConvertASMToUML();
         // target/classes/domain/abescode/FieldMock.class
         aLevel.run();
@@ -56,7 +55,5 @@ public class AbesMain {
         designPattern.run(myClassNode);
 
         System.out.println("\n");
-
-
     }
 }
