@@ -1,10 +1,9 @@
 package domain;
 
 
-import domain.abstractMock.Dog;
-import domain.abstractMock.Pet;
+import domain.abstractmock.Dog;
+import domain.abstractmock.Pet;
 
-import java.io.FileInputStream;
 import java.util.*;
 
 public class InterfaceMock {

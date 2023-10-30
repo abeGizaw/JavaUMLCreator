@@ -1,4 +1,4 @@
-package domain.abstractMock;
+package domain.abstractmock;
 
 public abstract class Pet {
 }
