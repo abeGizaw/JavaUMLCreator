@@ -6,8 +6,11 @@ public class AbesMain {
         // target/classes/domain/FieldMock.class
         fieldHider.run();
 
-        DirtyInterfaceNotImplementation designPattern = new DirtyInterfaceNotImplementation();
+        DirtyInterfaceNotImplementation designPrinciple = new DirtyInterfaceNotImplementation();
         // target/classes/domain/InterfaceMock.class
+        designPrinciple.run();
+
+        DirtyTemplateMethod designPattern = new DirtyTemplateMethod();
         designPattern.run();
     }
 }

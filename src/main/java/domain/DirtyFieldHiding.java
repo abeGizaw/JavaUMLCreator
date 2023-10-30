@@ -36,23 +36,21 @@ public class DirtyFieldHiding {
         Set<String> allFields = new HashSet<>();
         List<String> hiddenFields = new ArrayList<>();
 
-        if (classNode.fields != null) {
-            for (FieldNode field : classNode.fields) {
-                allFields.add(field.name);
-            }
+        for (FieldNode field : classNode.fields) {
+            allFields.add(field.name);
         }
 
-        if (classNode.methods != null) {
-            for (MethodNode method : classNode.methods) {
-                if (method.localVariables != null) {
-                    for (LocalVariableNode variable : method.localVariables) {
-                        if(allFields.contains(variable.name)){
-                            hiddenFields.add(variable.name);
-                        }
+
+        for (MethodNode method : classNode.methods) {
+            if (method.localVariables != null) {
+                for (LocalVariableNode variable : method.localVariables) {
+                    if (allFields.contains(variable.name)) {
+                        hiddenFields.add(variable.name);
                     }
                 }
             }
         }
+
 
 
         return hiddenFields;
