@@ -1,33 +1,19 @@
 package domain.abescode;
 
 import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 import static presentation.ANSIColors.*;
 
 public class DirtyFieldHiding {
 
-    public void run(File filePath) {
-        try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            ClassReader myReader = new ClassReader(fileInputStream);
-            ClassNode myClassNode = new ClassNode();
-            myReader.accept(myClassNode, ClassReader.EXPAND_FRAMES);
-
-            List<String> hiddenFields = checkFieldHiding(myClassNode);
-
-            System.out.println(RED + "The Fields that are hidden: " + hiddenFields + RESET);
-
-        } catch (IOException e) {
-            System.err.println("Error reading class file");
-        }
+    public void run(ClassNode myClassNode) {
+        List<String> hiddenFields = checkFieldHiding(myClassNode);
+        System.out.println(RED + "The Fields that are hidden: " + hiddenFields + RESET);
     }
 
     private List<String> checkFieldHiding(ClassNode classNode) {
