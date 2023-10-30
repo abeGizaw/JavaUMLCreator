@@ -11,7 +11,9 @@ import java.util.List;
 public class QDPLKCheck {
     public static void main(String[] args) throws IOException {
         List<String> classNames = new ArrayList<>();
-        classNames.add("domain/QDPLKCheck");
+        classNames.add("domain/PLKTestClass");
+        classNames.add("domain/ConcreteClass1");
+        classNames.add("domain/ConcreteClass2");
 
         List<ClassNode> classNodes = new ArrayList<>();
         for (String className : classNames) {
