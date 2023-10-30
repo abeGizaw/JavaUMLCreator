@@ -1,6 +1,6 @@
 package domain.templatemethodmocks;
 
-public class NoAbstractTemplateMock {
+public abstract class NoAbstractTemplateMock {
     public final void template(){
         doConcrete();
         doAHook();

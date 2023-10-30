@@ -13,7 +13,10 @@ public class DirtyTemplateMethod {
     public void run(){
         Scanner keyboard = new Scanner(System.in);
         System.out.print("Enter FilePath (Design Pattern): ");
-        //
+        // target/classes/domain/templatemethodmocks/CorrectTemplateMethodMock.class
+        // target/classes/domain/templatemethodmocks/NoFinalTemplateMethodMock.class
+        // target/classes/domain/templatemethodmocks/NoAbstractTemplateMock.class
+
         String filePath = keyboard.nextLine();
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             ClassReader myReader = new ClassReader(fileInputStream);
