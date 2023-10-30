@@ -1,5 +1,7 @@
 package domain;
 
+import domain.alevelfeature.ConvertASMToUML;
+
 public class AbesMain {
     public static void main(String[] args) {
         DirtyFieldHiding fieldHider = new DirtyFieldHiding();
@@ -15,5 +17,9 @@ public class AbesMain {
         // target/classes/domain/templatemethodmocks/NoFinalTemplateMethodMock.class
         // target/classes/domain/templatemethodmocks/NoAbstractTemplateMock.class
         designPattern.run();
+
+        ConvertASMToUML aLevel = new ConvertASMToUML();
+        // target/classes/domain/FieldMock.class
+        aLevel.run();
     }
 }
