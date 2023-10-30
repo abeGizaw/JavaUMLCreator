@@ -1,4 +1,4 @@
-package domain.templatemethodmocks;
+package domain.abescode.templatemethodmocks;
 
 public abstract class NoAbstractTemplateMock {
     public final void template(){

@@ -1,4 +1,4 @@
-package domain.alevelfeature;
+package domain.abescode.alevelfeature;
 
 import java.io.FileWriter;
 import java.io.IOException;

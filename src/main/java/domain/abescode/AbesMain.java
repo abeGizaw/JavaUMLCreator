@@ -1,6 +1,6 @@
-package domain;
+package domain.abescode;
 
-import domain.alevelfeature.ConvertASMToUML;
+import domain.abescode.alevelfeature.ConvertASMToUML;
 
 public class AbesMain {
     public static void main(String[] args) {

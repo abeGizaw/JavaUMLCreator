@@ -1,4 +1,4 @@
-package domain.alevelfeature;
+package domain.abescode.alevelfeature;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;

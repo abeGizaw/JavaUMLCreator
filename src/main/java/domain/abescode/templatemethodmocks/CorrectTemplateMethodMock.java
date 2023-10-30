@@ -1,4 +1,4 @@
-package domain.templatemethodmocks;
+package domain.abescode.templatemethodmocks;
 
 public abstract class CorrectTemplateMethodMock {
     final public void doStuff(){

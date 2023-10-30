@@ -1,8 +1,8 @@
-package domain;
+package domain.abescode;
 
 
-import domain.abstractmock.Dog;
-import domain.abstractmock.Pet;
+import domain.abescode.abstractmock.Dog;
+import domain.abescode.abstractmock.Pet;
 
 import java.util.*;
 

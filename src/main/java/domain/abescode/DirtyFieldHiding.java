@@ -1,4 +1,4 @@
-package domain;
+package domain.abescode;
 
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
