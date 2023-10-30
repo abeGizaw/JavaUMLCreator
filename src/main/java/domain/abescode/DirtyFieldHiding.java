@@ -8,16 +8,14 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 public class DirtyFieldHiding {
-    public void run() {
-        Scanner keyboard = new Scanner(System.in);
-        System.out.print("Enter FilePath (Style Check): ");
-        // target/classes/domain/FieldMock.class
-        String filePath = keyboard.nextLine();
+
+    public void run(File filePath) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             ClassReader myReader = new ClassReader(fileInputStream);
             ClassNode myClassNode = new ClassNode();

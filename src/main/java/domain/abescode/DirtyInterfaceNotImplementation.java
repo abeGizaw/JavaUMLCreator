@@ -5,19 +5,15 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class DirtyInterfaceNotImplementation {
 
-    public void run(){
-        Scanner keyboard = new Scanner(System.in);
-        // target/classes/domain/InterfaceMock.class
-        System.out.print("Enter FilePath (Design Principle): ");
-        String filePath = keyboard.nextLine();
+    public void run(File filePath){
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             ClassReader myReader = new ClassReader(fileInputStream);
             ClassNode myClassNode = new ClassNode();
@@ -57,17 +53,8 @@ public class DirtyInterfaceNotImplementation {
 
     private boolean implementsOrExtendsClass(ClassNode fieldClassNode) {
         if((fieldClassNode.access & Opcodes.ACC_INTERFACE) == 0 && (fieldClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
-            if(!fieldClassNode.interfaces.isEmpty()){
-                System.out.println("Interfaces " + fieldClassNode.name + " implements are " + fieldClassNode.interfaces);
-                return true;
-            }
+            return !fieldClassNode.interfaces.isEmpty() || (fieldClassNode.superName != null && checkIfAbstract(fieldClassNode.superName));
 
-            if(fieldClassNode.superName != null){
-                if(checkIfAbstract(fieldClassNode.superName)){
-                    System.out.println("Abstract class " + fieldClassNode.name + " extends " + fieldClassNode.superName);
-                    return true;
-                }
-            }
         }
         return false;
     }

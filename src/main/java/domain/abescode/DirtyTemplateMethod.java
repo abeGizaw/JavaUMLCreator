@@ -4,20 +4,13 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
 public class DirtyTemplateMethod {
-    public void run(){
-        Scanner keyboard = new Scanner(System.in);
-        System.out.print("Enter FilePath (Design Pattern): ");
-        // target/classes/domain/templatemethodmocks/CorrectTemplateMethodMock.class
-        // target/classes/domain/templatemethodmocks/NoFinalTemplateMethodMock.class
-        // target/classes/domain/templatemethodmocks/NoAbstractTemplateMock.class
-
-        String filePath = keyboard.nextLine();
+    public void run(File filePath){
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
             ClassReader myReader = new ClassReader(fileInputStream);
             ClassNode myClassNode = new ClassNode();
@@ -35,6 +28,7 @@ public class DirtyTemplateMethod {
         } catch (IOException e) {
             System.err.println("Error reading class file");
         }
+
     }
 
     private boolean detectTemplateMethod(ClassNode myClassNode) {
