@@ -24,9 +24,9 @@ public class AbesMain {
         }
 
 
-//        ConvertASMToUML aLevel = new ConvertASMToUML();
-//        // target/classes/domain/abescode/FieldMock.class
-//        aLevel.run();
+        ConvertASMToUML aLevel = new ConvertASMToUML();
+        // target/classes/domain/abescode/FieldMock.class
+        aLevel.run();
     }
 
     private static void processClassFile(Path filePath) {
@@ -37,17 +37,12 @@ public class AbesMain {
 
 
         DirtyFieldHiding fieldHider = new DirtyFieldHiding();
-        // target/classes/domain/FieldMock.class
         fieldHider.run(file);
 
         DirtyInterfaceNotImplementation designPrinciple = new DirtyInterfaceNotImplementation();
-        // target/classes/domain/InterfaceMock.class
         designPrinciple.run(file);
 
         DirtyTemplateMethod designPattern = new DirtyTemplateMethod();
-        // target/classes/domain/templatemethodmocks/CorrectTemplateMethodMock.class
-        // target/classes/domain/templatemethodmocks/NoFinalTemplateMethodMock.class
-        // target/classes/domain/templatemethodmocks/NoAbstractTemplateMock.class
         designPattern.run(file);
 
         System.out.println("\n");

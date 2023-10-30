@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static presentation.ANSIColors.*;
 
 public class DirtyInterfaceNotImplementation {
 
@@ -21,7 +22,7 @@ public class DirtyInterfaceNotImplementation {
 
             List<String> invalidUses = checkImplementInterface(myClassNode);
 
-            System.out.println("Where you are not Programming to interface, but instead implementation: " + invalidUses);
+            System.out.println(BLUE + "Where you are not Programming to interface, but instead implementation: " + invalidUses + RESET);
 
 
         } catch (IOException e) {

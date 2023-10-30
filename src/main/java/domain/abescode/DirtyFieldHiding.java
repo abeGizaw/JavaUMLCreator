@@ -7,11 +7,11 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import static presentation.ANSIColors.*;
 
 public class DirtyFieldHiding {
 
@@ -23,7 +23,7 @@ public class DirtyFieldHiding {
 
             List<String> hiddenFields = checkFieldHiding(myClassNode);
 
-            System.out.println("The Fields that are hidden: " + hiddenFields);
+            System.out.println(RED + "The Fields that are hidden: " + hiddenFields + RESET);
 
         } catch (IOException e) {
             System.err.println("Error reading class file");

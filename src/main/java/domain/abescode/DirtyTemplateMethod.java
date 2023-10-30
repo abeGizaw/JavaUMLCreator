@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import static presentation.ANSIColors.*;
 
 public class DirtyTemplateMethod {
     public void run(File filePath){
@@ -18,9 +19,9 @@ public class DirtyTemplateMethod {
             boolean usesTemplate = detectTemplateMethod(myClassNode);
 
             if(usesTemplate){
-                System.out.println("The Class "+ myClassNode.name + " uses the templateMethod Pattern");
+                System.out.println(YELLOW + "The Class "+ myClassNode.name + " uses the templateMethod Pattern" + RESET);
             } else {
-                System.out.println("The Class "+ myClassNode.name + " does not use the templateMethod Pattern");
+                System.out.println(YELLOW + "The Class "+ myClassNode.name + " does not use the templateMethod Pattern" + RESET);
             }
 
 
