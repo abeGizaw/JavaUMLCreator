@@ -19,7 +19,7 @@ public class DirtyTemplateMethod {
             ClassReader myReader = new ClassReader(fileInputStream);
             ClassNode myClassNode = new ClassNode();
             myReader.accept(myClassNode, ClassReader.EXPAND_FRAMES);
-            boolean usesTemplate = detectTemplateTemplateMethod(myClassNode);
+            boolean usesTemplate = detectTemplateMethod(myClassNode);
 
             if(usesTemplate){
                 System.out.println("The Class "+ myClassNode.name + " uses the templateMethod Pattern");
@@ -34,12 +34,12 @@ public class DirtyTemplateMethod {
         }
     }
 
-    private boolean detectTemplateTemplateMethod(ClassNode myClassNode) {
-        if((myClassNode.access & Opcodes.ACC_ABSTRACT) != 0){
+    private boolean detectTemplateMethod(ClassNode myClassNode) {
+        if((myClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
             return false;
         }
         for(MethodNode method: myClassNode.methods){
-            if((method.access & Opcodes.ACC_FINAL) == 0 && containsAbstractMethodCall(method.instructions, myClassNode.methods)){
+            if((method.access & Opcodes.ACC_FINAL) != 0 && containsAbstractMethodCall(method.instructions, myClassNode.methods)){
                 return true;
             }
         }
@@ -50,7 +50,15 @@ public class DirtyTemplateMethod {
     private boolean containsAbstractMethodCall(InsnList instructions, List<MethodNode> methods) {
         for(AbstractInsnNode node: instructions){
             if(isAMethodCall(node)){
-                MethodInsnNode method = (MethodInsnNode) node;
+                MethodInsnNode methodInsnNode = (MethodInsnNode) node;
+
+                for (MethodNode methodNode : methods) {
+                    if (methodNode.name.equals(methodInsnNode.name) && methodNode.desc.equals(methodInsnNode.desc)) {
+                        if ((methodNode.access & Opcodes.ACC_ABSTRACT) != 0) {
+                            return true;
+                        }
+                    }
+                }
 
             }
         }
@@ -60,7 +68,7 @@ public class DirtyTemplateMethod {
 
     private boolean isAMethodCall(AbstractInsnNode node) {
         int opcode = node.getOpcode();
-        return opcode == Opcodes.INVOKEVIRTUAL || opcode == Opcodes.INVOKEINTERFACE || opcode == Opcodes.INVOKESTATIC ||
+        return opcode == Opcodes.INVOKEVIRTUAL || opcode == Opcodes.INVOKEINTERFACE ||
                 opcode == Opcodes.INVOKESPECIAL || opcode == Opcodes.INVOKEDYNAMIC;
     }
 
