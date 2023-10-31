@@ -96,12 +96,15 @@ ADAPTER
 }
 
 +class MyASMClassNode implements MyClassNode {
+//takes all fields of abstract
+(inherits all methods)
 }
 
 +class MyASMClassReader implements MyClassReader {
 }
 
-+interface MyClassNode {
++abstract MyClassNode {
++name: String
 }
 
 +interface MyClassReader {
