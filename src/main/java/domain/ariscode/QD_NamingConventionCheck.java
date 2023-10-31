@@ -1,4 +1,4 @@
-package domain;
+package domain.ariscode;
 /*
   Note that this check is going to validate that proper naming convention is used for the following:
    - class names: UpperCase
@@ -18,29 +18,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QD_NamingConventionCheck {
+    private ClassNode classNode;
+
     public static void main(String[] args) throws IOException {
-        String className = "domain/Chair";
-        ClassReader reader = new ClassReader(className);
-        ClassNode classNode = new ClassNode();
-        reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-        checkClassName(classNode);
-        checkFieldNames(classNode);
-        checkMethodName(classNode);
+        String className = "testclasses/Chair";
+        ClassReader reader;
+
+        {
+            try {
+                reader = new ClassReader(className);
+                ClassNode classNode = new ClassNode();
+                reader.accept(classNode, ClassReader.EXPAND_FRAMES);
+//        checkClassName(classNode);
+//        checkFieldNames(classNode);
+//        checkMethodName(classNode);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
-    private static void checkClassName(ClassNode classNode) {
+    QD_NamingConventionCheck(ClassNode c) {
+
+    }
+
+    public void run() {
+        checkClassName();
+        checkFieldNames();
+        checkMethodName();
+    }
+
+    private void checkClassName() {
         String[] parts = classNode.name.split("/");
         String name = parts[parts.length - 1];
         System.out.println("Class: " + name);
 
-        if (!validPascalCase(name)) {
+        if (invalidPascalCase(name)) {
             System.out.println("    Invalid Name: Must be in PascalCase. " + name);
         }
         System.out.println();
 
     }
 
-    private static void checkFieldNames(ClassNode classNode) {
+    private void checkFieldNames() {
         List<FieldNode> invalidFliedNames = new ArrayList<>();
         List<FieldNode> fields = (List<FieldNode>) classNode.fields;
         System.out.println("Fields");
@@ -52,7 +73,7 @@ public class QD_NamingConventionCheck {
                 }
 
             } else {
-                if (!validCamelCase(field.name)) {
+                if (invalidCamelCase(field.name)) {
                     System.out.println("    Invalid Field Name: Must be in camelCase   " + field.name);
                     invalidFliedNames.add(field);
                 }
@@ -62,12 +83,12 @@ public class QD_NamingConventionCheck {
         System.out.println();
     }
 
-    private static void checkMethodName(ClassNode classNode) {
+    private void checkMethodName() {
         List<MethodNode> methods = classNode.methods;
         List<MethodNode> invalidMethods = new ArrayList<>();
         System.out.println("Methods  ");
         for (MethodNode method : methods) {
-            if (!validCamelCase(method.name) && !method.name.equals("<init>")) {
+            if (invalidCamelCase(method.name) && !method.name.equals("<init>")) {
                 System.out.println("    Invalid method name: Must be in camelCase.  " + method.name);
                 invalidMethods.add(method);
             }
@@ -76,12 +97,12 @@ public class QD_NamingConventionCheck {
 
     }
 
-    private static boolean validCamelCase (String name){
-        return name.matches("^(?:[a-z]+[A-Z]?[a-zA-Z]*)+$");
+    private boolean invalidCamelCase(String name) {
+        return !name.matches("^(?:[a-z]+[A-Z]?[a-zA-Z]*)+$");
     }
 
-    private static boolean validPascalCase(String name){
-        return name.matches("^[A-Z][a-z]+(?:[A-Z][a-z]+)*$");
+    private boolean invalidPascalCase(String name) {
+        return !name.matches("^[A-Z][a-z]+(?:[A-Z][a-z]+)*$");
     }
 
 }

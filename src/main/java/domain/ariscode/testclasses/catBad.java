@@ -1,4 +1,4 @@
-package domain;
+package domain.ariscode.testclasses;
 
 public class catBad extends Animal{
 
@@ -21,7 +21,7 @@ public class catBad extends Animal{
         toys = 4;
         chair = c;
         HasBirthday();
-        furniture = new Chair("oak");
+//        furniture = new Chair("oak");
     }
 
     public int HasBirthday(){
