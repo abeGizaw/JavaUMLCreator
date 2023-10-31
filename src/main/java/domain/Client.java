@@ -1,5 +1,6 @@
 package domain;
 
 public class Client {
-    private Adapter concreteAdapter;
+    private Adapter adapter;
+    private Adapter2 adapter2;
 }

@@ -5,19 +5,24 @@ import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class QDAdapterPatternCheck {
-    private List<ClassNode> implementsInterfaceHasClass;
+    List<ClassNode> classNodes;
     private List<String> classNames;
+    private Set<String> interfaceNames;
 
     public QDAdapterPatternCheck(List<ClassNode> classNodes) {
-        implementsInterfaceHasClass = new ArrayList<>();
+        this.classNodes = classNodes;
 
         classNames = new ArrayList<>();
         for (ClassNode classNode : classNodes) {
             classNames.add(classNode.name);
         }
+
+        interfaceNames = new HashSet<>();
     }
 
     public static void main(String[] args) throws IOException {
@@ -27,7 +32,8 @@ public class QDAdapterPatternCheck {
         classNames.add("domain/Adapter");
         classNames.add("domain/ConcreteClass1");
         classNames.add("domain/Client");
-        // TODO: how to pass in all classes in a package or directory?
+        classNames.add("domain/ConcreteAdapter2");
+        classNames.add("domain/Adapter2");
 
         List<ClassNode> classNodes = new ArrayList<>();
         for (String className : classNames) {
@@ -38,46 +44,47 @@ public class QDAdapterPatternCheck {
         }
 
         QDAdapterPatternCheck qdAdapterPatternCheck = new QDAdapterPatternCheck(classNodes);
-        qdAdapterPatternCheck.checkForAdapterPattern(classNodes);
+        qdAdapterPatternCheck.run(classNodes.get(0));
     }
 
-    private void checkForAdapterPattern(List<ClassNode> classNodes) {
+    public void run(ClassNode classNode) {
+        printAdapterPatterns(findAdapterPatterns());
+    }
+
+    private List<AdapterPatternClasses> findAdapterPatterns() {
         List<AdapterPatternClasses> possibleAdapterPatterns = new ArrayList<>();
-        List<String> interfaces = new ArrayList<>();
         for (ClassNode classNode : classNodes) {
-            for (String interfaceName : classNode.interfaces) {
-                interfaces.add(interfaceName);
-                for (FieldNode fieldNode : classNode.fields) {
-                    String fieldType = fieldNode.desc.substring(1,fieldNode.desc.length() - 1);
-                    if (this.fieldTypeIsClass(fieldType)) {
-                        possibleAdapterPatterns.add(new AdapterPatternClasses(classNode.name, interfaceName, fieldType));
-                    }
+            List<String> implementedInterfaces = getImplementedInterfaces(classNode);
+            for (String interfaceName : implementedInterfaces) {
+                interfaceNames.add(interfaceName);
+                for (String fieldType : getNotJavaClassFieldTypes(classNode)) {
+                    possibleAdapterPatterns.add(new AdapterPatternClasses(classNode.name, interfaceName, fieldType));
                 }
             }
         }
 
-        List<AdapterPatternClasses> adapterPatterns = new ArrayList<>();
+        return findAdapterPatternClients(possibleAdapterPatterns);
+    }
 
-        for (ClassNode classNode : classNodes) {
-            for (FieldNode fieldNode : classNode.fields) {
-                String fieldType = fieldNode.desc.substring(1,fieldNode.desc.length() - 1);
-                for (String interfaceName : this.findImplementedInterfaces(fieldType, interfaces)) {
-                    for (AdapterPatternClasses adapterPatternClasses : possibleAdapterPatterns) {
-                        if (adapterPatternClasses.adapter.equals(interfaceName)) {
-                            adapterPatterns.add(new AdapterPatternClasses(adapterPatternClasses.adapter, adapterPatternClasses.concreteAdapter, adapterPatternClasses.adaptee, classNode.name));
-                        }
-                    }
-                }
+    private List<String> getImplementedInterfaces(ClassNode classNode) {
+        List<String> implementedInterfaces = new ArrayList<>();
+        implementedInterfaces.addAll(classNode.interfaces);
+        String[] parts = classNode.superName.split("/");
+        if (!parts[0].isEmpty() && !parts[0].equals("java")) {
+            implementedInterfaces.add(classNode.superName);
+        }
+        return implementedInterfaces;
+    }
+
+    private List<String> getNotJavaClassFieldTypes(ClassNode classNode) {
+        List<String> fieldTypes = new ArrayList<>();
+        for (FieldNode fieldNode : classNode.fields) {
+            String fieldType = fieldNode.desc.substring(1,fieldNode.desc.length() - 1);
+            if (this.fieldTypeIsClass(fieldType)) {
+                fieldTypes.add(fieldType);
             }
         }
-
-        for (AdapterPatternClasses adapterPatternClasses : adapterPatterns) {
-            System.out.printf("There is a possible use of the Adapter Pattern with\n" +
-                    "\tadapter: %s\n" +
-                    "\tconcreteAdapter: %s\n" +
-                    "\tadaptee: %s\n" +
-                    "\tclient: %s.\n", adapterPatternClasses.adapter, adapterPatternClasses.concreteAdapter, adapterPatternClasses.adaptee, adapterPatternClasses.client);
-        }
+        return fieldTypes;
     }
 
     private boolean fieldTypeIsClass(String fieldType) {
@@ -89,9 +96,36 @@ public class QDAdapterPatternCheck {
         return false;
     }
 
-    private List<String> findImplementedInterfaces(String className, List<String> interfaces) {
+    private List<AdapterPatternClasses> findAdapterPatternClients(List<AdapterPatternClasses> possibleAdapterPatterns) {
+        List<AdapterPatternClasses> adapterPatterns = new ArrayList<>();
+        for (ClassNode classNode : classNodes) {
+            for (FieldNode fieldNode : classNode.fields) {
+                String fieldType = fieldNode.desc.substring(1,fieldNode.desc.length() - 1);
+                for (String interfaceName : this.findImplementedInterfaces(fieldType)) {
+                    for (AdapterPatternClasses adapterPatternClasses : possibleAdapterPatterns) {
+                        if (adapterPatternClasses.adapter.equals(interfaceName)) {
+                            adapterPatterns.add(new AdapterPatternClasses(adapterPatternClasses.adapter, adapterPatternClasses.concreteAdapter, adapterPatternClasses.adaptee, classNode.name));
+                        }
+                    }
+                }
+            }
+        }
+        return adapterPatterns;
+    }
+
+    private void printAdapterPatterns(List<AdapterPatternClasses> adapterPatterns) {
+        for (AdapterPatternClasses adapterPatternClasses : adapterPatterns) {
+            System.out.printf("There is a possible use of the Adapter Pattern with\n" +
+                    "\tadapter: %s\n" +
+                    "\tconcreteAdapter: %s\n" +
+                    "\tadaptee: %s\n" +
+                    "\tclient: %s.\n", adapterPatternClasses.adapter, adapterPatternClasses.concreteAdapter, adapterPatternClasses.adaptee, adapterPatternClasses.client);
+        }
+    }
+
+    private List<String> findImplementedInterfaces(String className) {
         List<String> implementedInterfaces = new ArrayList<>();
-        for (String interfaceName : interfaces) {
+        for (String interfaceName : interfaceNames) {
             if (interfaceName.equals(className)) {
                 implementedInterfaces.add(interfaceName);
             }
