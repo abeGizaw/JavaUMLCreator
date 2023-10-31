@@ -1,9 +1,7 @@
 package domain;
 
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
