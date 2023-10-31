@@ -1,29 +1,43 @@
 @startuml
 package presentation {
-+class Main {
++class ANSIColors {
+// lots of color constants
+}
+
++class LinterMain {
 -saver: Saver
-+Main()
--promptUserForClasses(): String
--promptUserForChecks(): String
++LinterMain()
 -lint(): void
--prettyPrint(List<Error>): void
+-promptUserForDirectory(): String
+-promptUserForOutputFileName(): String
+-promptUserForChecks(): String
+-validateUserSelectedChecks(checks: String): List<CheckType>
+-prettyPrint(errors: List<Error>): void
 -saveToFile(message: String): void
 }
-note left of Main::lint
+note left of LinterMain::lint
     calls prettyPrint()
 end note
 }
 
 package domain {
-+class AdapterPattern extends Check {
-+AdapterPattern(classNode: ClassNode, classReader: ClassReader)
++class AdapterPattern {
++AdapterPattern(classNodes: List<ClassNode>)
+-fieldTypeIsClass(fieldType: String): boolean
+-findImplementedInterfaces(className: String, interfaces: List<String>): List<String>
 }
 
-+abstract class Check {
--classNode: ClassNode
--classReader: ClassReader
-+Check(classNode: ClassNode, classReader: ClassReader)
-+{abstract}run(): List<Error>
+-class AdapterPatternClasses {
+-adapter: String
+-concreteAdapter: String
+-adaptee: String
+-client: String
+-AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String, client: String)
+-AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String)
+}
+
++interface Check {
++{abstract}run(classNode: ClassNode): List<Error>
 }
 
 +enum CheckType {
@@ -38,14 +52,12 @@ STRATEGY,
 ADAPTER
 }
 
-+interface ClassNode {
++class ClassNodeCreator {
++createClassNode(path: String): ClassNode
 }
 
-+interface ClassReader {
-}
-
-+class CompositionOverInheritance extends Check {
-+CompositionOverInheritance(classNode: ClassNode, classReader: ClassReader)
++class CompositionOverInheritance implements Check {
+-checkForInheritance(): void
 }
 
 +class Error {
@@ -58,44 +70,68 @@ ADAPTER
 +getMessage(): String
 }
 
-+class HiddenFields extends Check {
-+HiddenFields(classNode: ClassNode, classReader: ClassReader)
++class FinalLocalVariables {
 }
 
-+class InterfaceOverImplementation extends Check {
-+InterfaceOverImplementation(classNode: ClassNode, classReader: ClassReader)
++class HiddenFields {
+-checkFieldHiding(classNode: ClassNode): List<String>
+-{static} reference(classNode: ClassNode): void
+}
+
++class InterfaceOverImplementation {
++InterfaceOverImplementation(classNodeCreator: ClassNodeCreator)
+-checkImplementInterface(classNode: ClassNode): List<String>
+-implementsOrExtendsClass(fieldClassNode: ClassNode): boolean
+-checkIfAbstract(superName: String): boolean
 }
 
 +class Linter {
 -checkTypeToCheck: Map<CheckType, Check>
-+Linter(classNode: ClassNode, classReader: ClassReader)
+-classNodeCreator: ClassNodeCreator
+-classNodes: List<ClassNode>
++Linter(classPaths: List<String>, classNodeCreator: ClassNodeCreator)
 +runSelectedChecks(List<CheckType>): List<Error>
+-createClassNodes(classPaths: List<String>): List<ClassNode>
+-createSelectedChecks(List<CheckType>)
 }
 
-+class MagicNumbers extends Check {
-+MagicNumbers(classNode: ClassNode, classReader: ClassReader)
++class MyASMClassNode implements MyClassNode {
 }
 
-+class MyASMClassNode implements ClassNode {
++class MyASMClassReader implements MyClassReader {
 }
 
-+class MyASMClassReader implements ClassReader {
++interface MyClassNode {
 }
 
-+class NamingConventions extends Check {
-+NamingConventions(classNode: ClassNode, classReader: ClassReader)
++interface MyClassReader {
 }
 
-+class PrincipleOfLeastKnowledge extends Check {
-+PrincipleOfLeastKnowledge(classNode: ClassNode, classReader: ClassReader)
++class NamingConventions implements Check {
+-checkClassName(): void
+-checkFieldNames(): void
+-checkMethodName(): void
+-invalidCamelCase(name: String): boolean
+-invalidPascalCase(name: String): boolean
 }
 
-+class StrategyPattern extends Check {
-+StrategyPattern(classNode: ClassNode, classReader: ClassReader)
++class PrincipleOfLeastKnowledge implements Check {
 }
 
-+class TemplateMethodPattern extends Check {
-+TemplateMethodPattern(classNode: ClassNode, classReader: ClassReader)
++class StrategyPattern {
+-classNodeCreator: ClassNodeCreator
++StrategyPattern(classNodeCreator: ClassNodeCreator)
+-checkForStrategyPattern(): void
+-checkFieldForStrategyPattern(field: FieldNode)
+-fieldIsAbstractAndValidClass(name: String, originalClassName: String, fieldName: String): boolean
+-fieldIsAbstractType(classNode: ClassNode, originalClassName: String, fieldName: String): boolean
+-findSetter(classNode: ClassNode, fieldName: String, fieldType): String
+}
+
++class TemplateMethodPattern implements Check {
+-detectTemplateMethod(myClassNode: ClassNode): boolean
+-containsAbstractMethodCall(instructions: InsnList, methods: List<MethodNode>): boolean
+-isAMethodCall(node: AbstractInsnNode): boolean
 }
 }
 
@@ -118,11 +154,19 @@ package org.objectweb.asm {
 }
 
 Check ..> Error
-Check --> domain.ClassNode
-Check --> domain.ClassReader
+Check --> domain.MyClassNode
+Check --> domain.MyClassReader
 
+Check <|... AdapterPattern
+Check <|... FinalLocalVariables
+Check <|... HiddenFields
+Check <|... InterfaceOverImplementation
+Check <|... StrategyPattern
+
+domain.MyASMClassNode --> org.objectweb.asm.ClassNode
 domain.MyASMClassNode ..> org.objectweb.asm.ClassNode
 
+domain.MyASMClassReader --> org.objectweb.asm.ClassReader
 domain.MyASMClassReader ..> org.objectweb.asm.ClassReader
 
 Error --> CheckType
@@ -132,13 +176,16 @@ Linter ..> Check
 Linter --> CheckType
 Linter ..> CheckType
 Linter ..> Error
-Linter ..> domain.ClassNode
-Linter ..> domain.ClassReader
+Linter ..> domain.MyClassNode
+Linter ..> domain.MyClassReader
+Linter ..> ClassNodeCreator
 
-Main .down.> CheckType
-Main .down.> Error
-Main .down.> Linter
-Main .down.> domain.ClassNode
-Main .down.> domain.ClassReader
-Main -down-> Saver
+LinterMain ..> ANSIColors
+LinterMain .down.> CheckType
+LinterMain .down.> Error
+LinterMain .down.> Linter
+LinterMain .down.> domain.MyClassNode
+LinterMain .down.> domain.MyClassReader
+LinterMain ..> ClassNodeCreator
+LinterMain -down-> Saver
 @enduml
