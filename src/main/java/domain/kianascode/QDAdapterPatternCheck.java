@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class QDAdapterPatternCheck {
-    List<ClassNode> classNodes;
+    private List<ClassNode> classNodes;
     private List<String> classNames;
     private Set<String> interfaceNames;
 
