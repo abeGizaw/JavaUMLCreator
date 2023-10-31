@@ -22,7 +22,10 @@ end note
 
 package domain {
 +class AdapterPattern {
-+AdapterPattern(classNodes: List<ClassNode>)
+-classNodes: List<MyClassNode>
+-classNames: List<String>
+-interfaceNames: Set<String>
++AdapterPattern(classNodes: List<MyClassNode>)
 -fieldTypeIsClass(fieldType: String): boolean
 -findImplementedInterfaces(className: String, interfaces: List<String>): List<String>
 }
@@ -103,11 +106,25 @@ ADAPTER
 +class MyASMClassReader implements MyClassReader {
 }
 
++class MyASMFieldNode implements MyFieldNode {
+//takes all fields of abstract
+(inherits all methods)
+}
+
 +abstract MyClassNode {
 +name: String
++interfaces: List<String>
++superName: String
++fields: List<MyFieldNode>
++MyClassNode()
 }
 
 +interface MyClassReader {
+}
+
++abstract MyFieldNode {
++desc: String
++MyFieldNode()
 }
 
 +class NamingConventions implements Check {
@@ -154,7 +171,14 @@ package org.objectweb.asm {
 
 +class ClassReader {
 }
+
++class FieldNode {
 }
+}
+
+AdapterPattern ..> AdapterPatternClasses
+AdapterPattern -->"*" MyClassNode
+AdapterPattern ..> MyFieldNode
 
 Check ..> Error
 Check --> domain.MyClassNode
@@ -166,11 +190,17 @@ Check <|... HiddenFields
 Check <|... InterfaceOverImplementation
 Check <|... StrategyPattern
 
+ClassNodeCreator ..> MyClassNode
+ClassNodeCreator ..> MyClassReader
+
 domain.MyASMClassNode --> org.objectweb.asm.ClassNode
 domain.MyASMClassNode ..> org.objectweb.asm.ClassNode
 
 domain.MyASMClassReader --> org.objectweb.asm.ClassReader
 domain.MyASMClassReader ..> org.objectweb.asm.ClassReader
+
+domain.MyASMFieldNode --> org.objectweb.asm.FieldNode
+domain.MyASMFieldNode ..> org.objectweb.asm.FieldNode
 
 Error --> CheckType
 
@@ -191,4 +221,6 @@ LinterMain .down.> domain.MyClassNode
 LinterMain .down.> domain.MyClassReader
 LinterMain ..> ClassNodeCreator
 LinterMain -down-> Saver
+
+MyClassNode -->"*" MyFieldNode
 @enduml
