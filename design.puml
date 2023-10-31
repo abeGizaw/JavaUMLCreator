@@ -26,8 +26,14 @@ package domain {
 -classNames: List<String>
 -interfaceNames: Set<String>
 +AdapterPattern(classNodes: List<MyClassNode>)
+-findAdapterPatterns(): List<AdapterPatternClasses>
+-getImplementedInterfaces(classNode: ClassNode): List<String>
+-getNotJavaClassFieldTypes(classNode: ClassNode): List<String>
 -fieldTypeIsClass(fieldType: String): boolean
--findImplementedInterfaces(className: String, interfaces: List<String>): List<String>
+-findAdapterPatternClients(possibleAdapterPatterns: List<AdapterPatternClasses>): List<AdapterPatternClasses>
+-findImplementedInterfaces(className: String): List<String>
+-getAdapterPatternClassesForInterface(interfaceName: String,
+possibleAdapterPatterns: List<AdapterPatternClasses>, classNode: ClassNode): List<AdapterPatternClasses>
 }
 
 -class AdapterPatternClasses {
