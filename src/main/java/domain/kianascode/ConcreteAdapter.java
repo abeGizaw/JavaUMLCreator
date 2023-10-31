@@ -1,4 +1,4 @@
-package domain;
+package domain.kianascode;
 
 public class ConcreteAdapter implements Adapter {
     private Adaptee adaptee;

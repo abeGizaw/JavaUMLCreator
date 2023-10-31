@@ -1,4 +1,4 @@
-package domain;
+package domain.kianascode;
 
 public interface Adapter {
 }
