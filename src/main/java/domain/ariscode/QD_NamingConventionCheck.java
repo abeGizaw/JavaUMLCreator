@@ -7,40 +7,19 @@ package domain.ariscode;
    - final variable: all caps
  */
 
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QD_NamingConventionCheck {
-    private ClassNode classNode;
-
-    public static void main(String[] args) throws IOException {
-        String className = "testclasses/Chair";
-        ClassReader reader;
-
-        {
-            try {
-                reader = new ClassReader(className);
-                ClassNode classNode = new ClassNode();
-                reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-//        checkClassName(classNode);
-//        checkFieldNames(classNode);
-//        checkMethodName(classNode);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
+    private final ClassNode classNode;
 
     QD_NamingConventionCheck(ClassNode c) {
-
+        classNode = c;
     }
 
     public void run() {
@@ -57,8 +36,6 @@ public class QD_NamingConventionCheck {
         if (invalidPascalCase(name)) {
             System.out.println("    Invalid Name: Must be in PascalCase. " + name);
         }
-        System.out.println();
-
     }
 
     private void checkFieldNames() {
@@ -94,6 +71,7 @@ public class QD_NamingConventionCheck {
             }
         }
         System.out.println("    Total Invalid Method names: " + invalidMethods.size());
+        System.out.println();
 
     }
 
