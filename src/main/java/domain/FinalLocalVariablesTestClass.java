@@ -21,6 +21,6 @@ public class FinalLocalVariablesTestClass {
     public void testMethod2() {
         int x = 1;
         x = 2;
-        int y = 3;
+        final int y = 3;
     }
 }
