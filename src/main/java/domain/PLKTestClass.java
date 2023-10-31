@@ -6,9 +6,9 @@ public class PLKTestClass {
     public void method1(ConcreteClass3 concreteClass3) {
         // field
         concreteClass1.method1();
-        ConcreteClass2 concreteClass2 = new ConcreteClass2();
 
         // created object
+        ConcreteClass2 concreteClass2 = new ConcreteClass2();
         concreteClass2.method1();
 
         // parameter
