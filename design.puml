@@ -36,13 +36,17 @@ package domain {
 possibleAdapterPatterns: List<AdapterPatternClasses>, classNode: ClassNode): List<AdapterPatternClasses>
 }
 
--class AdapterPatternClasses {
++class AdapterPatternClasses {
 -adapter: String
 -concreteAdapter: String
 -adaptee: String
 -client: String
--AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String, client: String)
--AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String)
++AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String, client: String)
++AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String)
++getAdapter(): String
++getConcreteAdapter(): String
++getAdaptee(): String
++getClient(): String
 }
 
 +interface Check {
@@ -115,7 +119,7 @@ ADAPTER
 -createSelectedChecks(List<CheckType>)
 }
 
--class LocalVariableInfo {
++class LocalVariableInfo {
 -{final}name: String
 -{final}firstLabel: MyLabel
 -{final}lastLabel: MyLabel
@@ -123,7 +127,13 @@ ADAPTER
 -isInScope: boolean
 -hasBeenStored: boolean
 -hasBeenStoredOnce: boolean
--LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
++LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
++setIsInScope(isInScope: boolean): void
++setHasBeenStored(hasBeenStored: boolean): void
++setHasBeenStoredOnce(hasBeenStoredOnce: boolean): void
++getIsInScope(): boolean
++getHasBeenStored(): boolean
++getHasBeenStoredOnce(): boolean
 }
 
 +abstract class MyAbstractInsnNode {
