@@ -1,0 +1,6 @@
+@startuml
+class FieldMock{
+-someValue:List<String>
++someMethod(someParam:String, another:String):void
+}
+@enduml
