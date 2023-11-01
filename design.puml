@@ -80,6 +80,17 @@ ADAPTER
 }
 
 +class FinalLocalVariables {
+-{static}{final} STORE_OPCODES
+-localVariables: List<LocalVariableInfo>
+-prevInsnIsLabel: boolean
+-prevInsn: MyAbstractInsnNode
++FinalLocalVariables()
+-checkMethodForFinalLocalVariables(methodNode: MyMethodNode): void
+-addLocalVariable(methodNode: MyMethodNode): void
+-updateVariableScopes(insn: MyAbstractInsnNode): void
+-setInScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
+-setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
+-handleValueStored(localVariableInfo: LocalVariableInfo): void
 }
 
 +class HiddenFields {
@@ -104,7 +115,30 @@ ADAPTER
 -createSelectedChecks(List<CheckType>)
 }
 
-+class MyASMClassNode implements MyClassNode {
+-class LocalVariableInfo {
+-{final}name: String
+-{final}firstLabel: MyLabel
+-{final}lastLabel: MyLabel
+-{final}index: int
+-isInScope: boolean
+-hasBeenStored: boolean
+-hasBeenStoredOnce: boolean
+-LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
+}
+
++abstract class MyAbstractInsnNode {
++{static}{final} LABEL: int
++getNext(): MyAbstractInsnNode
++getOpcode(): int
++{abstract}getType(): int
+}
+
++class MyASMAbstractInsnNode extends MyAbstractInsnNode {
+//takes all fields of abstract
+(inherits all methods)
+}
+
++class MyASMClassNode extends MyClassNode {
 //takes all fields of abstract
 (inherits all methods)
 }
@@ -112,25 +146,92 @@ ADAPTER
 +class MyASMClassReader implements MyClassReader {
 }
 
-+class MyASMFieldNode implements MyFieldNode {
++class MyASMFieldNode extends MyFieldNode {
 //takes all fields of abstract
 (inherits all methods)
 }
 
-+abstract MyClassNode {
-+name: String
-+interfaces: List<String>
-+superName: String
++class MyASMInsnList extends MyInsnList {
+}
+
++class MyASMLabel extends MyLabel {
+//takes all fields of abstract
+(inherits all methods)
+}
+
++class MyASMLabelNode extends MyLabelNode {
+//takes all fields of abstract
+(inherits all methods)
+}
+
++class MyASMLocalVariableNode extends MyLocalVariableNode {
+//takes all fields of abstract
+(inherits all methods)
+}
+
++class MyASMMethodNode extends MyMethodNode {
+//takes all fields of abstract
+(inherits all methods)
+}
+
++class MyASMVarInsnNode extends MyVarInsnNode {
+//takes all fields of abstract
+(inherits all methods)
+}
+
++abstract class MyClassNode {
 +fields: List<MyFieldNode>
++interfaces: List<String>
++methods: List<MyMethodNode>
++name: String
++superName: String
 +MyClassNode()
 }
 
 +interface MyClassReader {
 }
 
-+abstract MyFieldNode {
++abstract class MyFieldNode {
 +desc: String
 +MyFieldNode()
+}
+
++abstract class MyInsnList implements Iterable {
+}
+
++abstract class MyLabel {
+}
+
++abstract class MyLabelNode extends MyAbstractInsnNode {
++getLabel(): MyLabel
+}
+
++abstract class MyLocalVariableNode {
++end: MyLabelNode
++index: int
++name: String
++start: MyLabelNode
++MyLocalVariableNode()
+}
+
++abstract class MyMethodNode {
++name: String
++instructions: MyInsnList
++localVariables: List<MyLocalVariableNode>
++MyMethodNode()
+}
+
++enum MyOpcodes {
+ISTORE,
+LSTORE,
+FSTORE,
+DSTORE,
+ASTORE
+}
+
++abstract class MyVarInsnNode extends MyAbstractInsnNode{
++var: int
++MyVarInsnNode()
 }
 
 +class NamingConventions implements Check {
@@ -172,6 +273,9 @@ package datasource {
 }
 
 package org.objectweb.asm {
++class AbstractInsnNode {
+}
+
 +class ClassNode {
 }
 
@@ -179,6 +283,21 @@ package org.objectweb.asm {
 }
 
 +class FieldNode {
+}
+
++class InsnList {
+}
+
++class Label {
+}
+
++class LabelNode {
+}
+
++class MethodNode {
+}
+
++class VarInsnNode {
 }
 }
 
@@ -199,16 +318,18 @@ Check <|... StrategyPattern
 ClassNodeCreator ..> MyClassNode
 ClassNodeCreator ..> MyClassReader
 
-domain.MyASMClassNode --> org.objectweb.asm.ClassNode
-domain.MyASMClassNode ..> org.objectweb.asm.ClassNode
-
-domain.MyASMClassReader --> org.objectweb.asm.ClassReader
-domain.MyASMClassReader ..> org.objectweb.asm.ClassReader
-
-domain.MyASMFieldNode --> org.objectweb.asm.FieldNode
-domain.MyASMFieldNode ..> org.objectweb.asm.FieldNode
-
 Error --> CheckType
+
+FinalLocalVariables -->"*" LocalVariableInfo
+FinalLocalVariables ..> LocalVariableInfo
+FinalLocalVariables --> MyAbstractInsnNode
+FinalLocalVariables --> MyClassNode
+FinalLocalVariables ..> MyLabel
+FinalLocalVariables ..> MyLabelNode
+FinalLocalVariables ..> MyLocalVariableNode
+FinalLocalVariables ..> MyMethodNode
+FinalLocalVariables -->"*" MyOpcodes
+FinalLocalVariables ..> MyVarInsnNode
 
 Linter --> Check
 Linter ..> Check
@@ -228,5 +349,45 @@ LinterMain .down.> domain.MyClassReader
 LinterMain ..> ClassNodeCreator
 LinterMain -down-> Saver
 
+LocalVariableInfo -->"2" MyLabel
+
+MyASMAbstractInsnNode --> org.objectweb.asm.AbstractInsnNode
+MyASMAbstractInsnNode ..> org.objectweb.asm.AbstractInsnNode
+
+MyASMClassNode --> org.objectweb.asm.ClassNode
+MyASMClassNode ..> org.objectweb.asm.ClassNode
+
+MyASMClassReader --> org.objectweb.asm.ClassReader
+MyASMClassReader ..> org.objectweb.asm.ClassReader
+
+MyASMFieldNode --> org.objectweb.asm.FieldNode
+MyASMFieldNode ..> org.objectweb.asm.FieldNode
+
+MyASMInsnList --> org.objectweb.asm.InsnList
+MyASMInsnList ..> org.objectweb.asm.InsnList
+
+MyASMLabel --> org.objectweb.asm.Label
+MyASMLabel ..> org.objectweb.asm.Label
+
+MyASMLabelNode --> org.objectweb.asm.LabelNode
+MyASMLabelNode ..> org.objectweb.asm.LabelNode
+
+MyASMLocalVariableNode --> org.objectweb.asm.LocalVariableNode
+MyASMLocalVariableNode ..> org.objectweb.asm.LocalVariableNode
+
+MyASMMethodNode --> org.objectweb.asm.MethodNode
+MyASMMethodNode ..> org.objectweb.asm.MethodNode
+
+MyASMVarInsnNode --> org.objectweb.asm.VarInsnNode
+MyASMVarInsnNode ..> org.objectweb.asm.VarInsnNode
+
 MyClassNode -->"*" MyFieldNode
+MyClassNode -->"*" MyMethodNode
+
+MyLabelNode ..> MyLabel
+
+MyLocalVariableNode -->"2" MyLabelNode
+
+MyMethodNode --> MyInsnList
+MyMethodNode -->"*" MyLocalVariableNode
 @enduml
