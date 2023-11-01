@@ -1,4 +1,4 @@
-package domain;
+package domain.kianascode;
 
 public class FinalLocalVariablesTestClass {
     public int testMethod() {
@@ -22,5 +22,15 @@ public class FinalLocalVariablesTestClass {
         int x = 1;
         x = 2;
         final int y = 3;
+    }
+
+    public void testMethod3() {
+        int x = 1;
+        x = 2;
+        final int y = 3;
+        while (x == 2) {
+            int z = 3214;
+            x = 1;
+        }
     }
 }

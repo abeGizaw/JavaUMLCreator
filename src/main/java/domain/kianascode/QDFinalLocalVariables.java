@@ -1,60 +1,37 @@
-package domain;
+package domain.kianascode;
 
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
-import java.io.IOException;
 import java.util.*;
 
 public class QDFinalLocalVariables {
     private static final Set<Integer> storeOpcodes = Set.of(Opcodes.ISTORE, Opcodes.LSTORE, Opcodes.FSTORE, Opcodes.DSTORE, Opcodes.ASTORE);
 
-    public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
+    private List<LocalVariableInfo> localVariables;
+    private boolean prevInsnIsLabel;
+    private AbstractInsnNode prevInsn;
 
-        System.out.print("Enter a class name: ");
-//        String className = scanner.next();
-        String className = "domain/FinalLocalVariablesTestClass";
-
-        ClassReader reader = new ClassReader(className);
-        ClassNode classNode = new ClassNode();
-        reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-
-        QDFinalLocalVariables qdFinalLocalVariables = new QDFinalLocalVariables();
-
-        qdFinalLocalVariables.checkForFinalLocalVariables(classNode);
+    public QDFinalLocalVariables() {
+        localVariables = new ArrayList<>();
+        prevInsnIsLabel = false;
+        prevInsn = null;
     }
 
-    private void checkForFinalLocalVariables(ClassNode classNode) {
+    public void run(ClassNode classNode) {
         for (MethodNode methodNode : classNode.methods) {
+            System.out.printf("Method: %s\n", methodNode.name);
+            localVariables.clear();
+            addLocalVariables(methodNode);
             checkMethodForFinalLocalVariables(methodNode);
+            printResults();
         }
     }
 
     private void checkMethodForFinalLocalVariables(MethodNode methodNode) {
-        List<LocalVariableInfo> localVariables = new ArrayList<>();
-        for (LocalVariableNode localVariableNode : methodNode.localVariables) {
-            localVariables.add(new LocalVariableInfo(localVariableNode.name, localVariableNode.start.getLabel(), localVariableNode.end.getLabel(), localVariableNode.index));
-        }
-
-        boolean prevInsnIsLabel = false;
-        AbstractInsnNode prevInsn = null;
         for (AbstractInsnNode insn : methodNode.instructions) {
-            if (insn.getNext() != null && insn.getNext().getType() == AbstractInsnNode.LABEL) {
-                setInScopeVariables(insn.getNext(), localVariables);
-            }
-            if (prevInsnIsLabel) {
-                setOutOfScopeVariables(prevInsn, localVariables);
-                prevInsnIsLabel = false;
-            }
-
-            if (insn.getType() == AbstractInsnNode.LABEL) {
-                prevInsnIsLabel = true;
-                prevInsn = insn;
-            }
-
+            updateVariableScopes(insn);
             for (LocalVariableInfo localVariableInfo : localVariables) {
                 if (localVariableInfo.isInScope && storeOpcodes.contains(insn.getOpcode())) {
                     if (localVariableInfo.index == ((VarInsnNode) insn).var) {
@@ -64,11 +41,27 @@ public class QDFinalLocalVariables {
                 }
             }
         }
+    }
 
-        for (LocalVariableInfo localVariableInfo : localVariables) {
-            if (localVariableInfo.hasBeenStoredOnce) {
-                System.out.printf("%s can be final since the value is not changed.\n", localVariableInfo.name);
-            }
+    private void addLocalVariables(MethodNode methodNode) {
+        for (LocalVariableNode localVariableNode : methodNode.localVariables) {
+            localVariables.add(new LocalVariableInfo(localVariableNode.name, localVariableNode.start.getLabel(), localVariableNode.end.getLabel(), localVariableNode.index));
+        }
+    }
+
+    private void updateVariableScopes(AbstractInsnNode insn) {
+        if (insn.getNext() != null && insn.getNext().getType() == AbstractInsnNode.LABEL) {
+            setInScopeVariables(insn.getNext(), localVariables);
+        }
+
+        if (prevInsnIsLabel) {
+            setOutOfScopeVariables(prevInsn, localVariables);
+            prevInsnIsLabel = false;
+        }
+
+        if (insn.getType() == AbstractInsnNode.LABEL) {
+            prevInsnIsLabel = true;
+            prevInsn = insn;
         }
     }
 
@@ -96,6 +89,14 @@ public class QDFinalLocalVariables {
         } else {
             localVariableInfo.hasBeenStored = true;
             localVariableInfo.hasBeenStoredOnce = true;
+        }
+    }
+
+    private void printResults() {
+        for (LocalVariableInfo localVariableInfo : localVariables) {
+            if (localVariableInfo.hasBeenStoredOnce) {
+                System.out.printf("%s can be final since the value is not changed.\n", localVariableInfo.name);
+            }
         }
     }
 
