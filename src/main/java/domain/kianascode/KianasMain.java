@@ -14,7 +14,7 @@ public class KianasMain {
         runAdapterPattern();
     }
     
-    private static void runFinalLocalVariables() {
+    private static void runFinalLocalVariables() throws IOException {
         String className = "domain/kianascode/FinalLocalVariablesTestClass";
 
         ClassReader reader = new ClassReader(className);
@@ -25,7 +25,7 @@ public class KianasMain {
         finalLocalVariablesCheck.run(classNode);
     }
     
-    private static void runAdapterPattern() {
+    private static void runAdapterPattern() throws IOException {
         List<String> classNames = new ArrayList<>();
         classNames.add("domain/kianascode/ConcreteAdapter");
         classNames.add("domain/kianascode/Adaptee");
