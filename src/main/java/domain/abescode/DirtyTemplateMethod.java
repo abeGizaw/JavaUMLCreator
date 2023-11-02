@@ -1,39 +1,17 @@
 package domain.abescode;
 
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
-
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
+import static presentation.ANSIColors.*;
 
 public class DirtyTemplateMethod {
-    public void run(){
-        Scanner keyboard = new Scanner(System.in);
-        System.out.print("Enter FilePath (Design Pattern): ");
-        // target/classes/domain/templatemethodmocks/CorrectTemplateMethodMock.class
-        // target/classes/domain/templatemethodmocks/NoFinalTemplateMethodMock.class
-        // target/classes/domain/templatemethodmocks/NoAbstractTemplateMock.class
-
-        String filePath = keyboard.nextLine();
-        try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            ClassReader myReader = new ClassReader(fileInputStream);
-            ClassNode myClassNode = new ClassNode();
-            myReader.accept(myClassNode, ClassReader.EXPAND_FRAMES);
-            boolean usesTemplate = detectTemplateMethod(myClassNode);
-
-            if(usesTemplate){
-                System.out.println("The Class "+ myClassNode.name + " uses the templateMethod Pattern");
-            } else {
-                System.out.println("The Class "+ myClassNode.name + " does not use the templateMethod Pattern");
-            }
-
-
-
-        } catch (IOException e) {
-            System.err.println("Error reading class file");
+    public void run(ClassNode myClassNode){
+        boolean usesTemplate = detectTemplateMethod(myClassNode);
+        if(usesTemplate){
+            System.out.println(YELLOW + "The Class "+ myClassNode.name + " uses the templateMethod Pattern" + RESET);
+        } else {
+            System.out.println(YELLOW + "The Class "+ myClassNode.name + " does not use the templateMethod Pattern" + RESET);
         }
     }
 
@@ -46,7 +24,6 @@ public class DirtyTemplateMethod {
                 return true;
             }
         }
-
         return false;
     }
 
