@@ -14,6 +14,7 @@ public class QDPLKCheck {
         classNames.add("domain/PLKTestClass");
         classNames.add("domain/ConcreteClass1");
         classNames.add("domain/ConcreteClass2");
+        classNames.add("domain/ConcreteClass3");
 
         List<ClassNode> classNodes = new ArrayList<>();
         for (String className : classNames) {
