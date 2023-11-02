@@ -159,10 +159,7 @@ package domain {
         //takes all fields of abstract
         (inherits all methods)
     }
-    
-    +class MyASMInsnList implements MyInsnList {
-    }
-    
+
     +class MyASMLabel implements MyLabel {
     }
 
@@ -208,9 +205,6 @@ package domain {
         +MyFieldNode()
     }
     
-    +interface MyInsnList {
-    }
-    
     +interface MyLabel {
     }
     
@@ -226,7 +220,7 @@ package domain {
         +MyLocalVariableNode()
     }
     
-    +abstract class MyMethodInsnNode{
+    +abstract class MyMethodInsnNode extends MyAbstractInsnNode{
         +name: String
         +desc: String
     }
@@ -234,7 +228,7 @@ package domain {
     +abstract class MyMethodNode {
         +access: int
         +name: String
-        +instructions: MyInsnList
+        +instructions: List<AbstractInsnNode>
         +localVariables: List<MyLocalVariableNode>
         +MyMethodNode()
     }
@@ -270,7 +264,7 @@ package domain {
 
     +class TemplateMethodPattern implements Check {
         -detectTemplateMethod(myClassNode: ClassNode): boolean
-        -containsAbstractMethodCall(instructions: InsnList, methods: List<MethodNode>): boolean
+        -containsAbstractMethodCall(instructions: <AbstractInsnNode>, methods: List<MethodNode>): boolean
         -isAMethodCall(node: AbstractInsnNode): boolean
     }
 }
@@ -296,9 +290,6 @@ package org.objectweb.asm {
     }
 
     +class FieldNode {
-    }
-
-    +class InsnList {
     }
 
     +class Label {
@@ -383,9 +374,6 @@ MyASMClassReader ..> org.objectweb.asm.ClassReader
 MyASMFieldNode --> org.objectweb.asm.FieldNode
 MyASMFieldNode ..> org.objectweb.asm.FieldNode
 
-MyASMInsnList --> org.objectweb.asm.InsnList
-MyASMInsnList ..> org.objectweb.asm.InsnList
-
 MyASMLabel --> org.objectweb.asm.Label
 MyASMLabel ..> org.objectweb.asm.Label
 
@@ -411,6 +399,6 @@ MyLabelNode ..> MyLabel
 
 MyLocalVariableNode -->"2" MyLabelNode
 
-MyMethodNode --> MyInsnList
 MyMethodNode -->"*" MyLocalVariableNode
+MyMethodNode -->"*" MyAbstractInsnNode
 @enduml
