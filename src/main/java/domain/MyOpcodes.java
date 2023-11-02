@@ -14,4 +14,5 @@ public interface MyOpcodes {
     int DSTORE = 57;
     int ASTORE = 58;
     int ACC_ABSTRACT = 1024;
+    int ACC_INTERFACE = 512;
 }

@@ -1,5 +1,6 @@
 package domain.abescode;
 
+import domain.*;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
@@ -11,21 +12,21 @@ import static presentation.ANSIColors.*;
 
 public class DirtyInterfaceNotImplementation {
 
-    public void run(ClassNode myClassNode){
+    public void run(MyClassNode myClassNode){
         List<String> invalidUses = checkImplementInterface(myClassNode);
         System.out.println(BLUE + "Where you are not Programming to interface, but instead implementation: " + invalidUses + RESET);
     }
 
-    private List<String> checkImplementInterface(ClassNode classNode){
+    private List<String> checkImplementInterface(MyClassNode classNode){
         List<String> invalidUses = new ArrayList<>();
-        for (FieldNode field : classNode.fields) {
+        for (MyFieldNode field : classNode.fields) {
             String className = field.desc.substring(1, field.desc.length() - 1);
 
             try {
-                ClassReader fieldClassReader = new ClassReader(className);
-                ClassNode fieldClassNode = new ClassNode();
+                MyClassReader fieldClassReader = new MyASMClassReader(className);
+                MyClassNode fieldClassNode = new MyASMClassNode();
                 fieldClassReader.accept(fieldClassNode, ClassReader.EXPAND_FRAMES);
-                if(implementsOrExtendsClass(fieldClassNode)){
+                if(implementsInterfaceOrExtendsAbstractClass(fieldClassNode)){
                     invalidUses.add(field.name);
                 }
 
@@ -36,8 +37,8 @@ public class DirtyInterfaceNotImplementation {
         return invalidUses;
     }
 
-    private boolean implementsOrExtendsClass(ClassNode fieldClassNode) {
-        if((fieldClassNode.access & Opcodes.ACC_INTERFACE) == 0 && (fieldClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
+    private boolean implementsInterfaceOrExtendsAbstractClass(MyClassNode fieldClassNode) {
+        if((fieldClassNode.access & MyOpcodes.ACC_INTERFACE) == 0 && (fieldClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
             return !fieldClassNode.interfaces.isEmpty() || (fieldClassNode.superName != null && checkIfAbstract(fieldClassNode.superName));
 
         }
@@ -46,11 +47,11 @@ public class DirtyInterfaceNotImplementation {
 
     private boolean checkIfAbstract(String superName) {
         try {
-            ClassReader myReader = new ClassReader(superName);
-            ClassNode myClassNode = new ClassNode();
+            MyClassReader myReader = new MyASMClassReader(superName);
+            MyClassNode myClassNode = new MyASMClassNode();
             myReader.accept(myClassNode, ClassReader.EXPAND_FRAMES);
 
-            if((myClassNode.access & Opcodes.ACC_ABSTRACT) != 0){
+            if((myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0){
                 return true;
             }
         } catch (IOException e) {
