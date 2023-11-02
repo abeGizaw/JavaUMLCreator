@@ -1,23 +1,23 @@
 @startuml
 package presentation {
-+class ANSIColors {
-// lots of color constants
-}
+    +class ANSIColors {
+        // lots of color constants
+    }
 
-+class LinterMain {
--saver: Saver
-+LinterMain()
--lint(): void
--promptUserForDirectory(): String
--promptUserForOutputFileName(): String
--promptUserForChecks(): String
--validateUserSelectedChecks(checks: String): List<CheckType>
--prettyPrint(errors: List<Error>): void
--saveToFile(message: String): void
-}
-note left of LinterMain::lint
-    calls prettyPrint()
-end note
+    +class LinterMain {
+        -saver: Saver
+        +LinterMain()
+        -lint(): void
+        -promptUserForDirectory(): String
+        -promptUserForOutputFileName(): String
+        -promptUserForChecks(): String
+        -validateUserSelectedChecks(checks: String): List<CheckType>
+        -prettyPrint(errors: List<Error>): void
+        -saveToFile(message: String): void
+    }
+    note left of LinterMain::lint
+        calls prettyPrint()
+    end note
 }
 
 package domain {
@@ -98,13 +98,13 @@ package domain {
     }
 
     +class HiddenFields {
-        -checkFieldHiding(classNode: ClassNode): List<String>
+        -checkFieldHiding(classNode: MyClassNode): List<String>
     }
 
     +class InterfaceOverImplementation {
         +InterfaceOverImplementation(classNodeCreator: ClassNodeCreator)
-        -checkImplementInterface(classNode: ClassNode): List<String>
-        -implementsOrExtendsClass(fieldClassNode: ClassNode): boolean
+        -checkImplementInterface(classNode: MyClassNode): List<String>
+        -implementsOrExtendsClass(fieldClassNode: MyClassNode): boolean
         -checkIfAbstract(superName: String): boolean
     }
 
@@ -232,13 +232,23 @@ package domain {
         +localVariables: List<MyLocalVariableNode>
         +MyMethodNode()
     }
+
+    +abstract class MyVarInsnNode extends MyAbstractInsnNode{
+        +var: int
+    }
     
     +enum MyOpcodes {
         ISTORE,
         LSTORE,
         FSTORE,
         DSTORE,
-        ASTORE
+        ASTORE,
+        ACC_ABSTRACT,
+        ACC_FINAL,
+        INVOKEVIRTUAL,
+        INVOKEINTERFACE,
+        INVOKEDYNAMIC,
+        INVOKESPECIAL
     }    
 
     +class NamingConventions implements Check {
@@ -264,8 +274,8 @@ package domain {
 
     +class TemplateMethodPattern implements Check {
         -detectTemplateMethod(myClassNode: ClassNode): boolean
-        -containsAbstractMethodCall(instructions: <AbstractInsnNode>, methods: List<MethodNode>): boolean
-        -isAMethodCall(node: AbstractInsnNode): boolean
+        -containsAbstractMethodCall(instructions: <MyAbstractInsnNode>, methods: List<MyMethodNode>): boolean
+        -isAMethodCall(node: MyAbstractInsnNode): boolean
     }
 }
 
@@ -342,6 +352,10 @@ FinalLocalVariables ..> MyMethodNode
 FinalLocalVariables -->"*" MyOpcodes
 FinalLocalVariables ..> MyVarInsnNode
 
+HiddenFields ..> MyClassNode
+
+InterfaceOverImplementation ..> MyClassNode
+
 Linter --> Check
 Linter ..> Check
 Linter --> CheckType
@@ -401,4 +415,8 @@ MyLocalVariableNode -->"2" MyLabelNode
 
 MyMethodNode -->"*" MyLocalVariableNode
 MyMethodNode -->"*" MyAbstractInsnNode
+
+TemplateMethodPattern ..> MyAbstractInsnNode
+TemplateMethodPattern ..> MyMethodNode
+TemplateMethodPattern ..> MyClassNode
 @enduml
