@@ -1,23 +1,23 @@
 @startuml
 package presentation {
-+class ANSIColors {
-// lots of color constants
-}
+    +class ANSIColors {
+        // lots of color constants
+    }
 
-+class LinterMain {
--saver: Saver
-+LinterMain()
--lint(): void
--promptUserForDirectory(): String
--promptUserForOutputFileName(): String
--promptUserForChecks(): String
--validateUserSelectedChecks(checks: String): List<CheckType>
--prettyPrint(errors: List<Error>): void
--saveToFile(message: String): void
-}
-note left of LinterMain::lint
-    calls prettyPrint()
-end note
+    +class LinterMain {
+        -saver: Saver
+        +LinterMain()
+        -lint(): void
+        -promptUserForDirectory(): String
+        -promptUserForOutputFileName(): String
+        -promptUserForChecks(): String
+        -validateUserSelectedChecks(checks: String): List<CheckType>
+        -prettyPrint(errors: List<Error>): void
+        -saveToFile(message: String): void
+    }
+    note left of LinterMain::lint
+        calls prettyPrint()
+    end note
 }
 
 package domain {
@@ -98,13 +98,13 @@ package domain {
     }
 
     +class HiddenFields {
-        -checkFieldHiding(classNode: ClassNode): List<String>
+        -checkFieldHiding(classNode: MyClassNode): List<String>
     }
 
     +class InterfaceOverImplementation {
         +InterfaceOverImplementation(classNodeCreator: ClassNodeCreator)
-        -checkImplementInterface(classNode: ClassNode): List<String>
-        -implementsOrExtendsClass(fieldClassNode: ClassNode): boolean
+        -checkImplementInterface(classNode: MyClassNode): List<String>
+        -implementsOrExtendsClass(fieldClassNode: MyClassNode): boolean
         -checkIfAbstract(superName: String): boolean
     }
 
@@ -159,10 +159,7 @@ package domain {
         //takes all fields of abstract
         (inherits all methods)
     }
-    
-    +class MyASMInsnList implements MyInsnList {
-    }
-    
+
     +class MyASMLabel implements MyLabel {
     }
 
@@ -208,9 +205,6 @@ package domain {
         +MyFieldNode()
     }
     
-    +interface MyInsnList {
-    }
-    
     +interface MyLabel {
     }
     
@@ -226,7 +220,7 @@ package domain {
         +MyLocalVariableNode()
     }
     
-    +abstract class MyMethodInsnNode{
+    +abstract class MyMethodInsnNode extends MyAbstractInsnNode{
         +name: String
         +desc: String
     }
@@ -234,9 +228,13 @@ package domain {
     +abstract class MyMethodNode {
         +access: int
         +name: String
-        +instructions: MyInsnList
+        +instructions: List<AbstractInsnNode>
         +localVariables: List<MyLocalVariableNode>
         +MyMethodNode()
+    }
+
+    +abstract class MyVarInsnNode extends MyAbstractInsnNode{
+        +var: int
     }
     
     +enum MyOpcodes {
@@ -244,7 +242,13 @@ package domain {
         LSTORE,
         FSTORE,
         DSTORE,
-        ASTORE
+        ASTORE,
+        ACC_ABSTRACT,
+        ACC_FINAL,
+        INVOKEVIRTUAL,
+        INVOKEINTERFACE,
+        INVOKEDYNAMIC,
+        INVOKESPECIAL
     }    
 
     +class NamingConventions implements Check {
@@ -270,8 +274,8 @@ package domain {
 
     +class TemplateMethodPattern implements Check {
         -detectTemplateMethod(myClassNode: ClassNode): boolean
-        -containsAbstractMethodCall(instructions: InsnList, methods: List<MethodNode>): boolean
-        -isAMethodCall(node: AbstractInsnNode): boolean
+        -containsAbstractMethodCall(instructions: <MyAbstractInsnNode>, methods: List<MyMethodNode>): boolean
+        -isAMethodCall(node: MyAbstractInsnNode): boolean
     }
 }
 
@@ -296,9 +300,6 @@ package org.objectweb.asm {
     }
 
     +class FieldNode {
-    }
-
-    +class InsnList {
     }
 
     +class Label {
@@ -351,6 +352,10 @@ FinalLocalVariables ..> MyMethodNode
 FinalLocalVariables -->"*" MyOpcodes
 FinalLocalVariables ..> MyVarInsnNode
 
+HiddenFields ..> MyClassNode
+
+InterfaceOverImplementation ..> MyClassNode
+
 Linter --> Check
 Linter ..> Check
 Linter --> CheckType
@@ -383,9 +388,6 @@ MyASMClassReader ..> org.objectweb.asm.ClassReader
 MyASMFieldNode --> org.objectweb.asm.FieldNode
 MyASMFieldNode ..> org.objectweb.asm.FieldNode
 
-MyASMInsnList --> org.objectweb.asm.InsnList
-MyASMInsnList ..> org.objectweb.asm.InsnList
-
 MyASMLabel --> org.objectweb.asm.Label
 MyASMLabel ..> org.objectweb.asm.Label
 
@@ -411,6 +413,10 @@ MyLabelNode ..> MyLabel
 
 MyLocalVariableNode -->"2" MyLabelNode
 
-MyMethodNode --> MyInsnList
 MyMethodNode -->"*" MyLocalVariableNode
+MyMethodNode -->"*" MyAbstractInsnNode
+
+TemplateMethodPattern ..> MyAbstractInsnNode
+TemplateMethodPattern ..> MyMethodNode
+TemplateMethodPattern ..> MyClassNode
 @enduml
