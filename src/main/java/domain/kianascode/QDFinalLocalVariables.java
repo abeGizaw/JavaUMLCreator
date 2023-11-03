@@ -7,7 +7,7 @@ import org.objectweb.asm.tree.*;
 import java.util.*;
 
 public class QDFinalLocalVariables {
-    private static final Set<Integer> storeOpcodes = Set.of(Opcodes.ISTORE, Opcodes.LSTORE, Opcodes.FSTORE, Opcodes.DSTORE, Opcodes.ASTORE);
+    private static final Set<Integer> STORE_OPCODES = Set.of(Opcodes.ISTORE, Opcodes.LSTORE, Opcodes.FSTORE, Opcodes.DSTORE, Opcodes.ASTORE);
 
     private List<LocalVariableInfo> localVariables;
     private boolean prevInsnIsLabel;
@@ -33,7 +33,7 @@ public class QDFinalLocalVariables {
         for (AbstractInsnNode insn : methodNode.instructions) {
             updateVariableScopes(insn);
             for (LocalVariableInfo localVariableInfo : localVariables) {
-                if (localVariableInfo.isInScope && storeOpcodes.contains(insn.getOpcode())) {
+                if (localVariableInfo.isInScope && STORE_OPCODES.contains(insn.getOpcode())) {
                     if (localVariableInfo.index == ((VarInsnNode) insn).var) {
                         handleValueStored(localVariableInfo);
                         break;
