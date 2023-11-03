@@ -16,7 +16,6 @@ Abe Gizaw, Ari Duvall, Kiana Fan
 
 | Developer  | Style Check                                              | Principle Check                          | Pattern Check    | A Feature (optional)            |
 |:-----------|:---------------------------------------------------------|:-----------------------------------------|:-----------------|:--------------------------------|
-| Abe Gizaw  | Hidden Fields                                            | Program to Interface over Implementation | Template         |                                 |
+| Abe Gizaw  | Hidden Fields                                            | Program to Interface over Implementation | Template         | ASM to PlantUML class Diagram   |
 | Ari Duvall | Naming Convention (class, field, method, final variable) | Favor Composition over Inheritance       | Strategy Pattern | Detect and Remove unused fields |
 | Kiana Fan  | Final Local Variables                                    | Principle of Least Knowledge             | Adapter          | Principle of Least Knowledge    |
-
