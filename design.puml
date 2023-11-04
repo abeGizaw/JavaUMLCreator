@@ -48,9 +48,11 @@ package domain {
     +class Message {
         -checkType: CheckType
         -message: String
-        +Message(checkType: CheckType, message: String)
+        -classOfInterest: String
+        +Message(checkType: CheckType, classOfInterest: String, message: String)
         +getCheckType(): CheckType
         +getMessage(): String
+        +getClassOfInterest(): String
     }
 
     +class MyClassNodeCreator {
@@ -190,11 +192,11 @@ package domain {
 
     +abstract class MyClassNode {
         +access: int
-        +fields: List<MyFieldNode>
-        +interfaces: List<String>
-        +methods: List<MyMethodNode>
         +name: String
         +superName: String
+        +interfaces: List<String>
+        +fields: List<MyFieldNode>
+        +methods: List<MyMethodNode>
     }
 
     +class MyASMClassNode{
