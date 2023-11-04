@@ -1,5 +1,7 @@
 package domain;
 
+import org.objectweb.asm.tree.FieldNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,4 +12,10 @@ public abstract class MyClassNode {
     public List<MyMethodNode> methods = new ArrayList<>();
     public String name;
     public String superName;
+
+    protected void setFields(List<FieldNode> asmFields){
+//        for(FieldNode asmField: asmFields){
+//            MyFieldNode myFieldNode = new MyASMFieldNode(asmField);
+//        }
+    }
 }

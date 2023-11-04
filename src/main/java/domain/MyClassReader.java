@@ -1,5 +1,5 @@
 package domain;
 
 public interface MyClassReader {
-    void accept(MyClassNode fieldClassNode, int expandFrames);
+    void accept(MyClassNode fieldClassNode);
 }

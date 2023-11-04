@@ -25,7 +25,7 @@ public class DirtyInterfaceNotImplementation {
             try {
                 MyClassReader fieldClassReader = new MyASMClassReader(className);
                 MyClassNode fieldClassNode = new MyASMClassNode();
-                fieldClassReader.accept(fieldClassNode, ClassReader.EXPAND_FRAMES);
+                fieldClassReader.accept(fieldClassNode);
                 if(implementsInterfaceOrExtendsAbstractClass(fieldClassNode)){
                     invalidUses.add(field.name);
                 }
@@ -49,7 +49,7 @@ public class DirtyInterfaceNotImplementation {
         try {
             MyClassReader myReader = new MyASMClassReader(superName);
             MyClassNode myClassNode = new MyASMClassNode();
-            myReader.accept(myClassNode, ClassReader.EXPAND_FRAMES);
+            myReader.accept(myClassNode);
 
             if((myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0){
                 return true;
