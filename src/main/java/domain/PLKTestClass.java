@@ -2,7 +2,6 @@ package domain;
 
 public class PLKTestClass {
     private ConcreteClass1 concreteClass1;
-//    private ConcreteClass1 concreteClass1a;
 
     public void testAllTypes(ConcreteClass3 concreteClass3) {
         // field
