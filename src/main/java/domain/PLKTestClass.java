@@ -17,7 +17,11 @@ public class PLKTestClass {
         concreteClass3.methodWith3Arguments(1, concreteClass2.concreteClass1, concreteClass1);
         concreteClass1a.method1();
 
-//        // this object
-//        this.method2();
+        // this object
+        this.method1();
+    }
+
+    private void method1() {
+
     }
 }

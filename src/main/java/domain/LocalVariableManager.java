@@ -22,7 +22,7 @@ public class LocalVariableManager {
         for (LocalVariableNode localVariableNode : methodNode.localVariables) {
             LocalVariableInfo newLocalVariable = new LocalVariableInfo(localVariableNode.name, localVariableNode.start.getLabel(), localVariableNode.end.getLabel(), localVariableNode.index);
             localVariables.add(newLocalVariable);
-            if (localVariableNode.start.getLabel().equals(startLabel)) {
+            if (localVariableNode.index != 0 && localVariableNode.start.getLabel().equals(startLabel)) {
                 parameters.add(newLocalVariable);
             }
         }

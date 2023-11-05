@@ -90,12 +90,9 @@ public class QDPLKCheck {
         if (localVariableManager.isParameter(receiverNode)) {
                 return true;
         }
-        return false;
-//        if (LOAD_OPCODES.contains(receiverNode.getOpcode())) {
-//            if (receiverNode.getOpcode() == Opcodes.ALOAD) {
-//                // TODO: valid load?
-//            }
-//        }
+
+        // is this?
+        return ((VarInsnNode) receiverNode).var == 0;
     }
 
     private void removeMethodArgument() {
