@@ -7,7 +7,7 @@ public class ConcreteClass2 {
         this.concreteClass1 = concreteClass1;
     }
 
-    public void method2() {
-
+    public ConcreteClass1 method1() {
+        return new ConcreteClass1();
     }
 }

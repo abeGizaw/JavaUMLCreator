@@ -12,12 +12,19 @@ public class LocalVariableManager {
     private static final Set<Integer> LOAD_OPCODES = Set.of(Opcodes.ILOAD, Opcodes.LLOAD, Opcodes.FLOAD, Opcodes.DLOAD, Opcodes.ALOAD);
 
     private Set<LocalVariableInfo> localVariables;
+    private Set<LocalVariableInfo> parameters;
     private Set<LocalVariableInfo> createdVariables;
 
     public LocalVariableManager(MethodNode methodNode) {
         localVariables = new HashSet<>();
+        parameters = new HashSet<>();
+        Label startLabel = methodNode.localVariables.get(0).start.getLabel();
         for (LocalVariableNode localVariableNode : methodNode.localVariables) {
-            localVariables.add(new LocalVariableInfo(localVariableNode.name, localVariableNode.start.getLabel(), localVariableNode.end.getLabel(), localVariableNode.index));
+            LocalVariableInfo newLocalVariable = new LocalVariableInfo(localVariableNode.name, localVariableNode.start.getLabel(), localVariableNode.end.getLabel(), localVariableNode.index);
+            localVariables.add(newLocalVariable);
+            if (localVariableNode.start.getLabel().equals(startLabel)) {
+                parameters.add(newLocalVariable);
+            }
         }
 
         createdVariables = new HashSet<>();
@@ -71,6 +78,19 @@ public class LocalVariableManager {
         int index = ((VarInsnNode) abstractInsnNode).var;
         for (LocalVariableInfo localVariableInfo : createdVariables) {
             if (localVariableInfo.getIndex() == index && localVariableInfo.getIsInScope()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isParameter(AbstractInsnNode abstractInsnNode) {
+        if (!LOAD_OPCODES.contains(abstractInsnNode.getOpcode())) {
+            return false;
+        }
+        int index = ((VarInsnNode) abstractInsnNode).var;
+        for (LocalVariableInfo localVariableInfo : parameters) {
+            if (localVariableInfo.getIndex() == index) {
                 return true;
             }
         }

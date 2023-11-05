@@ -9,13 +9,14 @@ public class PLKTestClass {
         concreteClass1.method1();
         concreteClass1.concreteClass3.method1();
 
-//        // created object
+        // created object
         ConcreteClass2 concreteClass2 = new ConcreteClass2(concreteClass1);
-        concreteClass2.method2();
-//
-//        // parameter
-//        concreteClass3.methodWith3Arguments(1, concreteClass2.concreteClass1, concreteClass1);
-//
+        ConcreteClass1 concreteClass1a = concreteClass2.method1();
+
+        // parameter
+        concreteClass3.methodWith3Arguments(1, concreteClass2.concreteClass1, concreteClass1);
+        concreteClass1a.method1();
+
 //        // this object
 //        this.method2();
     }

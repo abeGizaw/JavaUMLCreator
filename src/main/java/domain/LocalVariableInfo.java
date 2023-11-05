@@ -20,10 +20,6 @@ public class LocalVariableInfo {
         this.isInScope = isInScope;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Label getFirstLabel() {
         return firstLabel;
     }

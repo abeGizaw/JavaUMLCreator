@@ -85,6 +85,11 @@ public class QDPLKCheck {
         if (localVariableManager.isCreatedVariable(receiverNode)) {
             return true;
         }
+
+        // is parameter?
+        if (localVariableManager.isParameter(receiverNode)) {
+                return true;
+        }
         return false;
 //        if (LOAD_OPCODES.contains(receiverNode.getOpcode())) {
 //            if (receiverNode.getOpcode() == Opcodes.ALOAD) {
