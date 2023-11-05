@@ -1,16 +1,16 @@
-package domain;
+package domain.kianascode;
 
 public class PLKTestClass {
-    private ConcreteClass1 concreteClass1;
+    private PLKConcreteClass1 concreteClass1;
 
-    public void testAllTypes(ConcreteClass3 concreteClass3) {
+    public void testAllTypes(PLKConcreteClass3 concreteClass3) {
         // field
         concreteClass1.method1();
         concreteClass1.concreteClass3.method1();
 
         // created object
-        ConcreteClass2 concreteClass2 = new ConcreteClass2(concreteClass1);
-        ConcreteClass1 concreteClass1a = concreteClass2.method1();
+        PLKConcreteClass2 concreteClass2 = new PLKConcreteClass2(concreteClass1);
+        PLKConcreteClass1 concreteClass1a = concreteClass2.method1();
 
         // parameter
         concreteClass3.methodWith3Arguments(1, concreteClass2.concreteClass1, concreteClass1);

@@ -1,12 +1,9 @@
-package domain;
+package domain.kianascode;
 
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class QDPLKCheck {
@@ -14,24 +11,11 @@ public class QDPLKCheck {
 
     Stack<AbstractInsnNode> instructionStack;
 
-    public static void main(String[] args) throws IOException {
-        List<String> classNames = new ArrayList<>();
-        classNames.add("domain/PLKTestClass");
-
-        QDPLKCheck qdPLKCheck = new QDPLKCheck();
-        for (String className : classNames) {
-            ClassReader reader = new ClassReader(className);
-            ClassNode classNode = new ClassNode();
-            reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-            qdPLKCheck.run(classNode);
-        }
-    }
-
     public QDPLKCheck() {
         instructionStack = new Stack<>();
     }
 
-    private void run(ClassNode classNode) {
+    public void run(ClassNode classNode) {
         for (MethodNode methodNode : classNode.methods) {
             checkMethod(methodNode);
         }
