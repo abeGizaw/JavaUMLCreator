@@ -6,14 +6,11 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class QDPLKCheck {
     private static final Set<Integer> METHOD_OPCODES = Set.of(Opcodes.H_INVOKEVIRTUAL, Opcodes.H_INVOKESTATIC, Opcodes.H_INVOKESPECIAL, Opcodes.H_INVOKEINTERFACE);
-    private static final Set<Integer> LOAD_OPCODES = Set.of(Opcodes.ILOAD, Opcodes.LLOAD, Opcodes.FLOAD, Opcodes.DLOAD, Opcodes.ALOAD);
 
     Stack<AbstractInsnNode> instructionStack;
 
@@ -41,14 +38,19 @@ public class QDPLKCheck {
     }
 
     private void checkMethod(MethodNode methodNode) {
+        LocalVariableManager localVariableManager = new LocalVariableManager(methodNode);
         for (AbstractInsnNode abstractInsnNode : methodNode.instructions) {
+            localVariableManager.updateVariableScopes(abstractInsnNode);
             int insnType = abstractInsnNode.getType();
             if (METHOD_OPCODES.contains(insnType)) {
-                if (receiverIsValid(abstractInsnNode)) {
-                    // TODO: do something if this is false
-                    System.out.printf("receiver for %s is valid\n", methodNode.name);
+                if (isConstructor(abstractInsnNode)) {
+                    localVariableManager.addCreatedVariable(abstractInsnNode.getNext());
                 } else {
-                    System.out.printf("receiver for %s is invalid\n", methodNode.name);
+                    if (receiverIsValid(abstractInsnNode, localVariableManager)) {
+                        System.out.printf("receiver for %s is valid\n", ((MethodInsnNode) abstractInsnNode).name);
+                    } else {
+                        System.out.printf("receiver for %s is invalid\n", ((MethodInsnNode) abstractInsnNode).name);
+                    }
                 }
             } else {
                 instructionStack.push(abstractInsnNode);
@@ -56,7 +58,14 @@ public class QDPLKCheck {
         }
     }
 
-    private boolean receiverIsValid(AbstractInsnNode abstractInsnNode) {
+    private boolean isConstructor(AbstractInsnNode abstractInsnNode) {
+        if (abstractInsnNode.getOpcode() != Opcodes.INVOKESPECIAL)  {
+            return false;
+        }
+        return (((MethodInsnNode) abstractInsnNode).name).equals("<init>");
+    }
+
+    private boolean receiverIsValid(AbstractInsnNode abstractInsnNode, LocalVariableManager localVariableManager) {
         // remove arguments
         Type methodType = Type.getType(((MethodInsnNode) abstractInsnNode).desc);
         int numArguments = methodType.getArgumentTypes().length;
@@ -70,6 +79,11 @@ public class QDPLKCheck {
         if (receiverNode.getOpcode() == Opcodes.GETFIELD || receiverNode.getOpcode() == Opcodes.GETSTATIC) {
             AbstractInsnNode fieldsClassLoadInsn = instructionStack.pop();
             return (fieldsClassLoadInsn.getOpcode() == Opcodes.ALOAD) && (((VarInsnNode) fieldsClassLoadInsn).var == 0);
+        }
+
+        // is created?
+        if (localVariableManager.isCreatedVariable(receiverNode)) {
+            return true;
         }
         return false;
 //        if (LOAD_OPCODES.contains(receiverNode.getOpcode())) {
