@@ -2,9 +2,9 @@ package domain.ariscode;
 
 public abstract class MyAbstractInsnNode {
     public static int LABEL;
-// ??? What fields are supposed to be here and are these methods supposed to be abstract?
+// ??? What feilds are supposed to be here and are these methods supposed to be abstract?
 
-    MyAbstractInsnNode(int l){
+    public void setLABEL(int l){
         LABEL = l;
     }
 

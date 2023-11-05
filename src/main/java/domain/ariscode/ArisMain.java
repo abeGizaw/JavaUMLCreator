@@ -13,7 +13,9 @@ public class ArisMain {
         System.out.println();
         System.out.println();
         runNamingConevention();
-//        runStrategyPatternDetection();
+        System.out.println();
+        System.out.println();
+        runStrategyPatternDetection();
 
 //        Message m = new Message(CheckType.COMPOSITION_OVER_INHERITANCE, "THIS IS A TEST", "domain/ariscode/testclasses/catBad");
 //        System.out.println(m.toString());
@@ -43,12 +45,10 @@ public class ArisMain {
 
     private static void runStrategyPatternDetection() throws IOException {
         String className = "domain/ariscode/testclasses/catBad";
-        ClassReader reader = new ClassReader(className);
-        ClassNode classNode = new ClassNode();
-        reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-
-        QD_StrategyPattern strategyPattern = new QD_StrategyPattern(classNode);
-        strategyPattern.run();
+        MyClassNode classNode = creator.crateMyClassNode(className);
+        QD_StrategyPattern strategyPattern = new QD_StrategyPattern(creator);
+        List<Message> messageList = strategyPattern.run(classNode);
+        printMessages(messageList);
     }
 
     private static void printMessages( List<Message> messageList){

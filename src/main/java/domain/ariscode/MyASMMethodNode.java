@@ -1,17 +1,32 @@
 package domain.ariscode;
 
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyASMMethodNode extends MyMethodNode {
-    private MethodNode methodNode;
+    private final MethodNode methodNode;
     public MyASMMethodNode(MethodNode method) {
         super();
         this.methodNode = method;
         super.access = method.access;
         super.name = method.name;
         super.desc = method.desc;
-        //convert instructions
+        super.instructions = convertInstructions(method.instructions);
         //convert localVariables
 
+    }
+
+    private List<MyAbstractInsnNode> convertInstructions(InsnList instructions) {
+        List<MyAbstractInsnNode> newInstructions = new ArrayList<>();
+        for(AbstractInsnNode instruction: instructions){
+            MyAbstractInsnNode node =  new MyASMAbstractInsnNode(instruction);
+            newInstructions.add(node);
+            //            newInstructions.add((MyAbstractInsnNode) new MyASMAbstractInsnNode(instruction));
+        }
+        return newInstructions;
     }
 }

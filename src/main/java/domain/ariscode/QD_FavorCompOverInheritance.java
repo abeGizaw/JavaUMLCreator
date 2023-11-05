@@ -19,7 +19,7 @@ public class QD_FavorCompOverInheritance implements Check {
         String superName = classNode.superName;
         String[] parts = classNode.superName.split("/");
         if (!parts[0].isEmpty() && !parts[0].equals("java")) {
-            message =  "Consider composition instead of inheritance. This extends " + superName;
+            message =  "Consider composition instead of inheritance. " + classNode.name +" EXTENDS " + superName;
         }
         Message result = new Message(CheckType.COMPOSITION_OVER_INHERITANCE, message, classNode.name);
         messages.add(result);
