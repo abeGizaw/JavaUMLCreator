@@ -55,8 +55,9 @@ public class QD_StrategyPattern implements Check{
     private String findSetter(MyClassNode classNode, String fieldName, String fieldType) {
         for (MyMethodNode methodNode : classNode.methods) {
             for (MyAbstractInsnNode instruction : methodNode.instructions) {
+                MyFieldInsnNode fieldNode = new MyASMFieldInsnNode(instruction);
                 if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
-                    MyFieldInsnNode fieldInsn = (MyFieldInsnNode) ((MyAbstractInsnNode) instruction);
+                    MyASMFieldInsnNode fieldInsn = (MyASMFieldInsnNode) ((MyFieldInsnNode) instruction);
                     if (fieldInsn.name.equals(fieldName) && fieldInsn.desc.equals(fieldType)) {
                         return methodNode.name;
                     }

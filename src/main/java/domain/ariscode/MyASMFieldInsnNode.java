@@ -1,12 +1,14 @@
 package domain.ariscode;
 
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 
 public class MyASMFieldInsnNode extends MyFieldInsnNode {
     private final FieldInsnNode fieldNode;
 
-    MyASMFieldInsnNode(FieldInsnNode f) {
-        fieldNode = f;
+    MyASMFieldInsnNode(AbstractInsnNode node) {
+        super(node);
+        fieldNode = (FieldInsnNode) node;
         super.name = fieldNode.name;
         super.desc = fieldNode.desc;
     }

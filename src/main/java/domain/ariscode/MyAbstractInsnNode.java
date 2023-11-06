@@ -10,5 +10,5 @@ public abstract class MyAbstractInsnNode {
 
     abstract public MyAbstractInsnNode getNext() ;
     abstract public int getOpcode() ;
-    public abstract int getType();
+    abstract public int getType();
 }
