@@ -8,71 +8,64 @@ package domain.ariscode;
  */
 
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QD_NamingConventionCheck {
-    private final ClassNode classNode;
+public class QD_NamingConventionCheck implements Check{
 
-    QD_NamingConventionCheck(ClassNode c) {
-        classNode = c;
+    public List<Message> run(MyClassNode classNode) {
+        List<Message> allMessages = new ArrayList<>();
+        Message classNameMessage = checkClassName(classNode);
+        if (classNameMessage != null)
+            allMessages.add(classNameMessage);
+
+        List<Message> fieldNameMessages = checkFieldNames(classNode);
+        allMessages.addAll(fieldNameMessages);
+
+        List<Message> methodNameMessages = checkMethodName(classNode);
+        allMessages.addAll(methodNameMessages);
+        return allMessages;
     }
 
-    public void run() {
-        checkClassName();
-        checkFieldNames();
-        checkMethodName();
-    }
-
-    private void checkClassName() {
+    private Message checkClassName(MyClassNode classNode) {
         String[] parts = classNode.name.split("/");
         String name = parts[parts.length - 1];
-        System.out.println("Class: " + name);
 
         if (invalidPascalCase(name)) {
-            System.out.println("    Invalid Name: Must be in PascalCase. " + name);
+            return new Message(CheckType.NAMING_CONVENTION, "Invalid Name: Must be in PascalCase: " + name, classNode.name);
         }
+        return null;
     }
 
-    private void checkFieldNames() {
-        List<FieldNode> invalidFliedNames = new ArrayList<>();
-        List<FieldNode> fields = (List<FieldNode>) classNode.fields;
-        System.out.println("Fields");
-        for (FieldNode field : fields) {
+//    NEED TO CONVERT OPCODES
+    private  List<Message> checkFieldNames(MyClassNode classNode) {
+        List<Message> invalidFieldMessages= new ArrayList<>();
+
+        for (MyFieldNode field : classNode.fields) {
             if (((field.access & Opcodes.ACC_FINAL) != 0) && ((field.access & Opcodes.ACC_STATIC) != 0)) {
                 if (!field.name.matches("[A-Z]+")) {
-                    System.out.println("    Invalid Field Name: Static Final Fields must be in all caps.   " + field.name);
-                    invalidFliedNames.add(field);
+                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Static Final Fields must be in all caps:   " + field.name, classNode.name ));
                 }
 
             } else {
                 if (invalidCamelCase(field.name)) {
-                    System.out.println("    Invalid Field Name: Must be in camelCase   " + field.name);
-                    invalidFliedNames.add(field);
+                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Must be in camelCase:   " + field.name, classNode.name ));
                 }
             }
         }
-        System.out.println("    Total Fields with Naming Convention Violation:   " + invalidFliedNames.size());
-        System.out.println();
+        return invalidFieldMessages;
     }
 
-    private void checkMethodName() {
-        List<MethodNode> methods = classNode.methods;
-        List<MethodNode> invalidMethods = new ArrayList<>();
-        System.out.println("Methods  ");
-        for (MethodNode method : methods) {
+    private List<Message> checkMethodName(MyClassNode classNode) {
+        List<Message> invalidMethodMessages = new ArrayList<>();
+        for (MyMethodNode method : classNode.methods) {
             if (invalidCamelCase(method.name) && !method.name.equals("<init>")) {
-                System.out.println("    Invalid method name: Must be in camelCase.  " + method.name);
-                invalidMethods.add(method);
+                invalidMethodMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid method name: Must be in camelCase:  " + method.name, classNode.name));
             }
         }
-        System.out.println("    Total Invalid Method names: " + invalidMethods.size());
-        System.out.println();
-
+      return invalidMethodMessages;
     }
 
     private boolean invalidCamelCase(String name) {
@@ -82,5 +75,6 @@ public class QD_NamingConventionCheck {
     private boolean invalidPascalCase(String name) {
         return !name.matches("^[A-Z][a-z]+(?:[A-Z][a-z]+)*$");
     }
+
 
 }
