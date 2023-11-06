@@ -1,5 +1,8 @@
 package domain.kianascode;
 
+import domain.MyASMClassReader;
+import domain.MyClassNode;
+import domain.MyClassReader;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -35,15 +38,14 @@ public class KianasMain {
         classNames.add("domain/kianascode/ConcreteAdapter2");
         classNames.add("domain/kianascode/Adapter2");
 
-        List<ClassNode> classNodes = new ArrayList<>();
+        List<MyClassNode> myClassNodes = new ArrayList<>();
         for (String className : classNames) {
-            ClassReader reader = new ClassReader(className);
-            ClassNode classNode = new ClassNode();
-            reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-            classNodes.add(classNode);
+            MyClassReader reader = new MyASMClassReader();
+            MyClassNode myClassNode = reader.generateMyClassNode(className);
+            myClassNodes.add(myClassNode);
         }
 
-        QDAdapterPatternCheck adapterPatternCheck = new QDAdapterPatternCheck(classNodes);
-        adapterPatternCheck.run(classNodes.get(0));
+        QDAdapterPatternCheck adapterPatternCheck = new QDAdapterPatternCheck(myClassNodes);
+        adapterPatternCheck.run(myClassNodes.get(0));
     }
 }
