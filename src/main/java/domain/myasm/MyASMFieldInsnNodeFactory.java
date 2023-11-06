@@ -1,5 +1,7 @@
-package domain.ariscode;
+package domain.myasm;
 
+import domain.MyAbstractInsnNode;
+import domain.MyFieldInsnNodeFactory;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 

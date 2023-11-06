@@ -1,4 +1,6 @@
-package domain.ariscode;
+package domain;
+
+import domain.CheckType;
 
 public class Message {
     private final CheckType checkType;

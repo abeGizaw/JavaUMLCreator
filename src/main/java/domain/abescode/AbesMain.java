@@ -1,12 +1,9 @@
 package domain.abescode;
 
-import domain.MyASMClassNode;
-import domain.MyASMClassReader;
 import domain.MyClassNode;
-import domain.MyClassReader;
 import domain.abescode.alevelfeature.ConvertASMToUML;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
+import domain.myasm.MyASMClassNode;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.*;

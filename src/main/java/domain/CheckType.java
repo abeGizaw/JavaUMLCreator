@@ -1,4 +1,4 @@
-package domain.ariscode;
+package domain;
 
 public enum CheckType {
 

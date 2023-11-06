@@ -1,7 +1,10 @@
 package domain.ariscode;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
+import domain.Message;
+import domain.MyClassNodeCreator;
+import domain.checks.QD_FavorCompOverInheritance;
+import domain.checks.QD_NamingConventionCheck;
+import domain.checks.QD_StrategyPattern;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,6 +1,11 @@
 package domain;
 
-public class MyLocalVariableNode {
+public abstract class MyLocalVariableNode {
+    public MyLabelNode end;
     public int index;
     public String name;
+    public MyLabelNode start;
+
+
 }
+

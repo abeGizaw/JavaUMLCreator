@@ -1,21 +1,15 @@
 package domain;
 
-import org.objectweb.asm.tree.FieldNode;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MyClassNode {
+
     public int access;
-    public List<MyFieldNode> fields = new ArrayList<>();
-    public List<String> interfaces = new ArrayList<>();
-    public List<MyMethodNode> methods = new ArrayList<>();
+    public List<MyFieldNode> fields;
+    public List<String> interfaces;
+    public List<MyMethodNode> methods;
     public String name;
     public String superName;
 
-    protected void setFields(List<FieldNode> asmFields){
-//        for(FieldNode asmField: asmFields){
-//            MyFieldNode myFieldNode = new MyASMFieldNode(asmField);
-//        }
-    }
+
 }

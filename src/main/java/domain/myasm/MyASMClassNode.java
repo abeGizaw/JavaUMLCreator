@@ -1,4 +1,4 @@
-package domain.ariscode;
+package domain.myasm;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;

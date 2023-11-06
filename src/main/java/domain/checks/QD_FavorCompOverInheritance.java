@@ -1,6 +1,7 @@
-package domain.ariscode;
+package domain.checks;
 
-import org.objectweb.asm.tree.ClassNode;
+import domain.CheckType;
+import domain.Message;
 
 import java.util.ArrayList;
 import java.util.List;
