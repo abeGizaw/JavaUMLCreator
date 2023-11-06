@@ -8,7 +8,7 @@ public class catBad extends Animal{
 
     public static final String BED  = "fluffy";
 
-    private final String var = "help";
+    public String var = "help";
     private final String BADVAR = "table";
     private Chair chair;
 

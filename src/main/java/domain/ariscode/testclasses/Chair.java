@@ -18,5 +18,8 @@ public class Chair implements Furniture{
         System.out.println("Sitting");
     }
 
-    private void STandIng (){}
+    private void STandIng (){
+        catBad c =  new catBad("nemo", 4, "cat", new Chair("testing"));
+        c.var = "helpppppppp";
+    }
 }

@@ -4,21 +4,21 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArisMain {
     private static MyClassNodeCreator creator = new MyClassNodeCreator();
     public static void main(String[] args) throws IOException {
-        runCompositionOverInheritance();
-        System.out.println();
-        System.out.println();
-        runNamingConevention();
-        System.out.println();
-        System.out.println();
-        runStrategyPatternDetection();
+//        runCompositionOverInheritance();
+//        System.out.println();
+//        System.out.println();
+//        runNamingConevention();
+//        System.out.println();
+//        System.out.println();
+//        runStrategyPatternDetection();
 
-//        Message m = new Message(CheckType.COMPOSITION_OVER_INHERITANCE, "THIS IS A TEST", "domain/ariscode/testclasses/catBad");
-//        System.out.println(m.toString());
+        runDetectUnusedField();
 
     }
 
@@ -49,6 +49,33 @@ public class ArisMain {
         QD_StrategyPattern strategyPattern = new QD_StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
         printMessages(messageList);
+    }
+
+    private static void runDetectUnusedField(){
+        String className = "domain/ariscode/testclasses/catBad";
+        String className2 = "domain/ariscode/testclasses/Chair";
+        ClassReader reader = null;
+        ClassReader reader2 = null;
+        ClassNode classNode = null;
+        ClassNode classNode2 = null;
+        try {
+            reader = new ClassReader(className);
+            reader2 = new ClassReader(className2);
+            classNode = new ClassNode();
+            classNode2 = new ClassNode();
+            reader.accept(classNode, ClassReader.EXPAND_FRAMES);
+            reader2.accept(classNode2, ClassReader.EXPAND_FRAMES);
+        } catch (IOException e) {
+            throw new RuntimeException("This is not a valid class name: " + className);
+        }
+
+        QD_UnusedFields unusedFields = new QD_UnusedFields();
+        List<ClassNode> classes = new ArrayList<>();
+        classes.add(classNode);
+        classes.add(classNode2);
+        List<Message> messages =  unusedFields.run(classes);
+        printMessages(messages);
+
     }
 
     private static void printMessages( List<Message> messageList){
