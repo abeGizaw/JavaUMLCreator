@@ -24,7 +24,9 @@ Abe Gizaw, Ari Duvall, Kiana Fan
 ## How to Run the Linter
 ### Input 
 When running the Linter the user will be prompted through the command line for the following information:
-- Realtive or Absolute path for the directory containing the .class files to process
+- File Location Information
+  - Absolute path for the directory containing the .class files to process
+  - To process more than one of the options above, sepearte each path with a comma. 
 - Desired Style Checks to run [Naming Convention, Final Local Variables, Hidden Fields]
 - Desired Principle Checks to run [Favor Composition over Inheritance, PLK, Program to Interface not Implementation]
 - Desired Pattern Checks to run [Strategy Pattern, Adapter Pattern, Template Method Pattern]
