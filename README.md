@@ -19,3 +19,27 @@ Abe Gizaw, Ari Duvall, Kiana Fan
 | Abe Gizaw  | Hidden Fields                                            | Program to Interface over Implementation | Template         | ASM to PlantUML class Diagram   |
 | Ari Duvall | Naming Convention (class, field, method, final variable) | Favor Composition over Inheritance       | Strategy Pattern | Detect and Remove unused fields |
 | Kiana Fan  | Final Local Variables                                    | Principle of Least Knowledge             | Adapter          | Principle of Least Knowledge    |
+
+
+## How to Run the Linter
+### Input 
+When running the Linter the user will be prompted through the command line for the following information:
+- Realtive or Absolute path for the directory containing the .class files to process
+- Desired Style Checks to run [Naming Convention, Final local variables, Hidden Fields]
+- Desired Principle Checks to run [Favor Composition over Inheritance, PLK, Program to Interface not Implementation]
+- Desired Pattern Checks to run [Strategy Pattern, Adapter Pattern, Template Pattern]
+
+After the user enters a response, the response will be process to ensure it is a valid input. If the input is invalid the user will be prompted again. 
+  
+
+### Output 
+Once the Linter completes the user selected checks, the resulting output will be displayed to both the console and a log file. 
+The log file, log.txt,  can be found in the directory provided. 
+
+All output will be formatted as follows:      
+
+  Check Type: EXAMPLE_CHECK_TYPE     
+    &nbsp; &nbsp; Class Names: ClassA       
+    &nbsp; &nbsp; Message: "Check specific Message Here"        
+
+
