@@ -10,7 +10,7 @@ public class MyClassNodeCreator {
 
     public MyClassNode crateMyClassNode(String path){
 
-        ClassReader reader = null;
+        ClassReader reader = null; // this will need to change to use a MyClassReader and a MyClassNode
         ClassNode classNode = null;
         try {
             reader = new ClassReader(path);

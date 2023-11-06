@@ -7,6 +7,7 @@ public class MyASMAbstractInsnNode extends MyAbstractInsnNode{
 
     MyASMAbstractInsnNode(AbstractInsnNode a){
         abstractInsnNode = a;
+
     }
 
     @Override
