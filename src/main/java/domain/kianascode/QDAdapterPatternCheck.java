@@ -111,9 +111,9 @@ public class QDAdapterPatternCheck {
         for (AdapterPatternClasses adapterPatternClasses : adapterPatterns) {
             System.out.printf("There is a possible use of the Adapter Pattern with\n" +
                     "\tadapter: %s\n" +
-                    "\tconcreteAdapter: %s\n" +
+                    "\ttarget: %s\n" +
                     "\tadaptee: %s\n" +
-                    "\tclient: %s.\n", adapterPatternClasses.getTarget(), adapterPatternClasses.getAdapter(), adapterPatternClasses.getAdaptee(), adapterPatternClasses.getClient());
+                    "\tclient: %s.\n", adapterPatternClasses.getAdaptee(), adapterPatternClasses.getTarget(), adapterPatternClasses.getAdaptee(), adapterPatternClasses.getClient());
         }
     }
 }
