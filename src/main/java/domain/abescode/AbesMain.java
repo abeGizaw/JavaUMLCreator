@@ -1,5 +1,9 @@
 package domain.abescode;
 
+import domain.MyASMClassNode;
+import domain.MyASMClassReader;
+import domain.MyClassNode;
+import domain.MyClassReader;
 import domain.abescode.alevelfeature.ConvertASMToUML;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
@@ -31,15 +35,15 @@ public class AbesMain {
     }
 
     private static void processClassFile(Path filePath) {
-        ClassNode myClassNode = new ClassNode();
+        MyClassNode myClassNode = new MyASMClassNode();
         File file = filePath.toFile();
         String[] fileProperties = file.toString().split("\\\\");
 
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
 
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            ClassReader myReader = new ClassReader(fileInputStream);
-            myReader.accept(myClassNode, ClassReader.EXPAND_FRAMES);
+            MyClassReader myReader = new MyASMClassReader(fileInputStream);
+            myReader.accept(myClassNode);
         } catch (IOException e) {
             System.err.println("Error reading class file");
         }
