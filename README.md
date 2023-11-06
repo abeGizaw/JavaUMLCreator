@@ -46,7 +46,7 @@ Example Input
   
 ### Output 
 Once the Linter completes the user selected checks, the resulting output will be displayed to both the console and a log file. 
-The log file, log.txt,  can be found in the directory provided. 
+The log file, linter_log.txt,  can be found in the directory provided. 
 
 All output will be formatted as follows:      
 
