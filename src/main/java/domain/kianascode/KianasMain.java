@@ -12,6 +12,7 @@ public class KianasMain {
     public static void main(String[] args) throws IOException {
         runFinalLocalVariables();
         runAdapterPattern();
+        runPLK();
     }
     
     private static void runFinalLocalVariables() throws IOException {
@@ -45,5 +46,18 @@ public class KianasMain {
 
         QDAdapterPatternCheck adapterPatternCheck = new QDAdapterPatternCheck(classNodes);
         adapterPatternCheck.run(classNodes.get(0));
+    }
+
+    private static void runPLK() throws IOException {
+        List<String> classNames = new ArrayList<>();
+        classNames.add("domain/kianascode/PLKTestClass");
+
+        QDPLKCheck qdPLKCheck = new QDPLKCheck();
+        for (String className : classNames) {
+            ClassReader reader = new ClassReader(className);
+            ClassNode classNode = new ClassNode();
+            reader.accept(classNode, ClassReader.EXPAND_FRAMES);
+            qdPLKCheck.run(classNode);
+        }
     }
 }
