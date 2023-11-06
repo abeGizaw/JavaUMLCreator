@@ -3,10 +3,10 @@ package domain.ariscode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 
-public class MyASMFieldInsnNode extends MyFieldInsnNode {
+public class MyASMFieldInsnNodeFactory extends MyFieldInsnNodeFactory {
     private final FieldInsnNode fieldNode;
 
-    MyASMFieldInsnNode(AbstractInsnNode node) {
+    MyASMFieldInsnNodeFactory(AbstractInsnNode node) {
         super(node);
         fieldNode = (FieldInsnNode) node;
         super.name = fieldNode.name;
@@ -15,7 +15,7 @@ public class MyASMFieldInsnNode extends MyFieldInsnNode {
 
     @Override
     public MyAbstractInsnNode getNext() {
-        return new MyASMAbstractInsnNode(fieldNode.getNext());
+        return new MyASMAbstractInsnNodeFactory(fieldNode.getNext());
     }
 
     @Override

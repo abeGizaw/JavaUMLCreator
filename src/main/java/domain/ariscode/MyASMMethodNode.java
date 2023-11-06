@@ -23,8 +23,8 @@ public class MyASMMethodNode extends MyMethodNode {
     private List<MyAbstractInsnNode> convertInstructions(InsnList instructions) {
         List<MyAbstractInsnNode> newInstructions = new ArrayList<>();
         for(AbstractInsnNode instruction: instructions){
-            MyAbstractInsnNode node =  new MyASMAbstractInsnNode(instruction);
-            newInstructions.add(node);
+            MyASMAbstractInsnNodeFactory node =  new MyASMAbstractInsnNodeFactory();
+//            newInstructions.add(node);
             //            newInstructions.add((MyAbstractInsnNode) new MyASMAbstractInsnNode(instruction));
         }
         return newInstructions;

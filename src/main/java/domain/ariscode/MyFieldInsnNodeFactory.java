@@ -2,11 +2,11 @@ package domain.ariscode;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 
-public abstract class MyFieldInsnNode extends MyASMAbstractInsnNode {
+public abstract class MyFieldInsnNodeFactory extends MyASMAbstractInsnNodeFactory {
      public String name;
      public String desc;
 
-     MyFieldInsnNode(AbstractInsnNode a) {
+     MyFieldInsnNodeFactory(AbstractInsnNode a) {
           super(a);
      }
 }

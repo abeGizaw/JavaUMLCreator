@@ -57,7 +57,7 @@ public class QD_StrategyPattern implements Check{
             for (MyAbstractInsnNode instruction : methodNode.instructions) {
 //                MyFieldInsnNode fieldNode = new MyASMFieldInsnNode(instruction);
                 if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
-                    MyFieldInsnNode fieldInsn = (MyFieldInsnNode) instruction;
+                    MyFieldInsnNodeFactory fieldInsn = (MyFieldInsnNodeFactory) instruction;
                     if (fieldInsn.name.equals(fieldName) && fieldInsn.desc.equals(fieldType)) {
                         return methodNode.name;
                     }
