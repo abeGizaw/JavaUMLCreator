@@ -26,7 +26,6 @@ Abe Gizaw, Ari Duvall, Kiana Fan
 When running the Linter the user will be prompted through the command line for the following information:
 - File Location Information
   - Absolute path for the directory containing the .class files to process
-  - Absolute path for .class files to be processed.
   - To process more than one of the options above, sepearte each path with a comma. 
 - Desired Style Checks to run [Naming Convention, Final Local Variables, Hidden Fields]
 - Desired Principle Checks to run [Favor Composition over Inheritance, PLK, Program to Interface not Implementation]
