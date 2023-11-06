@@ -1,12 +1,15 @@
-package domain.ariscode;
+package domain.checks;
 
+import domain.*;
+import domain.CheckType;
+import domain.Message;
 import org.objectweb.asm.Opcodes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class QD_StrategyPattern implements Check{
+public class QD_StrategyPattern implements Check {
     private final MyClassNodeCreator myClassNodeCreator;
     QD_StrategyPattern(MyClassNodeCreator creator){
         myClassNodeCreator = creator;

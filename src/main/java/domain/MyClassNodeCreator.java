@@ -1,6 +1,6 @@
-package domain.ariscode;
+package domain;
 
-import domain.abescode.alevelfeature.MakeUmlMock;
+import domain.myasm.MyASMClassNode;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -20,7 +20,7 @@ public class MyClassNodeCreator {
             throw new RuntimeException("This is not a valid class name: " + path);
         }
 
-       return new MyASMClassNode (classNode);
+       return new MyASMClassNode(classNode);
     }
 
 

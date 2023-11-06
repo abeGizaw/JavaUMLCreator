@@ -1,4 +1,6 @@
-package domain.ariscode;
+package domain.checks;
+
+import domain.Message;
 
 import java.util.List;
 

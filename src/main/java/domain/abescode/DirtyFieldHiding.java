@@ -1,15 +1,5 @@
 package domain.abescode;
 
-import domain.MyClassNode;
-import domain.MyFieldNode;
-import domain.MyLocalVariableNode;
-import domain.MyMethodNode;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.LocalVariableNode;
-import org.objectweb.asm.tree.MethodNode;
 import java.util.*;
 import static presentation.ANSIColors.*;
 

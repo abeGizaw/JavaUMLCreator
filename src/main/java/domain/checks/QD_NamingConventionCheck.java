@@ -1,4 +1,4 @@
-package domain.ariscode;
+package domain.checks;
 /*
   Note that this check is going to validate that proper naming convention is used for the following:
    - class names: UpperCase
@@ -7,13 +7,14 @@ package domain.ariscode;
    - final variable: all caps
  */
 
+import domain.CheckType;
+import domain.Message;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QD_NamingConventionCheck implements Check{
+public class QD_NamingConventionCheck implements Check {
 
     public List<Message> run(MyClassNode classNode) {
         List<Message> allMessages = new ArrayList<>();
