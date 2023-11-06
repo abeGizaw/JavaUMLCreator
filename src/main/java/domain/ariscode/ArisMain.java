@@ -1,10 +1,11 @@
 package domain.ariscode;
 
 import domain.Message;
+import domain.MyClassNode;
 import domain.MyClassNodeCreator;
-import domain.checks.QD_FavorCompOverInheritance;
-import domain.checks.QD_NamingConventionCheck;
-import domain.checks.QD_StrategyPattern;
+import domain.checks.FavorCompOverInheritance;
+import domain.checks.NamingConventionCheck;
+import domain.checks.StrategyPattern;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +31,7 @@ public class ArisMain {
         String className = "domain/ariscode/testclasses/catBad";
 
         MyClassNode classNode = creator.crateMyClassNode(className);
-        QD_FavorCompOverInheritance favorCompOverInheritance = new QD_FavorCompOverInheritance();
+        FavorCompOverInheritance favorCompOverInheritance = new FavorCompOverInheritance();
         List<Message> messageList = favorCompOverInheritance.run(classNode);
         printMessages(messageList);
 
@@ -40,7 +41,7 @@ public class ArisMain {
         String className = "domain/ariscode/testclasses/catBad";
 
         MyClassNode classNode =  creator.crateMyClassNode(className);
-        QD_NamingConventionCheck namingConventionCheck = new QD_NamingConventionCheck();
+        NamingConventionCheck namingConventionCheck = new NamingConventionCheck();
         List<Message> messageList = namingConventionCheck.run(classNode);
         printMessages(messageList);
     }
@@ -49,7 +50,7 @@ public class ArisMain {
     private static void runStrategyPatternDetection() throws IOException {
         String className = "domain/ariscode/testclasses/catBad";
         MyClassNode classNode = creator.crateMyClassNode(className);
-        QD_StrategyPattern strategyPattern = new QD_StrategyPattern(creator);
+        StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
         printMessages(messageList);
     }

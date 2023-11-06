@@ -1,6 +1,7 @@
 package domain.myasm;
 
 import domain.MyAbstractInsnNode;
+import domain.MyMethodNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;

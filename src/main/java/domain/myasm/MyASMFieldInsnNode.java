@@ -1,14 +1,14 @@
 package domain.myasm;
 
 import domain.MyAbstractInsnNode;
-import domain.MyFieldInsnNodeFactory;
+import domain.MyFieldInsnNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 
-public class MyASMFieldInsnNodeFactory extends MyFieldInsnNodeFactory {
+public class MyASMFieldInsnNode extends MyFieldInsnNode {
     private final FieldInsnNode fieldNode;
 
-    MyASMFieldInsnNodeFactory(AbstractInsnNode node) {
+    MyASMFieldInsnNode(AbstractInsnNode node) {
         super(node);
         fieldNode = (FieldInsnNode) node;
         super.name = fieldNode.name;
@@ -17,7 +17,7 @@ public class MyASMFieldInsnNodeFactory extends MyFieldInsnNodeFactory {
 
     @Override
     public MyAbstractInsnNode getNext() {
-        return new MyASMAbstractInsnNodeFactory(fieldNode.getNext());
+        return new MyASMFieldInsnNode(fieldNode.getNext());
     }
 
     @Override
