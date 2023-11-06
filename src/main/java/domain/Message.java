@@ -7,7 +7,7 @@ public class Message {
     private final String message;
     private final String classOfInterest;
 
-    Message(CheckType cType, String mess, String classNameOfInterest){
+    public Message(CheckType cType, String mess, String classNameOfInterest){
         this.checkType = cType;
         this.message = mess;
         this.classOfInterest = classNameOfInterest;

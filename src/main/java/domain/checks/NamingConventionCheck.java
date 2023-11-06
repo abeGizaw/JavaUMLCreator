@@ -7,14 +7,13 @@ package domain.checks;
    - final variable: all caps
  */
 
-import domain.CheckType;
-import domain.Message;
+import domain.*;
 import org.objectweb.asm.Opcodes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QD_NamingConventionCheck implements Check {
+public class NamingConventionCheck implements Check {
 
     public List<Message> run(MyClassNode classNode) {
         List<Message> allMessages = new ArrayList<>();

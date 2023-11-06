@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class QD_StrategyPattern implements Check {
+public class StrategyPattern implements Check {
     private final MyClassNodeCreator myClassNodeCreator;
-    QD_StrategyPattern(MyClassNodeCreator creator){
+    public StrategyPattern(MyClassNodeCreator creator){
         myClassNodeCreator = creator;
     }
 
@@ -60,7 +60,7 @@ public class QD_StrategyPattern implements Check {
             for (MyAbstractInsnNode instruction : methodNode.instructions) {
 //                MyFieldInsnNode fieldNode = new MyASMFieldInsnNode(instruction);
                 if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
-                    MyFieldInsnNodeFactory fieldInsn = (MyFieldInsnNodeFactory) instruction;
+                    MyFieldInsnNode fieldInsn = (MyFieldInsnNode) instruction;
                     if (fieldInsn.name.equals(fieldName) && fieldInsn.desc.equals(fieldType)) {
                         return methodNode.name;
                     }
