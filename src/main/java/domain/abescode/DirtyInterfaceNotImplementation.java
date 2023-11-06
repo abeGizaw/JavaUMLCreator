@@ -1,10 +1,13 @@
 //package domain.abescode;
 //
 //import domain.*;
+//import domain.myasm.MyASMClassNode;
 //import org.objectweb.asm.ClassReader;
 //import org.objectweb.asm.Opcodes;
-//import org.objectweb.asm.tree.ClassNode;
-//import org.objectweb.asm.tree.FieldNode;
+//import domain.MyClassNode;
+//import domain.MyFieldNode;
+//import domain.MyLocalVariableNode;
+//import domain.MyMethodNode;
 //import java.io.IOException;
 //import java.util.ArrayList;
 //import java.util.List;
