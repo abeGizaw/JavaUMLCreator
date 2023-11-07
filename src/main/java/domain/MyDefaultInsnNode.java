@@ -11,11 +11,6 @@ public class MyDefaultInsnNode extends MyAbstractInsnNode {
     }
 
     @Override
-    public MyAbstractInsnNode getPrevious() {
-        return null;
-    }
-
-    @Override
     public int getType() {
         return -1;
     }

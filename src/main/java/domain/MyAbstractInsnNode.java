@@ -17,6 +17,5 @@ public abstract class MyAbstractInsnNode {
         return opcode;
     }
 
-    public abstract MyAbstractInsnNode getPrevious();
     public abstract int getType();
 }

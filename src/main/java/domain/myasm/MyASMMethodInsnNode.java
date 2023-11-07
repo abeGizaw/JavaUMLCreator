@@ -18,21 +18,7 @@ public class MyASMMethodInsnNode extends MyMethodInsnNode {
     @Override
     public MyAbstractInsnNode getNext() {
         MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode nextInsn = methodInsnNode.getNext();
-        if (nextInsn == null) {
-            return null;
-        }
         return myASMAbstractInsnNodeFactory.constructTypedInsnNode(methodInsnNode.getNext());
-    }
-
-    @Override
-    public MyAbstractInsnNode getPrevious() {
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode previousInsn = methodInsnNode.getPrevious();
-        if (previousInsn == null) {
-            return null;
-        }
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(methodInsnNode.getPrevious());
     }
 
     @Override

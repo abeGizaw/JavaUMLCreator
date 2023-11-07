@@ -16,24 +16,8 @@ public class MyASMLabelNode extends MyLabelNode {
 
     @Override
     public MyAbstractInsnNode getNext() {
-        // TODO: abstract getNext?
         MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode nextInsn = labelNode.getNext();
-        if (nextInsn == null) {
-            return null;
-        }
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(nextInsn);
-    }
-
-    @Override
-    public MyAbstractInsnNode getPrevious() {
-        // TODO: abstract getPrevious?
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode previousInsn = labelNode.getPrevious();
-        if (previousInsn == null) {
-            return null;
-        }
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(previousInsn);
+        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(labelNode.getNext());
     }
 
     @Override

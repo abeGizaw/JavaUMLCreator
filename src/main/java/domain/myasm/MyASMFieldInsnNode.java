@@ -15,21 +15,7 @@ public class MyASMFieldInsnNode extends MyFieldInsnNode {
     @Override
     public MyAbstractInsnNode getNext() {
         MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode nextInsn = fieldInsnNode.getNext();
-        if (nextInsn == null) {
-            return null;
-        }
         return myASMAbstractInsnNodeFactory.constructTypedInsnNode(fieldInsnNode.getNext());
-    }
-
-    @Override
-    public MyAbstractInsnNode getPrevious() {
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode previousInsn = fieldInsnNode.getPrevious();
-        if (previousInsn == null) {
-            return null;
-        }
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(fieldInsnNode.getPrevious());
     }
 
     @Override
