@@ -8,7 +8,7 @@ import domain.MyMethodNode;
 import java.util.*;
 import static presentation.ANSIColors.*;
 
-public class FieldHiding {
+public class FieldHiding{
 
     public void run(MyClassNode myClassNode) {
         List<String> hiddenFields = checkFieldHiding(myClassNode);
