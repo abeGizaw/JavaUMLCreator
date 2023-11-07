@@ -46,7 +46,7 @@ public class StrategyPattern implements Check {
     }
 
     private boolean fieldIsAbstractAndValidClass(String name) {
-        MyClassNode myClassNode = myClassNodeCreator.crateMyClassNodeFromName(name);
+        MyClassNode myClassNode = myClassNodeCreator.createMyClassNodeFromName(name);
         return fieldIsAbstractType(myClassNode);
     }
 

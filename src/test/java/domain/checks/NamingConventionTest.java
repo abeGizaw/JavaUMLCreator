@@ -4,6 +4,7 @@ import domain.CheckType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
+import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -21,13 +22,13 @@ public class NamingConventionTest {
      * - All other fields are camelCase
      * - All method names are camelCase
      */
-    private final MyClassNodeCreator creator = new MyClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
 
     @Test
     public void runValidNames() throws IOException {
         String className = "NamingConventionMockTestClasses/ValidNaming";
 
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         NamingConventionCheck namingConventionCheck = new NamingConventionCheck();
         List<Message> messageList = namingConventionCheck.run(classNode);
         printMessages(messageList);
@@ -37,7 +38,7 @@ public class NamingConventionTest {
 
     private void runInvalid(String className, List<String> expectedMessages) {
 
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         NamingConventionCheck namingConventionCheck = new NamingConventionCheck();
         List<Message> messageList = namingConventionCheck.run(classNode);
         printMessages(messageList);

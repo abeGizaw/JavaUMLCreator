@@ -4,6 +4,7 @@ import domain.CheckType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
+import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -19,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FavorCompositionTest {
 
-    private final MyClassNodeCreator creator = new MyClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
 
     @Test
     public void runViolatesCompositionWithInheritance() throws IOException {
         String className = "domain/checks/FavorCompositionMockTestClasses/IsSubClass";
         String superName = "domain/checks/FavorCompositionMockTestClasses/SuperClass";
 
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         FavorCompOverInheritance compOverInheritance = new FavorCompOverInheritance();
         List<Message> messageList = compOverInheritance.run(classNode);
         printMessages(messageList);
@@ -42,7 +43,7 @@ public class FavorCompositionTest {
     public void runNoViolationComposition() throws IOException {
         String className = "domain/checks/FavorCompositionMockTestClasses/ValidComp";
 
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         FavorCompOverInheritance compOverInheritance = new FavorCompOverInheritance();
         List<Message> messageList = compOverInheritance.run(classNode);
         printMessages(messageList);

@@ -4,6 +4,7 @@ import domain.CheckType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
+import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,19 +14,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Strategy Pattern looks for the following:
- *   - The provided class contains another user defined class as a field
- *          Test: User defined class as field, default Java class as field
- *   - The user defined class stored in the field is an abstract type
- *          Test: Field of an abstract type (interface and Abstract class), field of concrete type
- *   - There is a setter in the class provided to set the strategy Field to a strategy
- *          Test: setter provided, no setter, field initialized in the constructor
+ * - The provided class contains another user defined class as a field
+ * Test: User defined class as field, default Java class as field
+ * - The user defined class stored in the field is an abstract type
+ * Test: Field of an abstract type (interface and Abstract class), field of concrete type
+ * - There is a setter in the class provided to set the strategy Field to a strategy
+ * Test: setter provided, no setter, field initialized in the constructor
  */
 
 public class StrategyPatternTest {
-    private final MyClassNodeCreator creator = new MyClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
 
-    private void testValidStrategyPattern(String className, String strategyClassName, String fieldName, String setterName){
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+    private void testValidStrategyPattern(String className, String strategyClassName, String fieldName, String setterName) {
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
         printMessages(messageList);
@@ -67,7 +68,7 @@ public class StrategyPatternTest {
     @Test
     public void runStrategyPatternInValidWConstructor() throws IOException {
         String className = "domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWConstructor";
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
         printMessages(messageList);
@@ -77,7 +78,7 @@ public class StrategyPatternTest {
     @Test
     public void runStrategyPatternInValidWSetter() throws IOException {
         String className = "domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWSetter";
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
         printMessages(messageList);
@@ -87,7 +88,7 @@ public class StrategyPatternTest {
     @Test
     public void runStrategyPatternInValidWNoSetterNoConstructor() throws IOException {
         String className = "domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWNoSetterNoConstructor";
-        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
+        MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
         printMessages(messageList);
