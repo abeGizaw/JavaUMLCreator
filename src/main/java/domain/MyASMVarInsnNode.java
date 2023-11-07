@@ -4,23 +4,32 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 public class MyASMVarInsnNode extends MyVarInsnNode {
-    private VarInsnNode varInsnNode;
+    private AbstractInsnNode varInsnNode;
 
-    public MyASMVarInsnNode(VarInsnNode varInsnNode) {
+    public MyASMVarInsnNode(AbstractInsnNode varInsnNode) {
         super(varInsnNode.getOpcode());
         this.varInsnNode = varInsnNode;
-        super.var = varInsnNode.var;
+        super.var = ((VarInsnNode) varInsnNode).var;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
         MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
+        AbstractInsnNode nextInsn = varInsnNode.getNext();
+        if (nextInsn == null) {
+            return null;
+        }
         return myASMAbstractInsnNodeFactory.constructTypedInsnNode(varInsnNode.getNext());
     }
 
     @Override
-    public int getOpcode() {
-        return varInsnNode.getOpcode();
+    public MyAbstractInsnNode getPrevious() {
+        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
+        AbstractInsnNode previousInsn = varInsnNode.getPrevious();
+        if (previousInsn == null) {
+            return null;
+        }
+        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(varInsnNode.getPrevious());
     }
 
     @Override

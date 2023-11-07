@@ -15,12 +15,22 @@ public class MyASMLabelNode extends MyLabelNode {
     public MyAbstractInsnNode getNext() {
         // TODO: abstract getNext?
         MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(labelNode.getNext());
+        AbstractInsnNode nextInsn = labelNode.getNext();
+        if (nextInsn == null) {
+            return null;
+        }
+        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(nextInsn);
     }
 
     @Override
-    public int getOpcode() {
-        return labelNode.getOpcode();
+    public MyAbstractInsnNode getPrevious() {
+        // TODO: abstract getPrevious?
+        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
+        AbstractInsnNode previousInsn = labelNode.getPrevious();
+        if (previousInsn == null) {
+            return null;
+        }
+        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(previousInsn);
     }
 
     @Override

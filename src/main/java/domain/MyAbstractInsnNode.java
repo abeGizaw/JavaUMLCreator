@@ -2,6 +2,7 @@ package domain;
 
 public abstract class MyAbstractInsnNode {
     public static final int LABEL = 8;
+    public static final int VAR_INSN = 2;
 
     protected int opcode;
 
@@ -13,5 +14,7 @@ public abstract class MyAbstractInsnNode {
     public int getOpcode() {
         return opcode;
     }
+
+    public abstract MyAbstractInsnNode getPrevious();
     public abstract int getType();
 }

@@ -6,7 +6,7 @@ public class MyASMFieldNode extends MyFieldNode {
     private FieldNode fieldNode;
 
     public MyASMFieldNode(FieldNode fieldNode) {
-        super(fieldNode.desc);
         this.fieldNode = fieldNode;
+        super.desc = fieldNode.desc;
     }
 }

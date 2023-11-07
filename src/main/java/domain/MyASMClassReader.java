@@ -7,7 +7,6 @@ import java.io.IOException;
 
 public class MyASMClassReader extends MyClassReader {
     private ClassReader classReader;
-    private ClassNode classNode;
 
     @Override
     public MyClassNode generateMyClassNode(String className) throws IOException {

@@ -20,12 +20,11 @@ public class KianasMain {
     private static void runFinalLocalVariables() throws IOException {
         String className = "domain/kianascode/FinalLocalVariablesTestClass";
 
-        ClassReader reader = new ClassReader(className);
-        ClassNode classNode = new ClassNode();
-        reader.accept(classNode, ClassReader.EXPAND_FRAMES);
+        MyClassReader reader = new MyASMClassReader();
+        MyClassNode myClassNode = reader.generateMyClassNode(className);
 
         QDFinalLocalVariables finalLocalVariablesCheck = new QDFinalLocalVariables();
-        finalLocalVariablesCheck.run(classNode);
+        finalLocalVariablesCheck.run(myClassNode);
     }
     
     private static void runAdapterPattern() throws IOException {

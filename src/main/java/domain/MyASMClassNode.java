@@ -2,6 +2,7 @@ package domain;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +11,27 @@ public class MyASMClassNode extends MyClassNode {
     private ClassNode classNode;
 
     public MyASMClassNode(ClassNode classNode) {
-        super(classNode.name);
         this.classNode = classNode;
-        convertFields();
+        super.fields = convertFields();
         super.interfaces = classNode.interfaces;
+        super.name = classNode.name;
+        super.methods = convertMethods();
         super.superName = classNode.superName;
     }
 
-    private void convertFields() {
+    private List<MyFieldNode> convertFields() {
         List<MyFieldNode> fields = new ArrayList<>();
         for (FieldNode fieldNode : classNode.fields) {
             fields.add(new MyASMFieldNode(fieldNode));
         }
-        super.fields = fields;
+        return fields;
+    }
+
+    private List<MyMethodNode> convertMethods() {
+        List<MyMethodNode> methods = new ArrayList<>();
+        for (MethodNode methodNode : classNode.methods) {
+            methods.add(new MyASMMethodNode(methodNode));
+        }
+        return methods;
     }
 }
