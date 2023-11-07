@@ -7,27 +7,27 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 public class MyASMMethodInsnNode extends MyMethodInsnNode {
-    private final MethodInsnNode fieldNode;
+    private final MethodInsnNode methodInsnNode;
 
     public MyASMMethodInsnNode(AbstractInsnNode node) {
         super(node);
-        fieldNode = (MethodInsnNode) node;
-        super.name = fieldNode.name;
-        super.desc = fieldNode.desc;
+        methodInsnNode = (MethodInsnNode) node;
+        super.name = methodInsnNode.name;
+        super.desc = methodInsnNode.desc;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
-        return new MyASMFieldInsnNode(fieldNode.getNext());
+        return new MyASMFieldInsnNode(methodInsnNode.getNext());
     }
 
     @Override
     public int getOpcode() {
-        return fieldNode.getOpcode();
+        return methodInsnNode.getOpcode();
     }
 
     @Override
     public int getType() {
-        return fieldNode.getType();
+        return methodInsnNode.getType();
     }
 }

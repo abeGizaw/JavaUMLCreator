@@ -1,6 +1,7 @@
 package domain.myasm;
 
 import domain.MyAbstractInsnNode;
+import domain.MyDefaultInsnNode;
 import domain.MyMethodNode;
 import domain.MyOpcodes;
 import org.objectweb.asm.Opcodes;
@@ -16,7 +17,7 @@ public class MyASMAbstractInsnNodeFactory{
                 opcode == Opcodes.INVOKESPECIAL || opcode == Opcodes.INVOKEDYNAMIC || opcode == Opcodes.INVOKESTATIC){
             return new MyASMMethodInsnNode(node);
         }
-        return null;
+        return new MyDefaultInsnNode(node);
 
     }
 

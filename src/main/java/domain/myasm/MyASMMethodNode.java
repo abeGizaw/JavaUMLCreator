@@ -11,6 +11,7 @@ import java.util.List;
 
 public class MyASMMethodNode extends MyMethodNode {
     private final MethodNode methodNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
     public MyASMMethodNode(MethodNode method) {
         super();
         this.methodNode = method;
@@ -25,9 +26,7 @@ public class MyASMMethodNode extends MyMethodNode {
     private List<MyAbstractInsnNode> convertInstructions(InsnList instructions) {
         List<MyAbstractInsnNode> newInstructions = new ArrayList<>();
         for(AbstractInsnNode instruction: instructions){
-            MyASMAbstractInsnNodeFactory node =  new MyASMAbstractInsnNodeFactory();
-//            newInstructions.add(node);
-            //            newInstructions.add((MyAbstractInsnNode) new MyASMAbstractInsnNode(instruction));
+            newInstructions.add(factory.constructTypedInsnNode(instruction));
         }
         return newInstructions;
     }
