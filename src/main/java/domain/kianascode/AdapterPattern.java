@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class QDAdapterPatternCheck {
+public class AdapterPattern {
     private List<MyClassNode> myClassNodes;
     private List<String> classNames;
     private Set<String> interfaceNames;
 
-    public QDAdapterPatternCheck(List<MyClassNode> myClassNodes) {
+    public AdapterPattern(List<MyClassNode> myClassNodes) {
         this.myClassNodes = myClassNodes;
 
         classNames = new ArrayList<>();

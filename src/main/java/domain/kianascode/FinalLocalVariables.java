@@ -4,7 +4,7 @@ import domain.*;
 
 import java.util.*;
 
-public class QDFinalLocalVariables {
+public class FinalLocalVariables {
     private static final Set<Integer> STORE_OPCODES = Set.of(MyOpcodes.ISTORE, MyOpcodes.LSTORE, MyOpcodes.FSTORE, MyOpcodes.DSTORE, MyOpcodes.ASTORE);
 
     private LocalVariableManager localVariableManager;

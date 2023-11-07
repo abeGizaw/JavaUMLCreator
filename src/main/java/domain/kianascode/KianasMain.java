@@ -3,8 +3,6 @@ package domain.kianascode;
 import domain.MyASMClassReader;
 import domain.MyClassNode;
 import domain.MyClassReader;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,7 @@ public class KianasMain {
         MyClassReader reader = new MyASMClassReader();
         MyClassNode myClassNode = reader.generateMyClassNode(className);
 
-        QDFinalLocalVariables finalLocalVariablesCheck = new QDFinalLocalVariables();
+        FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
         finalLocalVariablesCheck.run(myClassNode);
     }
     
@@ -44,7 +42,7 @@ public class KianasMain {
             myClassNodes.add(myClassNode);
         }
 
-        QDAdapterPatternCheck adapterPatternCheck = new QDAdapterPatternCheck(myClassNodes);
+        AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
         adapterPatternCheck.run(myClassNodes.get(0));
     }
 }
