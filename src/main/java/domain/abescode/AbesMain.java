@@ -16,7 +16,6 @@ public class AbesMain {
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
-        // target/classes/domain
         System.out.print("Enter Directory/Package: ");
         String packagePath = keyboard.nextLine();
         Path startPath = Paths.get(packagePath);
@@ -30,7 +29,6 @@ public class AbesMain {
         }
 
         ConvertASMToUML aLevel = new ConvertASMToUML();
-        // target/classes/domain/abescode/FieldMock.class
         aLevel.run();
     }
 
@@ -44,8 +42,8 @@ public class AbesMain {
         DirtyFieldHiding fieldHider = new DirtyFieldHiding();
         fieldHider.run(myClassNode);
 
-//        DirtyInterfaceNotImplementation designPrinciple = new DirtyInterfaceNotImplementation();
-//        designPrinciple.run(myClassNode);
+        DirtyInterfaceNotImplementation designPrinciple = new DirtyInterfaceNotImplementation(creator);
+        designPrinciple.run(myClassNode);
 
         DirtyTemplateMethod designPattern = new DirtyTemplateMethod();
         designPattern.run(myClassNode);
