@@ -6,10 +6,8 @@ public abstract class CorrectTemplateMethodMock {
         doAbstractThing();
         doAHook();
     }
-
     private void doAHook() {
     }
-
     public abstract void doAbstractThing();
 
     private void doConcreteThing() {

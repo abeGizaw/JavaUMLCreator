@@ -8,6 +8,8 @@ public class MyASMFieldNode extends MyFieldNode {
 
     public MyASMFieldNode(FieldNode fieldNode) {
         this.fieldNode = fieldNode;
+        super.access = fieldNode.access;
         super.desc = fieldNode.desc;
+        super.name = fieldNode.name;
     }
 }

@@ -4,6 +4,7 @@ import domain.MyAbstractInsnNode;
 import domain.MyLocalVariableNode;
 import domain.MyMethodNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
+
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -16,16 +17,17 @@ public class MyASMMethodNode extends MyMethodNode {
 
     public MyASMMethodNode(MethodNode methodNode) {
         this.methodNode = methodNode;
+        super.access = methodNode.access;
+        super.desc = methodNode.desc;
         super.instructions = convertInstructionNodes();
-        super.localVariables = convertLocalVariableNodes();
+        super.localVariables = methodNode.localVariables == null ? null : convertLocalVariableNodes();
         super.name = methodNode.name;
     }
 
     private List<MyAbstractInsnNode> convertInstructionNodes() {
         List<MyAbstractInsnNode> instructions = new ArrayList<>();
         for (AbstractInsnNode instruction : methodNode.instructions) {
-            MyAbstractInsnNode newInstructionNode = factory.constructTypedInsnNode(instruction);
-            instructions.add(newInstructionNode);
+            instructions.add(factory.constructTypedInsnNode(instruction));
         }
         return instructions;
     }

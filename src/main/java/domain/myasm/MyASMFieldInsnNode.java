@@ -11,6 +11,8 @@ public class MyASMFieldInsnNode extends MyFieldInsnNode {
 
     public MyASMFieldInsnNode(AbstractInsnNode abstractInsnNode) {
         this.fieldInsnNode = (FieldInsnNode) abstractInsnNode;
+        super.name = this.fieldInsnNode.name;
+        super.desc = this.fieldInsnNode.desc;
     }
 
     @Override

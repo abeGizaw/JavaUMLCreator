@@ -5,8 +5,6 @@ import domain.MyMethodInsnNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
-import java.lang.reflect.Method;
-
 public class MyASMMethodInsnNode extends MyMethodInsnNode {
     private final MethodInsnNode methodInsnNode;
     private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
