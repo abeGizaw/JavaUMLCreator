@@ -6,6 +6,10 @@ public interface MyOpcodes {
     public static final int INVOKESPECIAL = 183;
     public static final int INVOKEINTERFACE = 185;
     public static final int INVOKEDYNAMIC = 186;
+    public static final int H_INVOKEVIRTUAL = 5;
+    public static final int H_INVOKESTATIC = 6;
+    public static final int H_INVOKESPECIAL = 7;
+    public static final int H_INVOKEINTERFACE = 9;
     public static final int ILOAD = 21;
     public static final int LLOAD = 22;
     public static final int FLOAD = 23;
@@ -18,4 +22,6 @@ public interface MyOpcodes {
     public static final int ASTORE = 58;
     public static final int ACC_ABSTRACT = 1024;
     public static final int ACC_INTERFACE = 512;
+    public static final int GETFIELD = 180;
+    public static final int GETSTATIC = 178;
 }

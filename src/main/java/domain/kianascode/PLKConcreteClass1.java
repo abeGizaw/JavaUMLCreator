@@ -7,7 +7,11 @@ public class PLKConcreteClass1 {
         concreteClass3 = new PLKConcreteClass3();
     }
 
-    public void method1() {
+    public void checkField() {
+
+    }
+
+    public void checkNotParameter() {
 
     }
 }

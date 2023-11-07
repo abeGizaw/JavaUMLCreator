@@ -53,10 +53,10 @@ public class KianasMain {
 
         QDPLKCheck qdPLKCheck = new QDPLKCheck();
         for (String className : classNames) {
-            ClassReader reader = new ClassReader(className);
-            ClassNode classNode = new ClassNode();
-            reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-            qdPLKCheck.run(classNode);
+            MyClassReader reader = new MyASMClassReader();
+            MyClassNode myClassNode = reader.generateMyClassNode(className);
+
+            qdPLKCheck.run(myClassNode);
         }
     }
 }

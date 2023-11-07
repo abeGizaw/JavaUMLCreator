@@ -1,68 +1,67 @@
 package domain.kianascode;
 
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.*;
+import domain.*;
 
 import java.util.*;
 
 public class QDPLKCheck {
-    private static final Set<Integer> METHOD_OPCODES = Set.of(Opcodes.H_INVOKEVIRTUAL, Opcodes.H_INVOKESTATIC, Opcodes.H_INVOKESPECIAL, Opcodes.H_INVOKEINTERFACE);
+    private static final Set<Integer> METHOD_OPCODES = Set.of(MyOpcodes.H_INVOKEVIRTUAL, MyOpcodes.H_INVOKESTATIC, MyOpcodes.H_INVOKESPECIAL, MyOpcodes.H_INVOKEINTERFACE);
 
-    Stack<AbstractInsnNode> instructionStack;
+    Stack<MyAbstractInsnNode> instructionStack;
 
     public QDPLKCheck() {
         instructionStack = new Stack<>();
     }
 
-    public void run(ClassNode classNode) {
-        for (MethodNode methodNode : classNode.methods) {
-            checkMethod(methodNode);
+    public void run(MyClassNode classNode) {
+        for (MyMethodNode myMethodNode : classNode.methods) {
+            checkMethod(myMethodNode);
         }
     }
 
-    private void checkMethod(MethodNode methodNode) {
-        LocalVariableManager localVariableManager = new LocalVariableManager(methodNode);
-        for (AbstractInsnNode abstractInsnNode : methodNode.instructions) {
-            localVariableManager.updateVariableScopes(abstractInsnNode);
-            int insnType = abstractInsnNode.getType();
+    private void checkMethod(MyMethodNode myMethodNode) {
+        LocalVariableManager localVariableManager = new LocalVariableManager(myMethodNode);
+        for (MyAbstractInsnNode myAbstractInsnNode : myMethodNode.instructions) {
+            localVariableManager.updateVariableScopes(myAbstractInsnNode);
+            int insnType = myAbstractInsnNode.getType();
             if (METHOD_OPCODES.contains(insnType)) {
-                if (isConstructor(abstractInsnNode)) {
-                    localVariableManager.addCreatedVariable(abstractInsnNode.getNext());
+                if (isConstructor(myAbstractInsnNode)) {
+                    localVariableManager.addCreatedVariable(myAbstractInsnNode.getNext());
                 } else {
-                    if (receiverIsValid(abstractInsnNode, localVariableManager)) {
-                        System.out.printf("receiver for %s is valid\n", ((MethodInsnNode) abstractInsnNode).name);
+                    if (receiverIsValid(myAbstractInsnNode, localVariableManager)) {
+                        System.out.printf("receiver for %s is valid\n", ((MyMethodInsnNode) myAbstractInsnNode).name);
                     } else {
-                        System.out.printf("receiver for %s is invalid\n", ((MethodInsnNode) abstractInsnNode).name);
+                        System.out.printf("receiver for %s is invalid\n", ((MyMethodInsnNode) myAbstractInsnNode).name);
                     }
                 }
             } else {
-                instructionStack.push(abstractInsnNode);
+                instructionStack.push(myAbstractInsnNode);
             }
         }
     }
 
-    private boolean isConstructor(AbstractInsnNode abstractInsnNode) {
-        if (abstractInsnNode.getOpcode() != Opcodes.INVOKESPECIAL)  {
+    private boolean isConstructor(MyAbstractInsnNode myAbstractInsnNode) {
+        if (myAbstractInsnNode.getOpcode() != MyOpcodes.INVOKESPECIAL)  {
             return false;
         }
-        return (((MethodInsnNode) abstractInsnNode).name).equals("<init>");
+        return (((MyMethodInsnNode) myAbstractInsnNode).name).equals("<init>");
     }
 
-    private boolean receiverIsValid(AbstractInsnNode abstractInsnNode, LocalVariableManager localVariableManager) {
+    private boolean receiverIsValid(MyAbstractInsnNode abstractInsnNode, LocalVariableManager localVariableManager) {
         // remove arguments
-        Type methodType = Type.getType(((MethodInsnNode) abstractInsnNode).desc);
+        MyType myType = new MyASMType();
+        MyType methodType = myType.getType(((MyMethodInsnNode) abstractInsnNode).desc);
         int numArguments = methodType.getArgumentTypes().length;
         for (int i = 0; i < numArguments; i++) {
             removeMethodArgument();
         }
 
-        AbstractInsnNode receiverNode = instructionStack.pop();
+        MyAbstractInsnNode receiverNode = instructionStack.pop();
 
         // is field?
-        if (receiverNode.getOpcode() == Opcodes.GETFIELD || receiverNode.getOpcode() == Opcodes.GETSTATIC) {
-            AbstractInsnNode fieldsClassLoadInsn = instructionStack.pop();
-            return (fieldsClassLoadInsn.getOpcode() == Opcodes.ALOAD) && (((VarInsnNode) fieldsClassLoadInsn).var == 0);
+        if (receiverNode.getOpcode() == MyOpcodes.GETFIELD || receiverNode.getOpcode() == MyOpcodes.GETSTATIC) {
+            MyAbstractInsnNode fieldsClassLoadInsn = instructionStack.pop();
+            return (fieldsClassLoadInsn.getOpcode() == MyOpcodes.ALOAD) && (((MyVarInsnNode) fieldsClassLoadInsn).var == 0);
         }
 
         // is created?
@@ -76,13 +75,16 @@ public class QDPLKCheck {
         }
 
         // is this?
-        return ((VarInsnNode) receiverNode).var == 0;
+        if (receiverNode.getType() != MyAbstractInsnNode.VAR_INSN) {
+            return false;
+        }
+        return ((MyVarInsnNode) receiverNode).var == 0;
     }
 
     private void removeMethodArgument() {
-        AbstractInsnNode abstractInsnNode = instructionStack.pop();
+        MyAbstractInsnNode abstractInsnNode = instructionStack.pop();
         int methodArgumentInsnOpcode = abstractInsnNode.getOpcode();
-        if (methodArgumentInsnOpcode == Opcodes.GETFIELD || methodArgumentInsnOpcode == Opcodes.GETSTATIC) {
+        if (methodArgumentInsnOpcode == MyOpcodes.GETFIELD || methodArgumentInsnOpcode == MyOpcodes.GETSTATIC) {
             instructionStack.pop();
         }
     }

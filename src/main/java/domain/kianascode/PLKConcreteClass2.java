@@ -7,7 +7,7 @@ public class PLKConcreteClass2 {
         this.concreteClass1 = concreteClass1;
     }
 
-    public PLKConcreteClass1 method1() {
+    public PLKConcreteClass1 checkCreated() {
         return new PLKConcreteClass1();
     }
 }

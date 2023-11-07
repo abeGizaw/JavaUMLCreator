@@ -5,22 +5,22 @@ public class PLKTestClass {
 
     public void testAllTypes(PLKConcreteClass3 concreteClass3) {
         // field
-        concreteClass1.method1();
-        concreteClass1.concreteClass3.method1();
+        concreteClass1.checkField();
+        concreteClass1.concreteClass3.checkNotField();
 
         // created object
         PLKConcreteClass2 concreteClass2 = new PLKConcreteClass2(concreteClass1);
-        PLKConcreteClass1 concreteClass1a = concreteClass2.method1();
+        PLKConcreteClass1 concreteClass1a = concreteClass2.checkCreated();
 
         // parameter
-        concreteClass3.methodWith3Arguments(1, concreteClass2.concreteClass1, concreteClass1);
-        concreteClass1a.method1();
+        concreteClass3.checkParameterWithArguments(1, concreteClass2.concreteClass1, concreteClass1);
+        concreteClass1a.checkNotParameter();
 
         // this object
-        this.method1();
+        this.checkThis();
     }
 
-    private void method1() {
+    private void checkThis() {
 
     }
 }

@@ -24,11 +24,8 @@ public class MyASMMethodNode extends MyMethodNode {
     private List<MyAbstractInsnNode> convertInstructionNodes() {
         List<MyAbstractInsnNode> instructions = new ArrayList<>();
         for (AbstractInsnNode instruction : methodNode.instructions) {
-            // TODO: create these types of nodes, if it isn't Method, Var, or Field, ignore it?
             MyAbstractInsnNode newInstructionNode = myASMAbstractInsnNodeFactory.constructTypedInsnNode(instruction);
-            if  (newInstructionNode != null) {
-                instructions.add(newInstructionNode);
-            }
+            instructions.add(newInstructionNode);
         }
         return instructions;
     }
