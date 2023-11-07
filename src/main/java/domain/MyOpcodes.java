@@ -16,4 +16,7 @@ public interface MyOpcodes {
     public static final int INVOKEDYNAMIC = 186;
     public static final int ACC_INTERFACE = 512;
     public static final int ACC_ABSTRACT = 1024;
+    public static final int PUTFIELD = 181;
+    public static final int PUTSTATIC = 179;
+
 }
