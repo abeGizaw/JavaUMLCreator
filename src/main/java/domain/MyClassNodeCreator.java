@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class MyClassNodeCreator {
 
-    public MyClassNode crateMyClassNode(String path){
+    public MyClassNode crateMyClassNodeFromName(String path){
 
         ClassReader reader = null; // this will need to change to use a MyClassReader and a MyClassNode
         ClassNode classNode = null;

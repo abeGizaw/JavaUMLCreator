@@ -30,7 +30,7 @@ public class ArisMain {
     private static void runCompositionOverInheritance() throws IOException {
         String className = "domain/ariscode/testclasses/catBad";
 
-        MyClassNode classNode = creator.crateMyClassNode(className);
+        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
         FavorCompOverInheritance favorCompOverInheritance = new FavorCompOverInheritance();
         List<Message> messageList = favorCompOverInheritance.run(classNode);
         printMessages(messageList);
@@ -40,7 +40,7 @@ public class ArisMain {
     private static void runNamingConevention() throws IOException {
         String className = "domain/ariscode/testclasses/catBad";
 
-        MyClassNode classNode =  creator.crateMyClassNode(className);
+        MyClassNode classNode =  creator.crateMyClassNodeFromName(className);
         NamingConventionCheck namingConventionCheck = new NamingConventionCheck();
         List<Message> messageList = namingConventionCheck.run(classNode);
         printMessages(messageList);
@@ -49,7 +49,7 @@ public class ArisMain {
 
     private static void runStrategyPatternDetection() throws IOException {
         String className = "domain/ariscode/testclasses/catBad";
-        MyClassNode classNode = creator.crateMyClassNode(className);
+        MyClassNode classNode = creator.crateMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
         printMessages(messageList);
