@@ -1,5 +1,6 @@
 package domain.abescode;
 
+import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.abescode.alevelfeature.ConvertASMToUML;
@@ -11,6 +12,7 @@ import domain.myasm.MyASMClassNodeCreator;
 import java.io.File;
 import java.nio.file.*;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class AbesMain {
@@ -42,7 +44,11 @@ public class AbesMain {
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
         FieldHiding fieldHider = new FieldHiding();
-        fieldHider.run(myClassNode);
+        List<Message> hiddenFields = fieldHider.run(myClassNode);
+
+        for(Message message: hiddenFields){
+            System.out.println(message.toString());
+        }
 
         ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator);
         designPrinciple.run(myClassNode);
