@@ -1,5 +1,4 @@
 # Compiled class file
-*.class
 
 # Log file
 *.log
@@ -11,7 +10,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -169,6 +167,7 @@ fabric.properties
 ### Intellij Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
+LinterProject.iml
 # *.iml
 # modules.xml
 # .idea/misc.xml
@@ -201,7 +200,7 @@ fabric.properties
 
 ### Java ###
 # Compiled class file
-*.class
+target/
 
 # Log file
 *.log
@@ -213,7 +212,6 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
