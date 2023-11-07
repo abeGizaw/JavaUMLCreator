@@ -11,13 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyASMMethodNode extends MyMethodNode {
-    private MethodNode methodNode;
-    private MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory;
+    private final MethodNode methodNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
 
     public MyASMMethodNode(MethodNode methodNode) {
         this.methodNode = methodNode;
-        myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-
         super.instructions = convertInstructionNodes();
         super.localVariables = convertLocalVariableNodes();
         super.name = methodNode.name;
@@ -26,7 +24,7 @@ public class MyASMMethodNode extends MyMethodNode {
     private List<MyAbstractInsnNode> convertInstructionNodes() {
         List<MyAbstractInsnNode> instructions = new ArrayList<>();
         for (AbstractInsnNode instruction : methodNode.instructions) {
-            MyAbstractInsnNode newInstructionNode = myASMAbstractInsnNodeFactory.constructTypedInsnNode(instruction);
+            MyAbstractInsnNode newInstructionNode = factory.constructTypedInsnNode(instruction);
             instructions.add(newInstructionNode);
         }
         return instructions;

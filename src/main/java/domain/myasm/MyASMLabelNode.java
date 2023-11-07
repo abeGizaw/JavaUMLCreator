@@ -7,17 +7,21 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 
 public class MyASMLabelNode extends MyLabelNode {
-    private AbstractInsnNode labelNode;
+    private final LabelNode labelNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
 
     public MyASMLabelNode(AbstractInsnNode labelNode) {
-        super(labelNode.getOpcode());
-        this.labelNode = labelNode;
+        this.labelNode = (LabelNode) labelNode;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(labelNode.getNext());
+        return factory.constructTypedInsnNode(labelNode.getNext());
+    }
+
+    @Override
+    public int getOpcode() {
+        return labelNode.getOpcode();
     }
 
     @Override
@@ -27,6 +31,6 @@ public class MyASMLabelNode extends MyLabelNode {
 
     @Override
     public MyLabel getLabel() {
-        return new MyASMLabel(((LabelNode) labelNode).getLabel());
+        return new MyASMLabel(labelNode.getLabel());
     }
 }

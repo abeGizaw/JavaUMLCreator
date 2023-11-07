@@ -1,13 +1,14 @@
 package domain;
 
 public class MyDefaultInsnNode extends MyAbstractInsnNode {
-    public MyDefaultInsnNode() {
-        super(-1);
-    }
-
     @Override
     public MyAbstractInsnNode getNext() {
         return null;
+    }
+
+    @Override
+    public int getOpcode() {
+        return -1;
     }
 
     @Override

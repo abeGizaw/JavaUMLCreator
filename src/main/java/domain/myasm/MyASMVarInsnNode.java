@@ -6,18 +6,22 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 public class MyASMVarInsnNode extends MyVarInsnNode {
-    private AbstractInsnNode varInsnNode;
+    private final VarInsnNode varInsnNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
 
     public MyASMVarInsnNode(AbstractInsnNode varInsnNode) {
-        super(varInsnNode.getOpcode());
-        this.varInsnNode = varInsnNode;
-        super.var = ((VarInsnNode) varInsnNode).var;
+        this.varInsnNode = (VarInsnNode) varInsnNode;
+        super.var = this.varInsnNode.var;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(varInsnNode.getNext());
+        return factory.constructTypedInsnNode(varInsnNode.getNext());
+    }
+
+    @Override
+    public int getOpcode() {
+        return varInsnNode.getOpcode();
     }
 
     @Override

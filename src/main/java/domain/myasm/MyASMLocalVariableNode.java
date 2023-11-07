@@ -4,7 +4,7 @@ import domain.MyLocalVariableNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 
 public class MyASMLocalVariableNode extends MyLocalVariableNode {
-    private LocalVariableNode localVariableNode;
+    private final LocalVariableNode localVariableNode;
 
     public MyASMLocalVariableNode(LocalVariableNode localVariableNode) {
         this.localVariableNode = localVariableNode;

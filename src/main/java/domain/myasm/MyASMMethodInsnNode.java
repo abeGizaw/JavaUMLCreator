@@ -5,20 +5,26 @@ import domain.MyMethodInsnNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
+import java.lang.reflect.Method;
+
 public class MyASMMethodInsnNode extends MyMethodInsnNode {
-    private AbstractInsnNode methodInsnNode;
+    private final MethodInsnNode methodInsnNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
 
     public MyASMMethodInsnNode(AbstractInsnNode methodInsnNode) {
-        super(methodInsnNode.getOpcode());
-        this.methodInsnNode = methodInsnNode;
-        super.desc = ((MethodInsnNode) methodInsnNode).desc;
-        super.name = ((MethodInsnNode) methodInsnNode).name;
+        this.methodInsnNode = (MethodInsnNode) methodInsnNode;
+        super.desc = this.methodInsnNode.desc;
+        super.name = this.methodInsnNode.name;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(methodInsnNode.getNext());
+        return factory.constructTypedInsnNode(methodInsnNode.getNext());
+    }
+
+    @Override
+    public int getOpcode() {
+        return methodInsnNode.getOpcode();
     }
 
     @Override

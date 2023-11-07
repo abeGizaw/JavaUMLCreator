@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyASMClassNode extends MyClassNode {
-    private ClassNode classNode;
+    private final ClassNode classNode;
 
     public MyASMClassNode(ClassNode classNode) {
         this.classNode = classNode;

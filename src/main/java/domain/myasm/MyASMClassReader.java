@@ -12,7 +12,7 @@ public class MyASMClassReader extends MyClassReader {
 
     @Override
     public MyClassNode generateMyClassNode(String className) throws IOException {
-        this.classReader = new ClassReader(className);
+        classReader = new ClassReader(className);
         ClassNode classNode = new ClassNode();
         classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
         return convertThirdParty(classNode);
