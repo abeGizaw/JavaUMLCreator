@@ -1,6 +1,6 @@
 package domain.kianascode;
 
-import domain.MyASMClassNodeCreator;
+import domain.myasm.MyASMClassNodeCreator;
 import domain.MyClassNodeCreator;
 import domain.checks.AdapterPattern;
 import domain.checks.FinalLocalVariables;

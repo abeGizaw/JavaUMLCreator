@@ -1,5 +1,7 @@
-package domain;
+package domain.myasm;
 
+import domain.MyClassNode;
+import domain.MyClassNodeCreator;
 import domain.myasm.MyASMClassNode;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
@@ -10,10 +12,9 @@ import java.io.IOException;
 
 public class MyASMClassNodeCreator implements MyClassNodeCreator {
     public MyClassNode createMyClassNodeFromName(String path) {
-        ClassReader reader = null; // this will need to change to use a MyClassReader and a MyClassNode
-        ClassNode classNode = null;
+        ClassNode classNode;
         try {
-            reader = new ClassReader(path);
+            ClassReader reader = new ClassReader(path);
             classNode = new ClassNode();
             reader.accept(classNode, ClassReader.EXPAND_FRAMES);
         } catch (IOException e) {
@@ -24,10 +25,9 @@ public class MyASMClassNodeCreator implements MyClassNodeCreator {
     }
 
     public MyClassNode createMyClassNodeFromFile(File path) {
-        ClassReader reader = null; // this will need to change to use a MyClassReader and a MyClassNode
-        ClassNode classNode = null;
+        ClassNode classNode;
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
-            reader = new ClassReader(fileInputStream);
+            ClassReader reader = new ClassReader(fileInputStream);
             classNode = new ClassNode();
             reader.accept(classNode, ClassReader.EXPAND_FRAMES);
         } catch (IOException e) {
