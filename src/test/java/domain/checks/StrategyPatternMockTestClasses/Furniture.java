@@ -1,4 +1,4 @@
-package domain.ariscode.testclasses;
+package domain.checks.StrategyPatternMockTestClasses;
 
 public interface Furniture {
 

@@ -37,7 +37,7 @@ public class StrategyPattern implements Check {
         if (fieldIsAbstractAndValidClass(field.desc.substring(1, (field.desc.length() - 1)))) {
             String setterName = findSetter(classNode, field.name, field.desc);
             if (!setterName.isEmpty()) {
-                String messageValue = String.format("STRATEGY PATTERN: %s stores an instance of  %s in the field %s. The setter is %s. \n",
+                String messageValue = String.format("STRATEGY PATTERN: %s stores an instance of  %s in the field %s. The setter is %s.\n",
                         classNode.name, field.desc, field.name, setterName);
                 return new Message(CheckType.STRATEGY_PATTERN, messageValue, classNode.name);
 

@@ -1,6 +1,6 @@
-package domain.ariscode.testclasses;
+package domain.checks.StrategyPatternMockTestClasses;
 
-public class catBad extends Animal{
+public class catBad extends Animal {
 
     private String Ability;
     private int toys;
