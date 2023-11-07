@@ -1,7 +1,7 @@
 package domain;
 
-public class DefaultInsnNode extends MyAbstractInsnNode {
-    public DefaultInsnNode() {
+public class MyDefaultInsnNode extends MyAbstractInsnNode {
+    public MyDefaultInsnNode() {
         super(-1);
     }
 
