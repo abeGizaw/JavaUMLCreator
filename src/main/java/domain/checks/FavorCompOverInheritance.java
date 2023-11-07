@@ -23,9 +23,8 @@ public class FavorCompOverInheritance implements Check {
         String[] parts = classNode.superName.split("/");
         if (!parts[0].isEmpty() && !parts[0].equals("java")) {
             message = "Consider composition instead of inheritance. " + classNode.name + " EXTENDS " + superName;
+            messages.add(new Message(CheckType.COMPOSITION_OVER_INHERITANCE, message, classNode.name));
         }
-        Message result = new Message(CheckType.COMPOSITION_OVER_INHERITANCE, message, classNode.name);
-        messages.add(result);
         return messages;
     }
 }
