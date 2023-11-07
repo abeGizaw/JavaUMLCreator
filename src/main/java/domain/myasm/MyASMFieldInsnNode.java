@@ -6,27 +6,27 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 
 public class MyASMFieldInsnNode extends MyFieldInsnNode {
-    private final FieldInsnNode fieldNode;
+    private final FieldInsnNode fieldInsnNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
 
-    MyASMFieldInsnNode(AbstractInsnNode node) {
-        super(node);
-        fieldNode = (FieldInsnNode) node;
-        super.name = fieldNode.name;
-        super.desc = fieldNode.desc;
+    public MyASMFieldInsnNode(AbstractInsnNode abstractInsnNode) {
+        this.fieldInsnNode = (FieldInsnNode) abstractInsnNode;
+        super.name = this.fieldInsnNode.name;
+        super.desc = this.fieldInsnNode.desc;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
-        return new MyASMFieldInsnNode(fieldNode.getNext());
+        return factory.constructTypedInsnNode(fieldInsnNode.getNext());
     }
 
     @Override
     public int getOpcode() {
-        return fieldNode.getOpcode();
+        return fieldInsnNode.getOpcode();
     }
 
     @Override
     public int getType() {
-        return fieldNode.getType();
+        return fieldInsnNode.getType();
     }
 }

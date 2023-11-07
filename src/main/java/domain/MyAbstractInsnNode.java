@@ -1,15 +1,15 @@
 package domain;
 
 public abstract class MyAbstractInsnNode {
-    public static int LABEL;
+    public static final int FIELD_INSN = 4;
+    public static final int LABEL = 8;
+    public static final int METHOD_INSN = 5;
+    public static final int VAR_INSN = 2;
 
-    public void setLABEL(int l) {
-        LABEL = l;
-    }
+    public abstract MyAbstractInsnNode getNext();
+    
+    public abstract int getOpcode();
 
-    abstract public MyAbstractInsnNode getNext();
+    public abstract int getType();
 
-    abstract public int getOpcode();
-
-    abstract public int getType();
 }

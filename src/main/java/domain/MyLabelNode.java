@@ -1,9 +1,5 @@
 package domain;
 
-public class MyLabelNode {
-
-    //   ?? fields?
-    public MyLabel getLabel() {
-        return null;
-    }
+public abstract class MyLabelNode extends MyAbstractInsnNode {
+    public abstract MyLabel getLabel();
 }
