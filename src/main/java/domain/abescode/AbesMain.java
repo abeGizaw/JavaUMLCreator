@@ -3,6 +3,9 @@ package domain.abescode;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.abescode.alevelfeature.ConvertASMToUML;
+import domain.checks.FieldHiding;
+import domain.checks.ProgramInterfaceNotImplementation;
+import domain.checks.TemplateMethodPattern;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.io.File;
@@ -38,13 +41,13 @@ public class AbesMain {
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-        DirtyFieldHiding fieldHider = new DirtyFieldHiding();
+        FieldHiding fieldHider = new FieldHiding();
         fieldHider.run(myClassNode);
 
-        DirtyInterfaceNotImplementation designPrinciple = new DirtyInterfaceNotImplementation(creator);
+        ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator);
         designPrinciple.run(myClassNode);
 
-        DirtyTemplateMethod designPattern = new DirtyTemplateMethod();
+        TemplateMethodPattern designPattern = new TemplateMethodPattern();
         designPattern.run(myClassNode);
 
         System.out.println("\n");

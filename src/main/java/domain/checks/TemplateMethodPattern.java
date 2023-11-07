@@ -1,10 +1,10 @@
-package domain.abescode;
+package domain.checks;
 
 import domain.*;
 import java.util.List;
 import static presentation.ANSIColors.*;
 
-public class DirtyTemplateMethod {
+public class TemplateMethodPattern {
     public void run(MyClassNode myClassNode){
         boolean usesTemplate = detectTemplateMethod(myClassNode);
         if(usesTemplate){

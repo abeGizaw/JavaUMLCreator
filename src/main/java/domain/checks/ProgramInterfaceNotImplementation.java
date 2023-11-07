@@ -1,13 +1,13 @@
-package domain.abescode;
+package domain.checks;
 
 import domain.*;
 import java.util.ArrayList;
 import java.util.List;
 import static presentation.ANSIColors.*;
 
-public class DirtyInterfaceNotImplementation{
+public class ProgramInterfaceNotImplementation {
     private final MyClassNodeCreator classNodeCreator;
-    public DirtyInterfaceNotImplementation(MyClassNodeCreator nodeCreator){
+    public ProgramInterfaceNotImplementation(MyClassNodeCreator nodeCreator){
         classNodeCreator = nodeCreator;
     }
 

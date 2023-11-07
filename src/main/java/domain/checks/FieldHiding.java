@@ -1,4 +1,4 @@
-package domain.abescode;
+package domain.checks;
 
 import domain.MyClassNode;
 import domain.MyFieldNode;
@@ -8,7 +8,7 @@ import domain.MyMethodNode;
 import java.util.*;
 import static presentation.ANSIColors.*;
 
-public class DirtyFieldHiding {
+public class FieldHiding {
 
     public void run(MyClassNode myClassNode) {
         List<String> hiddenFields = checkFieldHiding(myClassNode);
