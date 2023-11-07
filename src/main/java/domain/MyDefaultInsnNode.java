@@ -3,9 +3,6 @@ package domain;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 public class MyDefaultInsnNode extends MyAbstractInsnNode {
-    public MyDefaultInsnNode(AbstractInsnNode node) {
-    }
-
     @Override
     public MyAbstractInsnNode getNext() {
         return null;
@@ -13,13 +10,11 @@ public class MyDefaultInsnNode extends MyAbstractInsnNode {
 
     @Override
     public int getOpcode() {
-        return 0;
+        return -1;
     }
 
     @Override
     public int getType() {
-        return 0;
+        return -1;
     }
-
-    // Any other methods relevant to your default node
 }

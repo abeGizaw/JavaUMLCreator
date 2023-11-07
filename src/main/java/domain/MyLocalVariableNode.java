@@ -5,7 +5,4 @@ public abstract class MyLocalVariableNode {
     public int index;
     public String name;
     public MyLabelNode start;
-
-
 }
-

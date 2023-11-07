@@ -3,21 +3,21 @@ package domain.myasm;
 import domain.MyAbstractInsnNode;
 import domain.MyMethodInsnNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 public class MyASMMethodInsnNode extends MyMethodInsnNode {
     private final MethodInsnNode methodInsnNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
 
-    public MyASMMethodInsnNode(AbstractInsnNode node) {
-        methodInsnNode = (MethodInsnNode) node;
-        super.name = methodInsnNode.name;
-        super.desc = methodInsnNode.desc;
+    public MyASMMethodInsnNode(AbstractInsnNode methodInsnNode) {
+        this.methodInsnNode = (MethodInsnNode) methodInsnNode;
+        super.desc = this.methodInsnNode.desc;
+        super.name = this.methodInsnNode.name;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
-        return new MyASMFieldInsnNode(methodInsnNode.getNext());
+        return factory.constructTypedInsnNode(methodInsnNode.getNext());
     }
 
     @Override

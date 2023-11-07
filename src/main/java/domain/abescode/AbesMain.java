@@ -3,6 +3,7 @@ package domain.abescode;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.abescode.alevelfeature.ConvertASMToUML;
+import domain.myasm.MyASMClassNodeCreator;
 
 import java.io.File;
 import java.nio.file.*;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class AbesMain {
-    private static MyClassNodeCreator creator = new MyClassNodeCreator();
+    private static MyClassNodeCreator creator = new MyASMClassNodeCreator();
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);

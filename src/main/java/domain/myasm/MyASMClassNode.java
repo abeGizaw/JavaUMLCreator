@@ -12,30 +12,30 @@ import java.util.List;
 
 public class MyASMClassNode extends MyClassNode {
     private final ClassNode classNode;
+
     public MyASMClassNode(ClassNode classNode) {
         this.classNode = classNode;
         super.access = classNode.access;
+        super.fields = convertFields();
+        super.interfaces = classNode.interfaces;
+        super.methods = convertMethods();
         super.name = classNode.name;
         super.superName = classNode.superName;
-        super.interfaces = classNode.interfaces;
-        super.fields = convertFields();
-        super.methods = convertMethods();
-
-    }
-
-    private List<MyMethodNode> convertMethods() {
-        List<MyMethodNode> myMethods  = new ArrayList<>();
-        for(MethodNode method : classNode.methods){
-            myMethods.add(new MyASMMethodNode(method));
-        }
-        return myMethods;
     }
 
     private List<MyFieldNode> convertFields() {
-        List<MyFieldNode> myFields = new ArrayList<>();
-        for (FieldNode fieldNode: classNode.fields){
-            myFields.add(new MyASMFieldNode(fieldNode));
+        List<MyFieldNode> fields = new ArrayList<>();
+        for (FieldNode fieldNode : classNode.fields) {
+            fields.add(new MyASMFieldNode(fieldNode));
         }
-        return myFields;
+        return fields;
+    }
+
+    private List<MyMethodNode> convertMethods() {
+        List<MyMethodNode> methods = new ArrayList<>();
+        for (MethodNode methodNode : classNode.methods) {
+            methods.add(new MyASMMethodNode(methodNode));
+        }
+        return methods;
     }
 }

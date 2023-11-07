@@ -4,40 +4,39 @@ import domain.MyAbstractInsnNode;
 import domain.MyLocalVariableNode;
 import domain.MyMethodNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnList;
+
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MyASMMethodNode extends MyMethodNode {
     private final MethodNode methodNode;
     private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
-    public MyASMMethodNode(MethodNode method) {
-        this.methodNode = method;
-        super.access = method.access;
-        super.name = method.name;
-        super.desc = method.desc;
-        super.instructions = convertInstructions(method.instructions);
-        super.localVariables = method.localVariables == null ? null : convertLocalVariables(method.localVariables);
 
+    public MyASMMethodNode(MethodNode methodNode) {
+        this.methodNode = methodNode;
+        super.access = methodNode.access;
+        super.desc = methodNode.desc;
+        super.instructions = convertInstructionNodes();
+        super.localVariables = methodNode.localVariables == null ? null : convertLocalVariableNodes();
+        super.name = methodNode.name;
     }
 
-    private List<MyLocalVariableNode> convertLocalVariables(List<LocalVariableNode> localVariables) {
-        List<MyLocalVariableNode> myLocalVariableNodes = new ArrayList<>();
-        for(LocalVariableNode localVariableNode: localVariables){
-            myLocalVariableNodes.add(new MyASMLocalVariableNode(localVariableNode));
+    private List<MyAbstractInsnNode> convertInstructionNodes() {
+        List<MyAbstractInsnNode> instructions = new ArrayList<>();
+        for (AbstractInsnNode instruction : methodNode.instructions) {
+            instructions.add(factory.constructTypedInsnNode(instruction));
         }
-        return myLocalVariableNodes;
+        return instructions;
     }
 
-    private List<MyAbstractInsnNode> convertInstructions(InsnList instructions) {
-        List<MyAbstractInsnNode> newInstructions = new ArrayList<>();
-        for(AbstractInsnNode instruction: instructions){
-            newInstructions.add(factory.constructTypedInsnNode(instruction));
+    private List<MyLocalVariableNode> convertLocalVariableNodes() {
+        List<MyLocalVariableNode> localVariables = new ArrayList<>();
+        for (LocalVariableNode localVariableNode : methodNode.localVariables) {
+            localVariables.add(new MyASMLocalVariableNode(localVariableNode));
         }
-        return newInstructions;
+        return localVariables;
     }
 }
