@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FavorCompOverInheritance implements Check {
-    public FavorCompOverInheritance() {
-    }
-
     public List<Message> run(MyClassNode classNode) {
         return checkForInheritance(classNode);
     }

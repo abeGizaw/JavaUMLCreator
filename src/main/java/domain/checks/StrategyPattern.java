@@ -2,7 +2,6 @@ package domain.checks;
 
 import domain.*;
 import org.objectweb.asm.Opcodes;
-
 import java.util.ArrayList;
 import java.util.List;
 

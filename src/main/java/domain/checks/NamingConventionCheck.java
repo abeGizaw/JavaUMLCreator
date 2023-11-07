@@ -8,7 +8,6 @@ package domain.checks;
  */
 
 import domain.*;
-import org.objectweb.asm.Opcodes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +38,19 @@ public class NamingConventionCheck implements Check {
         return null;
     }
 
-//    NEED TO CONVERT OPCODES
-    private  List<Message> checkFieldNames(MyClassNode classNode) {
-        List<Message> invalidFieldMessages= new ArrayList<>();
+
+    private List<Message> checkFieldNames(MyClassNode classNode) {
+        List<Message> invalidFieldMessages = new ArrayList<>();
 
         for (MyFieldNode field : classNode.fields) {
-            if (((field.access & Opcodes.ACC_FINAL) != 0) && ((field.access & Opcodes.ACC_STATIC) != 0)) {
-                if (!field.name.matches("[A-Z]+")) {
-                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Static Final Fields must be in all caps:   " + field.name, classNode.name ));
+            if (((field.access & MyOpcodes.ACC_FINAL) != 0) && ((field.access & MyOpcodes.ACC_STATIC) != 0)) {
+                if (!isAllCaps(field.name)) {
+                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Static Final Fields must be in all caps:   " + field.name, classNode.name));
                 }
 
             } else {
                 if (invalidCamelCase(field.name)) {
-                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Must be in camelCase:   " + field.name, classNode.name ));
+                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Must be in camelCase:   " + field.name, classNode.name));
                 }
             }
         }
@@ -65,7 +64,7 @@ public class NamingConventionCheck implements Check {
                 invalidMethodMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid method name: Must be in camelCase:  " + method.name, classNode.name));
             }
         }
-      return invalidMethodMessages;
+        return invalidMethodMessages;
     }
 
     private boolean invalidCamelCase(String name) {
@@ -76,5 +75,15 @@ public class NamingConventionCheck implements Check {
         return !name.matches("^[A-Z][a-z]+(?:[A-Z][a-z]+)*$");
     }
 
+    private boolean isAllCaps(String fieldName) {
+        boolean isAllCaps = true;
+        for (char c : fieldName.toCharArray()) {
+            if (Character.isAlphabetic(c) && !Character.isUpperCase(c)) {
+                isAllCaps = false;
+                break;
+            }
+        }
+        return isAllCaps;
+    }
 
 }

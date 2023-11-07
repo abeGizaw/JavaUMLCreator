@@ -1,7 +1,5 @@
 package domain;
 
-import org.objectweb.asm.Opcodes;
-
 public interface MyOpcodes {
     public static final int ACC_FINAL = 16;
     public static final int INVOKEVIRTUAL = 182;
@@ -17,5 +15,6 @@ public interface MyOpcodes {
     public static final int ACC_INTERFACE = 512;
     public static final int PUTFIELD = 181;
     public static final int PUTSTATIC = 179;
+    public static final int ACC_STATIC = 8;
 
 }

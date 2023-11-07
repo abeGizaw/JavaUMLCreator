@@ -12,6 +12,7 @@ import java.util.List;
 
 public class MyASMClassNode extends MyClassNode {
     private final ClassNode classNode;
+
     public MyASMClassNode(ClassNode classNode) {
         super();
         this.classNode = classNode;
@@ -25,8 +26,8 @@ public class MyASMClassNode extends MyClassNode {
     }
 
     private List<MyMethodNode> convertMethods() {
-        List<MyMethodNode> myMethods  = new ArrayList<>();
-        for(MethodNode method : classNode.methods){
+        List<MyMethodNode> myMethods = new ArrayList<>();
+        for (MethodNode method : classNode.methods) {
             myMethods.add(new MyASMMethodNode(method));
         }
         return myMethods;
@@ -34,7 +35,7 @@ public class MyASMClassNode extends MyClassNode {
 
     private List<MyFieldNode> convertFields() {
         List<MyFieldNode> myFields = new ArrayList<>();
-        for (FieldNode fieldNode: classNode.fields){
+        for (FieldNode fieldNode : classNode.fields) {
             myFields.add(new MyASMFieldNode(fieldNode));
         }
         return myFields;

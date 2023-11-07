@@ -8,9 +8,9 @@ import java.io.IOException;
 
 public class MyClassNodeCreator {
 
-    public MyClassNode crateMyClassNodeFromName(String path){
+    public MyClassNode crateMyClassNodeFromName(String path) {
 
-        ClassReader reader = null; // this will need to change to use a MyClassReader and a MyClassNode
+        ClassReader reader = null;
         ClassNode classNode = null;
         try {
             reader = new ClassReader(path);
@@ -20,10 +20,8 @@ public class MyClassNodeCreator {
             throw new RuntimeException("This is not a valid class name: " + path);
         }
 
-       return new MyASMClassNode(classNode);
+        return new MyASMClassNode(classNode);
     }
-
-
 
 
 }

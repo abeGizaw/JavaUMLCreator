@@ -22,5 +22,4 @@ public class MyDefaultInsnNode extends MyAbstractInsnNode {
         return 0;
     }
 
-    // Any other methods relevant to your default node
 }

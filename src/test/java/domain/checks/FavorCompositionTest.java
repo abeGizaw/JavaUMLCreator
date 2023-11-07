@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * FavorCompositionOverInheritance checks for the following things
- *      - Violation = extends a class
- *          Test: extends a class, does not extend
+ * - Violation = extends a class
+ * Test: extends a class, does not extend
  */
 
 public class FavorCompositionTest {
