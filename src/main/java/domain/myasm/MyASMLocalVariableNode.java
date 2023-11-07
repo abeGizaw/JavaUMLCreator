@@ -1,8 +1,9 @@
-package domain;
+package domain.myasm;
 
+import domain.MyLocalVariableNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 
-public class MyASMLocalVariableNode extends MyLocalVariableNode{
+public class MyASMLocalVariableNode extends MyLocalVariableNode {
     private LocalVariableNode localVariableNode;
 
     public MyASMLocalVariableNode(LocalVariableNode localVariableNode) {

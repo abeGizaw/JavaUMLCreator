@@ -1,5 +1,7 @@
-package domain;
+package domain.myasm;
 
+import domain.MyAbstractInsnNode;
+import domain.MyFieldInsnNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 public class MyASMFieldInsnNode extends MyFieldInsnNode {

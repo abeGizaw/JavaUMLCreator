@@ -1,5 +1,6 @@
-package domain;
+package domain.myasm;
 
+import domain.MyFieldNode;
 import org.objectweb.asm.tree.FieldNode;
 
 public class MyASMFieldNode extends MyFieldNode {

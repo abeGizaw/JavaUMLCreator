@@ -1,4 +1,4 @@
-package domain.kianascode;
+package domain.checks;
 
 import domain.*;
 

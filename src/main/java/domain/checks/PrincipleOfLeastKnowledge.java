@@ -1,15 +1,16 @@
-package domain.kianascode;
+package domain.checks;
 
 import domain.*;
+import domain.myasm.MyASMType;
 
 import java.util.*;
 
-public class QDPLKCheck {
+public class PrincipleOfLeastKnowledge {
     private static final Set<Integer> METHOD_OPCODES = Set.of(MyOpcodes.H_INVOKEVIRTUAL, MyOpcodes.H_INVOKESTATIC, MyOpcodes.H_INVOKESPECIAL, MyOpcodes.H_INVOKEINTERFACE);
 
     Stack<MyAbstractInsnNode> instructionStack;
 
-    public QDPLKCheck() {
+    public PrincipleOfLeastKnowledge() {
         instructionStack = new Stack<>();
     }
 

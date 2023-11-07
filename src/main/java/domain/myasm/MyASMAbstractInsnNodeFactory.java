@@ -1,5 +1,7 @@
-package domain;
+package domain.myasm;
 
+import domain.DefaultInsnNode;
+import domain.MyAbstractInsnNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 public class MyASMAbstractInsnNodeFactory {

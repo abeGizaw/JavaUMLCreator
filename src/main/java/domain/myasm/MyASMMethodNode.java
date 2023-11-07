@@ -1,7 +1,9 @@
-package domain;
+package domain.myasm;
 
+import domain.MyAbstractInsnNode;
+import domain.MyLocalVariableNode;
+import domain.MyMethodNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 

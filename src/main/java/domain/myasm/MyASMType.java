@@ -1,5 +1,6 @@
-package domain;
+package domain.myasm;
 
+import domain.MyType;
 import org.objectweb.asm.Type;
 
 public class MyASMType extends MyType {

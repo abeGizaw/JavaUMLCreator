@@ -1,6 +1,9 @@
 package domain.kianascode;
 
-import domain.MyASMClassReader;
+import domain.checks.AdapterPattern;
+import domain.checks.FinalLocalVariables;
+import domain.checks.PrincipleOfLeastKnowledge;
+import domain.myasm.MyASMClassReader;
 import domain.MyClassNode;
 import domain.MyClassReader;
 
@@ -51,7 +54,7 @@ public class KianasMain {
         List<String> classNames = new ArrayList<>();
         classNames.add("domain/kianascode/PLKTestClass");
 
-        QDPLKCheck qdPLKCheck = new QDPLKCheck();
+        PrincipleOfLeastKnowledge qdPLKCheck = new PrincipleOfLeastKnowledge();
         for (String className : classNames) {
             MyClassReader reader = new MyASMClassReader();
             MyClassNode myClassNode = reader.generateMyClassNode(className);

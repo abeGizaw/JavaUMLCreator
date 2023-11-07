@@ -1,5 +1,6 @@
-package domain;
+package domain.myasm;
 
+import domain.MyLabel;
 import org.objectweb.asm.Label;
 
 public class MyASMLabel extends MyLabel {
