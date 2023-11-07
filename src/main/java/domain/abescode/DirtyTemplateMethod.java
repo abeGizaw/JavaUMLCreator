@@ -1,7 +1,6 @@
 package domain.abescode;
 
 import domain.*;
-import org.objectweb.asm.Opcodes;
 import java.util.List;
 import static presentation.ANSIColors.*;
 
@@ -16,7 +15,7 @@ public class DirtyTemplateMethod {
     }
 
     private boolean detectTemplateMethod(MyClassNode myClassNode) {
-        if((myClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
+        if((myClassNode.access & MyOpcodes.ACC_ABSTRACT) == 0){
             return false;
         }
         for(MyMethodNode method: myClassNode.methods){
@@ -33,7 +32,7 @@ public class DirtyTemplateMethod {
                 MyMethodInsnNode methodInsnNode = (MyMethodInsnNode) node;
                 for (MyMethodNode methodNode : methods) {
                     if (methodNode.name.equals(methodInsnNode.name) && methodNode.desc.equals(methodInsnNode.desc)) {
-                        if ((methodNode.access & Opcodes.ACC_ABSTRACT) != 0) {
+                        if ((methodNode.access & MyOpcodes.ACC_ABSTRACT) != 0) {
                             return true;
                         }
                     }
@@ -47,8 +46,8 @@ public class DirtyTemplateMethod {
 
     private boolean isAMethodCall(MyAbstractInsnNode node) {
         int opcode = node.getOpcode();
-        return opcode == MyOpcodes.INVOKEVIRTUAL || opcode == Opcodes.INVOKEINTERFACE ||
-                opcode == Opcodes.INVOKESPECIAL || opcode == Opcodes.INVOKEDYNAMIC;
+        return opcode == MyOpcodes.INVOKEVIRTUAL || opcode == MyOpcodes.INVOKEINTERFACE ||
+                opcode == MyOpcodes.INVOKESPECIAL || opcode == MyOpcodes.INVOKEDYNAMIC;
     }
 
 }

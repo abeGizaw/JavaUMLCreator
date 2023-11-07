@@ -1,7 +1,4 @@
 package domain;
-
-import org.objectweb.asm.Opcodes;
-
 public interface MyOpcodes {
     public static final int ACC_FINAL = 16;
     public static final int ISTORE = 54;

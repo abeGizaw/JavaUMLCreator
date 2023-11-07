@@ -16,7 +16,6 @@ public class MyASMMethodNode extends MyMethodNode {
     private final MethodNode methodNode;
     private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
     public MyASMMethodNode(MethodNode method) {
-        super();
         this.methodNode = method;
         super.access = method.access;
         super.name = method.name;

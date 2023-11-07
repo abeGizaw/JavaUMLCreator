@@ -10,7 +10,6 @@ public class MyASMMethodInsnNode extends MyMethodInsnNode {
     private final MethodInsnNode methodInsnNode;
 
     public MyASMMethodInsnNode(AbstractInsnNode node) {
-        super(node);
         methodInsnNode = (MethodInsnNode) node;
         super.name = methodInsnNode.name;
         super.desc = methodInsnNode.desc;

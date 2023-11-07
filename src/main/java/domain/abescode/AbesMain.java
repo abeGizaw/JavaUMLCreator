@@ -3,10 +3,8 @@ package domain.abescode;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.abescode.alevelfeature.ConvertASMToUML;
-import domain.myasm.MyASMClassNode;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.Scanner;
@@ -38,7 +36,7 @@ public class AbesMain {
 
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
 
-        MyClassNode myClassNode  = creator.crateMyClassNodeFromFile(file);
+        MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
         DirtyFieldHiding fieldHider = new DirtyFieldHiding();
         fieldHider.run(myClassNode);
 

@@ -8,8 +8,7 @@ import org.objectweb.asm.tree.FieldInsnNode;
 public class MyASMFieldInsnNode extends MyFieldInsnNode {
     private final FieldInsnNode fieldNode;
 
-    MyASMFieldInsnNode(AbstractInsnNode node) {
-        super(node);
+    public MyASMFieldInsnNode(AbstractInsnNode node) {
         fieldNode = (FieldInsnNode) node;
         super.name = fieldNode.name;
         super.desc = fieldNode.desc;

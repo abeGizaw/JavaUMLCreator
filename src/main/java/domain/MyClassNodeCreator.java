@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class MyClassNodeCreator {
 
-    public MyClassNode crateMyClassNodeFromName(String path){
+    public MyClassNode createMyClassNodeFromName(String path){
 
         ClassReader reader = null; // this will need to change to use a MyClassReader and a MyClassNode
         ClassNode classNode = null;
@@ -25,7 +25,7 @@ public class MyClassNodeCreator {
        return new MyASMClassNode(classNode);
     }
 
-    public MyClassNode crateMyClassNodeFromFile(File path){
+    public MyClassNode createMyClassNodeFromFile(File path){
 
         ClassReader reader = null; // this will need to change to use a MyClassReader and a MyClassNode
         ClassNode classNode = null;

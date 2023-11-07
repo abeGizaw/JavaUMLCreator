@@ -1,10 +1,6 @@
 package domain.abescode;
 
 import domain.*;
-import org.objectweb.asm.Opcodes;
-import domain.MyClassNode;
-import domain.MyFieldNode;
-
 import java.util.ArrayList;
 import java.util.List;
 import static presentation.ANSIColors.*;
@@ -24,7 +20,7 @@ public class DirtyInterfaceNotImplementation{
         List<String> invalidUses = new ArrayList<>();
         for (MyFieldNode field : classNode.fields) {
             String className = field.desc.substring(1, field.desc.length() - 1);
-            MyClassNode fieldClassNode = classNodeCreator.crateMyClassNodeFromName(className);
+            MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromName(className);
             if(implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
                 invalidUses.add(field.name);
             }
@@ -33,15 +29,14 @@ public class DirtyInterfaceNotImplementation{
     }
 
     private boolean implementsInterfaceOrExtendsAbstractClass(MyClassNode fieldClassNode) {
-        if((fieldClassNode.access & MyOpcodes.ACC_INTERFACE) == 0 && (fieldClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
+        if((fieldClassNode.access & MyOpcodes.ACC_INTERFACE) == 0 && (fieldClassNode.access & MyOpcodes.ACC_ABSTRACT) == 0){
             return !fieldClassNode.interfaces.isEmpty() || (fieldClassNode.superName != null && checkIfAbstract(fieldClassNode.superName));
-
         }
         return false;
     }
 
     private boolean checkIfAbstract(String superName) {
-        MyClassNode myClassNode = classNodeCreator.crateMyClassNodeFromName(superName);
+        MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
         return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
     }
 }

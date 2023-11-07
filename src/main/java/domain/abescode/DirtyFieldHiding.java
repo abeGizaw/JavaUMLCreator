@@ -23,7 +23,6 @@ public class DirtyFieldHiding {
             allFields.add(field.name);
         }
 
-
         for (MyMethodNode method : classNode.methods) {
             if (method.localVariables != null) {
                 for (MyLocalVariableNode variable : method.localVariables) {

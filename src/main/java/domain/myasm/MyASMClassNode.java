@@ -13,7 +13,6 @@ import java.util.List;
 public class MyASMClassNode extends MyClassNode {
     private final ClassNode classNode;
     public MyASMClassNode(ClassNode classNode) {
-        super();
         this.classNode = classNode;
         super.access = classNode.access;
         super.name = classNode.name;

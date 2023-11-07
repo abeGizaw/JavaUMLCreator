@@ -11,15 +11,11 @@ import org.objectweb.asm.tree.MethodInsnNode;
 public class MyASMAbstractInsnNodeFactory{
 
     public MyAbstractInsnNode constructTypedInsnNode(AbstractInsnNode node){
-//        check opcodes and create either a MyFieldInsnNode, MyMehtodInsnNode, MyVarInsnNode
-        if (node instanceof MethodInsnNode) {
+        int type = node.getType();
+        if (type  == AbstractInsnNode.METHOD_INSN) {
             return new MyASMMethodInsnNode(node);
         }
 
         return new MyDefaultInsnNode(node);
-
     }
-
-
-
 }

@@ -3,7 +3,6 @@ package domain;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 public class MyDefaultInsnNode extends MyAbstractInsnNode {
-    // Constructor
     public MyDefaultInsnNode(AbstractInsnNode node) {
     }
 
