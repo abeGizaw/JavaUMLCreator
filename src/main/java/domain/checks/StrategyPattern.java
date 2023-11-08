@@ -1,7 +1,7 @@
 package domain.checks;
 
 import domain.*;
-import org.objectweb.asm.Opcodes;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class StrategyPattern implements Check {
     private String findSetter(MyClassNode classNode, String fieldName, String fieldType) {
         for (MyMethodNode methodNode : classNode.methods) {
             for (MyAbstractInsnNode instruction : methodNode.instructions) {
-                if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
+                if (instruction.getOpcode() == MyOpcodes.PUTFIELD || instruction.getOpcode() == MyOpcodes.PUTSTATIC) {
                     MyFieldInsnNode fieldInsn = (MyFieldInsnNode) instruction;
                     if (fieldInsn.name.equals(fieldName) && fieldInsn.desc.equals(fieldType)) {
                         return methodNode.name;
