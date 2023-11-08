@@ -180,15 +180,13 @@ package domain {
         +getNext(): MyAbstractInsnNode
         +getOpcode(): int
         +{abstract}getType(): int
+
     }
 
-    +class MyASMAbstractInsnNode{
-        -abstractInsnNode: AbstractInsnNode
-        //takes all fields of abstract
-
-        + MyASMAbstractInsnNode(abstractInsnNode: AbstractInsnNode)
-        (inherits all methods)
-    }
+    +class MyASMAbstractInsnNodeFactory{
+        +MyASMAbstractInsnNode(abstractInsnNode: AbstractInsnNode)
+        +constructTypedInsnNode(insn: AbstractInsnNode): MyAbstractInsnNode
+      }
 
     +abstract class MyClassNode {
         +access: int
@@ -237,6 +235,7 @@ package domain {
     }
 
     +abstract class MyMethodNode {
+        -insnFactory: MyASMAbstractInsnNodeFactory
         +access: int
         +name: String
         +desc: String
@@ -314,6 +313,10 @@ package domain {
         -fieldInsnNode: FieldInsnNode
 
         +MyASMFieldInsnNode(fieldInsnNode: FieldInsnNode)
+    }
+
+    +class MyDefaultInsnNode{
+
     }
 
     +interface MyOpcodes {
@@ -400,7 +403,7 @@ Linter .up.> Message
 Message --> CheckType
 
 
-MyASMAbstractInsnNode --up|>  MyAbstractInsnNode
+'MyASMAbstractInsnNode --up|>  MyAbstractInsnNode
 MyASMClassNode ..up|> MyClassNode
 MyASMClassReader .up|> MyClassReader
 MyASMFieldNode -up|> MyFieldNode
@@ -411,12 +414,16 @@ MyASMLocalVariableNode -up|> MyLocalVariableNode
 MyASMMethodInsnNode ..up|> MyMethodInsnNode
 MyMethodInsnNode -up-|> MyAbstractInsnNode
 MyASMMethodNode -up-|> MyMethodNode
-MyASMVarInsnNode -up-|> MyVarInsnNode
+MyASMVarInsnNode -up|> MyVarInsnNode
 MyLabelNode -|> MyAbstractInsnNode
-MyVarInsnNode -|> MyAbstractInsnNode
+MyVarInsnNode -up-|> MyAbstractInsnNode
 MyASMFieldInsnNode -up-|> MyFieldInsnNode
 MyFieldInsnNode -up-|> MyAbstractInsnNode
+MyDefaultInsnNode -up-|> MyAbstractInsnNode
 
+MyASMAbstractInsnNodeFactory ..> MyAbstractInsnNode
+MyMethodNode ..> MyASMAbstractInsnNodeFactory
+MyMethodNode --> MyASMAbstractInsnNodeFactory
 
 Check .up> Message
 Check --> domain.MyClassNode
@@ -479,8 +486,8 @@ InterfaceOverImplementation ..> MyClassNode
 
 LocalVariableInfo -->"2" MyLabel
 
-MyASMAbstractInsnNode --> org.objectweb.asm.AbstractInsnNode
-MyASMAbstractInsnNode ..> org.objectweb.asm.AbstractInsnNode
+'MyASMAbstractInsnNode --> org.objectweb.asm.AbstractInsnNode
+'MyASMAbstractInsnNode ..> org.objectweb.asm.AbstractInsnNode
 
 MyASMClassNode --> org.objectweb.asm.ClassNode
 MyASMClassNode ..> org.objectweb.asm.ClassNode

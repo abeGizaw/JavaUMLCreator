@@ -1,7 +1,11 @@
 package domain.kianascode;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
+import domain.myasm.MyASMClassNodeCreator;
+import domain.MyClassNodeCreator;
+import domain.checks.AdapterPattern;
+import domain.checks.FinalLocalVariables;
+import domain.checks.PrincipleOfLeastKnowledge;
+import domain.MyClassNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,20 +13,21 @@ import java.util.List;
 import java.io.IOException;
 
 public class KianasMain {
+    private static MyClassNodeCreator creator = new MyASMClassNodeCreator();
+
     public static void main(String[] args) throws IOException {
         runFinalLocalVariables();
         runAdapterPattern();
+        runPLK();
     }
     
     private static void runFinalLocalVariables() throws IOException {
         String className = "domain/kianascode/FinalLocalVariablesTestClass";
 
-        ClassReader reader = new ClassReader(className);
-        ClassNode classNode = new ClassNode();
-        reader.accept(classNode, ClassReader.EXPAND_FRAMES);
+        MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
 
-        QDFinalLocalVariables finalLocalVariablesCheck = new QDFinalLocalVariables();
-        finalLocalVariablesCheck.run(classNode);
+        FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
+        finalLocalVariablesCheck.run(myClassNode);
     }
     
     private static void runAdapterPattern() throws IOException {
@@ -35,15 +40,25 @@ public class KianasMain {
         classNames.add("domain/kianascode/ConcreteAdapter2");
         classNames.add("domain/kianascode/Adapter2");
 
-        List<ClassNode> classNodes = new ArrayList<>();
+        List<MyClassNode> myClassNodes = new ArrayList<>();
         for (String className : classNames) {
-            ClassReader reader = new ClassReader(className);
-            ClassNode classNode = new ClassNode();
-            reader.accept(classNode, ClassReader.EXPAND_FRAMES);
-            classNodes.add(classNode);
+            MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
+            myClassNodes.add(myClassNode);
         }
 
-        QDAdapterPatternCheck adapterPatternCheck = new QDAdapterPatternCheck(classNodes);
-        adapterPatternCheck.run(classNodes.get(0));
+        AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
+        adapterPatternCheck.run(myClassNodes.get(0));
+    }
+
+    private static void runPLK() throws IOException {
+        List<String> classNames = new ArrayList<>();
+        classNames.add("domain/kianascode/PLKTestClass");
+
+        PrincipleOfLeastKnowledge qdPLKCheck = new PrincipleOfLeastKnowledge();
+        for (String className : classNames) {
+            MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
+
+            qdPLKCheck.run(myClassNode);
+        }
     }
 }

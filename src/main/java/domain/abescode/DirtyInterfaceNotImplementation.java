@@ -1,62 +1,42 @@
 package domain.abescode;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import java.io.IOException;
+import domain.*;
 import java.util.ArrayList;
 import java.util.List;
 import static presentation.ANSIColors.*;
 
-public class DirtyInterfaceNotImplementation {
+public class DirtyInterfaceNotImplementation{
+    private final MyClassNodeCreator classNodeCreator;
+    public DirtyInterfaceNotImplementation(MyClassNodeCreator nodeCreator){
+        classNodeCreator = nodeCreator;
+    }
 
-    public void run(ClassNode myClassNode){
+    public void run(MyClassNode myClassNode){
         List<String> invalidUses = checkImplementInterface(myClassNode);
         System.out.println(BLUE + "Where you are not Programming to interface, but instead implementation: " + invalidUses + RESET);
     }
 
-    private List<String> checkImplementInterface(ClassNode classNode){
+    private List<String> checkImplementInterface(MyClassNode classNode){
         List<String> invalidUses = new ArrayList<>();
-        for (FieldNode field : classNode.fields) {
+        for (MyFieldNode field : classNode.fields) {
             String className = field.desc.substring(1, field.desc.length() - 1);
-
-            try {
-                ClassReader fieldClassReader = new ClassReader(className);
-                ClassNode fieldClassNode = new ClassNode();
-                fieldClassReader.accept(fieldClassNode, ClassReader.EXPAND_FRAMES);
-                if(implementsOrExtendsClass(fieldClassNode)){
-                    invalidUses.add(field.name);
-                }
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromName(className);
+            if(implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
+                invalidUses.add(field.name);
             }
         }
         return invalidUses;
     }
 
-    private boolean implementsOrExtendsClass(ClassNode fieldClassNode) {
-        if((fieldClassNode.access & Opcodes.ACC_INTERFACE) == 0 && (fieldClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
+    private boolean implementsInterfaceOrExtendsAbstractClass(MyClassNode fieldClassNode) {
+        if((fieldClassNode.access & MyOpcodes.ACC_INTERFACE) == 0 && (fieldClassNode.access & MyOpcodes.ACC_ABSTRACT) == 0){
             return !fieldClassNode.interfaces.isEmpty() || (fieldClassNode.superName != null && checkIfAbstract(fieldClassNode.superName));
-
         }
         return false;
     }
 
     private boolean checkIfAbstract(String superName) {
-        try {
-            ClassReader myReader = new ClassReader(superName);
-            ClassNode myClassNode = new ClassNode();
-            myReader.accept(myClassNode, ClassReader.EXPAND_FRAMES);
-
-            if((myClassNode.access & Opcodes.ACC_ABSTRACT) != 0){
-                return true;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return false;
+        MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
+        return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
     }
 }
