@@ -22,3 +22,4 @@ public class Message {
             return "Class: " + classOfInterest + "\n  Check Type: " + checkType + "\n  Message: " + message;
         }
     }
+
