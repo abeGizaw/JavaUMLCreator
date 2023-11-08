@@ -28,7 +28,10 @@ public class KianasMain {
         MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
 
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
-        finalLocalVariablesCheck.run(myClassNode);
+        List<Message> messages = finalLocalVariablesCheck.run(myClassNode);
+        for (Message message : messages) {
+            System.out.println(message.toString());
+        }
     }
     
     private static void runAdapterPattern() throws IOException {

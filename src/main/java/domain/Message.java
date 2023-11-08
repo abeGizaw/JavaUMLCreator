@@ -13,9 +13,11 @@ public class Message {
     public CheckType getCheckType(){
         return checkType;
     }
+
     public String getMessage(){
         return  message;
     }
+
     public String getClassesOfInterest(){
         return classOfInterest;
     }
