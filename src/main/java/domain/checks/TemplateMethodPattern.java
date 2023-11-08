@@ -27,16 +27,20 @@ public class TemplateMethodPattern implements Check{
             if(isAMethodCall(node)){
                 MyMethodInsnNode methodInsnNode = (MyMethodInsnNode) node;
                 for (MyMethodNode methodNode : methods) {
-                    if (methodNode.name.equals(methodInsnNode.name) && methodNode.desc.equals(methodInsnNode.desc)) {
-                        if ((methodNode.access & MyOpcodes.ACC_ABSTRACT) != 0) {
-                            return true;
-                        }
+                    if(similarAbstractMethodInsn(methodInsnNode, methodNode)){
+                        return true;
                     }
                 }
-
             }
         }
 
+        return false;
+    }
+
+    private boolean similarAbstractMethodInsn(MyMethodInsnNode methodInsnNode, MyMethodNode methodNode) {
+        if (methodNode.name.equals(methodInsnNode.name) && methodNode.desc.equals(methodInsnNode.desc)) {
+            return (methodNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
+        }
         return false;
     }
 
