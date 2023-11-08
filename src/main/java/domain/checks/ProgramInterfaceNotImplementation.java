@@ -1,12 +1,22 @@
 package domain.checks;
 import domain.*;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static presentation.ANSIColors.*;
+
 public class ProgramInterfaceNotImplementation implements Check{
     private final MyClassNodeCreator classNodeCreator;
-    public ProgramInterfaceNotImplementation(MyClassNodeCreator nodeCreator){
+    private final Path basePath;
+
+    public ProgramInterfaceNotImplementation(MyClassNodeCreator nodeCreator, Path startPath){
         classNodeCreator = nodeCreator;
+        this.basePath = startPath;
     }
 
     public List<Message> run(MyClassNode myClassNode){
@@ -17,15 +27,73 @@ public class ProgramInterfaceNotImplementation implements Check{
         List<Message> invalidUses = new ArrayList<>();
 
         for (MyFieldNode field : classNode.fields) {
-            String className = field.desc.substring(1, field.desc.length() - 1);
-            MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromName(className);
-            if(implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
+            if(isPrimitive(field.desc)) continue;
+
+            String className= getClassName(field.desc);
+
+
+            if(isJavaAPIClass(className)){
+                readJavaDefinedClass(classNode, className, field, invalidUses);
+            } else {
+                String relativePath = findRelativePath(className);
+                readUserDefinedClass(classNode, relativePath, field, invalidUses);
+            }
+
+        }
+        return invalidUses;
+    }
+
+    private String getClassName(String desc) {
+        if(desc.startsWith("[")){
+            return getClassName(desc.substring(1));
+        }
+        return  desc.substring(1, desc.length() - 1);
+    }
+
+    boolean isPrimitive(String desc) {
+        if(desc.startsWith("[")){
+            return isPrimitive(desc.substring(1));
+        }
+        return !desc.startsWith("L");
+    }
+
+    private boolean isJavaAPIClass(String className) {
+        String classPackage = className.replace('/', '.');
+        return classPackage.startsWith("java.");
+    }
+
+    private String findRelativePath(String desc) {
+        String filePackage = basePath.toString().substring(basePath.toString().lastIndexOf(File.separatorChar) + 1);
+        String pathToFind = desc.replace('/', File.separatorChar);
+        int separator = pathToFind.lastIndexOf(filePackage);
+        if(separator == -1){
+            return desc;
+        }
+        return pathToFind.substring(separator + filePackage.length());
+    }
+
+    private void readJavaDefinedClass(MyClassNode classNode, String classNamePath, MyFieldNode field, List<Message> invalidUses) {
+        MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromName(classNamePath);
+        if(implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
+            String message = "Where you need to Programming to interface instead of implementation: " + field.name;
+            invalidUses.add(new Message(CheckType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
+        }
+    }
+
+    private void readUserDefinedClass(MyClassNode classNode, String relativePath, MyFieldNode field, List<Message> invalidUses) {
+        Path classFilePath = basePath.resolve(basePath + relativePath +".class");
+
+        if (!Files.exists(classFilePath)) {
+            System.out.println("The class file for " + relativePath + " cannot be found. Please provide the correct directory.");
+        } else {
+            MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
+            if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
                 String message = "Where you need to Programming to interface instead of implementation: " + field.name;
                 invalidUses.add(new Message(CheckType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
             }
         }
-        return invalidUses;
     }
+
 
     private boolean implementsInterfaceOrExtendsAbstractClass(MyClassNode fieldClassNode) {
         if ((fieldClassNode.access & MyOpcodes.ACC_FINAL) != 0) {
@@ -39,7 +107,13 @@ public class ProgramInterfaceNotImplementation implements Check{
     }
 
     private boolean checkIfAbstract(String superName) {
-        MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
-        return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
+        if(isJavaAPIClass(superName)){
+            MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
+            return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
+        } else {
+            Path classFilePath = basePath.resolve(basePath + findRelativePath(superName) + ".class");
+            MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
+            return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
+        }
     }
 }

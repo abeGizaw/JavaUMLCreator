@@ -27,39 +27,39 @@ public class AbesMain {
         try {
             Files.walk(startPath)
                     .filter(p -> p.toString().endsWith(".class"))
-                    .forEach(AbesMain::processClassFile);
+                    .forEach(filePath -> processClassFile(filePath, startPath));
         } catch (IOException e) {
-            System.err.println("Error reading package \n");
+            System.err.println("Error walking the directory: " + e.getMessage());
         }
 
         ConvertASMToUML aLevel = new ConvertASMToUML();
         aLevel.run();
     }
 
-    private static void processClassFile(Path filePath) {
+    private static void processClassFile(Path filePath, Path startPath) {
         File file = filePath.toFile();
         String[] fileProperties = file.toString().split("\\\\");
 
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-        FieldHiding fieldHider = new FieldHiding();
-        List<Message> hiddenFields = fieldHider.run(myClassNode);
-        for(Message message: hiddenFields){
-            System.out.println(message.toString());
-        }
+//        FieldHiding fieldHider = new FieldHiding();
+//        List<Message> hiddenFields = fieldHider.run(myClassNode);
+//        for(Message message: hiddenFields){
+//            System.out.println(message.toString());
+//        }
 
-        ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator);
+        ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator, startPath);
         List<Message> badImplementation = designPrinciple.run(myClassNode);
         for(Message message: badImplementation){
             System.out.println(message.toString());
         }
 
-        TemplateMethodPattern designPattern = new TemplateMethodPattern();
-        List<Message> usesPattern = designPattern.run(myClassNode);
-        for(Message message : usesPattern){
-            System.out.println(message.toString());
-        }
+//        TemplateMethodPattern designPattern = new TemplateMethodPattern();
+//        List<Message> usesPattern = designPattern.run(myClassNode);
+//        for(Message message : usesPattern){
+//            System.out.println(message.toString());
+//        }
 
         System.out.println("\n");
 

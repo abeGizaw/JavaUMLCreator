@@ -13,6 +13,8 @@ public class InterfaceMock {
     HashMap<String, String> violator = new HashMap<>();
     Map<String, String> great = new HashMap<>();
 
+    Dog[] violatesDifferently = new Dog[3];
+
     HashSet<String> badInterfaceUse = new HashSet<>();
 
     Set<String> goodInterfaceUse = new HashSet<>();
