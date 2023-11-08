@@ -56,7 +56,10 @@ public class AbesMain {
         }
 
         TemplateMethodPattern designPattern = new TemplateMethodPattern();
-        designPattern.run(myClassNode);
+        List<Message> usesPattern = designPattern.run(myClassNode);
+        for(Message message : usesPattern){
+            System.out.println(message.toString());
+        }
 
         System.out.println("\n");
 

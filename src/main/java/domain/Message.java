@@ -1,5 +1,4 @@
 package domain;
-import domain.CheckType;
 public class Message {
     private final CheckType checkType;
     private final String message;

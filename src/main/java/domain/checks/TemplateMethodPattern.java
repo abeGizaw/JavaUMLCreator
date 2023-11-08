@@ -1,29 +1,25 @@
 package domain.checks;
 
 import domain.*;
+import java.util.ArrayList;
 import java.util.List;
-import static presentation.ANSIColors.*;
 
-public class TemplateMethodPattern {
-    public void run(MyClassNode myClassNode){
-        boolean usesTemplate = detectTemplateMethod(myClassNode);
-        if(usesTemplate){
-            System.out.println(YELLOW + "The Class "+ myClassNode.name + " uses the templateMethod Pattern" + RESET);
-        } else {
-            System.out.println(YELLOW + "The Class "+ myClassNode.name + " does not use the templateMethod Pattern" + RESET);
-        }
+public class TemplateMethodPattern implements Check{
+    public List<Message> run(MyClassNode myClassNode){
+        return detectTemplateMethod(myClassNode);
     }
 
-    private boolean detectTemplateMethod(MyClassNode myClassNode) {
-        if((myClassNode.access & MyOpcodes.ACC_ABSTRACT) == 0){
-            return false;
-        }
-        for(MyMethodNode method: myClassNode.methods){
-            if((method.access & MyOpcodes.ACC_FINAL) != 0 && containsAbstractMethodCall(method.instructions, myClassNode.methods)){
-                return true;
+    private List<Message> detectTemplateMethod(MyClassNode myClassNode) {
+        List<Message> usesTemplatePattern = new ArrayList<>();
+        if((myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0){
+            for(MyMethodNode method: myClassNode.methods){
+                if((method.access & MyOpcodes.ACC_FINAL) != 0 && containsAbstractMethodCall(method.instructions, myClassNode.methods)){
+                    String message = "The Class "+ myClassNode.name + " uses the templateMethod Pattern";
+                    usesTemplatePattern.add(new Message(CheckType.TEMPLATE_METHOD_PATTERN, message, myClassNode.name));
+                }
             }
         }
-        return false;
+        return usesTemplatePattern;
     }
 
     private boolean containsAbstractMethodCall(List<MyAbstractInsnNode> instructions, List<MyMethodNode> methods) {
