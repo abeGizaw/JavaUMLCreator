@@ -45,13 +45,15 @@ public class AbesMain {
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
         FieldHiding fieldHider = new FieldHiding();
         List<Message> hiddenFields = fieldHider.run(myClassNode);
-
         for(Message message: hiddenFields){
             System.out.println(message.toString());
         }
 
         ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator);
-        designPrinciple.run(myClassNode);
+        List<Message> badImplementation = designPrinciple.run(myClassNode);
+        for(Message message: badImplementation){
+            System.out.println(message.toString());
+        }
 
         TemplateMethodPattern designPattern = new TemplateMethodPattern();
         designPattern.run(myClassNode);

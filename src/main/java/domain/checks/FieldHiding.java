@@ -12,7 +12,7 @@ public class FieldHiding implements Check{
     }
 
     private List<Message> checkFieldHiding(MyClassNode classNode) {
-        List<Message> hiddenFields2 = new ArrayList<>();
+        List<Message> hiddenFields = new ArrayList<>();
         Set<String> allFields = new HashSet<>();
 
         for (MyFieldNode field : classNode.fields) {
@@ -24,12 +24,12 @@ public class FieldHiding implements Check{
                 for (MyLocalVariableNode variable : method.localVariables) {
                     if (allFields.contains(variable.name)) {
                         String message = "Field " + variable.name + " is hidden by method " + method.name;
-                        hiddenFields2.add(new Message(CheckType.HIDDEN_FIELDS, message, classNode.name));
+                        hiddenFields.add(new Message(CheckType.HIDDEN_FIELDS, message, classNode.name));
                     }
                 }
             }
         }
 
-        return hiddenFields2;
+        return hiddenFields;
     }
 }
