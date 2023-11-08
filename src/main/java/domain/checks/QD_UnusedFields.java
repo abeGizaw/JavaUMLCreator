@@ -1,5 +1,7 @@
-package domain.ariscode;
+package domain.checks;
 
+import domain.CheckType;
+import domain.Message;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
@@ -39,7 +41,7 @@ public class QD_UnusedFields {
                     FieldInsnNode fieldInsn = (FieldInsnNode) instruction;
                     if (fieldUsageMap.containsKey(fieldInsn.name)) {
                         fieldUsageMap.put(fieldInsn.name, true);
-                        System.out.printf(" %s    %s   %s   %s\n", fieldInsn.name , fieldInsn.desc , fieldInsn.owner , fieldInsn.getType(), instruction.);
+                        System.out.printf(" %s    %s   %s   %s\n", fieldInsn.name, fieldInsn.desc, fieldInsn.owner, fieldInsn.getType(), ((FieldInsnNode) instruction).desc);
                     }
                 }
             }

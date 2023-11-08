@@ -1,4 +1,4 @@
-package NamingConventionMockTestClasses;
+package domain.checks.NamingConventionMockTestClasses;
 
 public class FinalStaticFieldName {
 
