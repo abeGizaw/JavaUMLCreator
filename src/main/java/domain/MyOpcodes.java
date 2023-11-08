@@ -22,6 +22,10 @@ public interface MyOpcodes {
     public static final int ASTORE = 58;
     public static final int ACC_ABSTRACT = 1024;
     public static final int ACC_INTERFACE = 512;
+    public static final int PUTFIELD = 181;
+    public static final int PUTSTATIC = 179;
+    public static final int ACC_STATIC = 8;
     public static final int GETFIELD = 180;
     public static final int GETSTATIC = 178;
+
 }

@@ -1,7 +1,6 @@
 package domain;
 
 public abstract class MyFieldInsnNode extends MyAbstractInsnNode {
-    public MyFieldInsnNode(int opcode) {
-        super(opcode);
-    }
+     public String name;
+     public String desc;
 }

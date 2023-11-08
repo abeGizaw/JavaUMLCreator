@@ -1,12 +1,12 @@
 package domain.kianascode;
 
 import domain.Message;
+import domain.myasm.MyASMClassNodeCreator;
+import domain.MyClassNodeCreator;
 import domain.checks.AdapterPattern;
 import domain.checks.FinalLocalVariables;
 import domain.checks.PrincipleOfLeastKnowledge;
-import domain.myasm.MyASMClassReader;
 import domain.MyClassNode;
-import domain.MyClassReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,8 @@ import java.util.List;
 import java.io.IOException;
 
 public class KianasMain {
+    private static MyClassNodeCreator creator = new MyASMClassNodeCreator();
+
     public static void main(String[] args) throws IOException {
         runFinalLocalVariables();
         runAdapterPattern();
@@ -23,8 +25,7 @@ public class KianasMain {
     private static void runFinalLocalVariables() throws IOException {
         String className = "domain/kianascode/FinalLocalVariablesTestClass";
 
-        MyClassReader reader = new MyASMClassReader();
-        MyClassNode myClassNode = reader.generateMyClassNode(className);
+        MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
 
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
         finalLocalVariablesCheck.run(myClassNode);
@@ -42,8 +43,7 @@ public class KianasMain {
 
         List<MyClassNode> myClassNodes = new ArrayList<>();
         for (String className : classNames) {
-            MyClassReader reader = new MyASMClassReader();
-            MyClassNode myClassNode = reader.generateMyClassNode(className);
+            MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
             myClassNodes.add(myClassNode);
         }
 
@@ -60,8 +60,7 @@ public class KianasMain {
 
         PrincipleOfLeastKnowledge qdPLKCheck = new PrincipleOfLeastKnowledge();
         for (String className : classNames) {
-            MyClassReader reader = new MyASMClassReader();
-            MyClassNode myClassNode = reader.generateMyClassNode(className);
+            MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
 
             qdPLKCheck.run(myClassNode);
         }

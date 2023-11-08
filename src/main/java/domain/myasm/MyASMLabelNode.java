@@ -7,33 +7,21 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 
 public class MyASMLabelNode extends MyLabelNode {
-    private AbstractInsnNode labelNode;
+    private final LabelNode labelNode;
+    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
 
     public MyASMLabelNode(AbstractInsnNode labelNode) {
-        super(labelNode.getOpcode());
-        this.labelNode = labelNode;
+        this.labelNode = (LabelNode) labelNode;
     }
 
     @Override
     public MyAbstractInsnNode getNext() {
-        // TODO: abstract getNext?
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode nextInsn = labelNode.getNext();
-        if (nextInsn == null) {
-            return null;
-        }
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(nextInsn);
+        return factory.constructTypedInsnNode(labelNode.getNext());
     }
 
     @Override
-    public MyAbstractInsnNode getPrevious() {
-        // TODO: abstract getPrevious?
-        MyASMAbstractInsnNodeFactory myASMAbstractInsnNodeFactory = new MyASMAbstractInsnNodeFactory();
-        AbstractInsnNode previousInsn = labelNode.getPrevious();
-        if (previousInsn == null) {
-            return null;
-        }
-        return myASMAbstractInsnNodeFactory.constructTypedInsnNode(previousInsn);
+    public int getOpcode() {
+        return labelNode.getOpcode();
     }
 
     @Override
@@ -43,6 +31,6 @@ public class MyASMLabelNode extends MyLabelNode {
 
     @Override
     public MyLabel getLabel() {
-        return new MyASMLabel(((LabelNode) labelNode).getLabel());
+        return new MyASMLabel(labelNode.getLabel());
     }
 }

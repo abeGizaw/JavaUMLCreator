@@ -11,15 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyASMClassNode extends MyClassNode {
-    private ClassNode classNode;
+    private final ClassNode classNode;
 
     public MyASMClassNode(ClassNode classNode) {
         this.classNode = classNode;
-        super.fields = convertFields();
-        super.interfaces = classNode.interfaces;
+        super.access = classNode.access;
         super.name = classNode.name;
-        super.methods = convertMethods();
         super.superName = classNode.superName;
+        super.interfaces = classNode.interfaces;
+        super.fields = convertFields();
+        super.methods = convertMethods();
     }
 
     private List<MyFieldNode> convertFields() {

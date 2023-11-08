@@ -6,6 +6,9 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 
 public class MyASMAbstractInsnNodeFactory {
     public MyAbstractInsnNode constructTypedInsnNode(AbstractInsnNode node){
+        if (node == null) {
+            return null;
+        }
         int type = node.getType();
         if (type == MyAbstractInsnNode.FIELD_INSN) {
             return new MyASMFieldInsnNode(node);

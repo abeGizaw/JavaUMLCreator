@@ -1,12 +1,11 @@
 package domain.abescode;
 
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
+import domain.*;
 import java.util.List;
 import static presentation.ANSIColors.*;
 
 public class DirtyTemplateMethod {
-    public void run(ClassNode myClassNode){
+    public void run(MyClassNode myClassNode){
         boolean usesTemplate = detectTemplateMethod(myClassNode);
         if(usesTemplate){
             System.out.println(YELLOW + "The Class "+ myClassNode.name + " uses the templateMethod Pattern" + RESET);
@@ -15,26 +14,25 @@ public class DirtyTemplateMethod {
         }
     }
 
-    private boolean detectTemplateMethod(ClassNode myClassNode) {
-        if((myClassNode.access & Opcodes.ACC_ABSTRACT) == 0){
+    private boolean detectTemplateMethod(MyClassNode myClassNode) {
+        if((myClassNode.access & MyOpcodes.ACC_ABSTRACT) == 0){
             return false;
         }
-        for(MethodNode method: myClassNode.methods){
-            if((method.access & Opcodes.ACC_FINAL) != 0 && containsAbstractMethodCall(method.instructions, myClassNode.methods)){
+        for(MyMethodNode method: myClassNode.methods){
+            if((method.access & MyOpcodes.ACC_FINAL) != 0 && containsAbstractMethodCall(method.instructions, myClassNode.methods)){
                 return true;
             }
         }
         return false;
     }
 
-    private boolean containsAbstractMethodCall(InsnList instructions, List<MethodNode> methods) {
-        for(AbstractInsnNode node: instructions){
+    private boolean containsAbstractMethodCall(List<MyAbstractInsnNode> instructions, List<MyMethodNode> methods) {
+        for(MyAbstractInsnNode node: instructions){
             if(isAMethodCall(node)){
-                MethodInsnNode methodInsnNode = (MethodInsnNode) node;
-
-                for (MethodNode methodNode : methods) {
+                MyMethodInsnNode methodInsnNode = (MyMethodInsnNode) node;
+                for (MyMethodNode methodNode : methods) {
                     if (methodNode.name.equals(methodInsnNode.name) && methodNode.desc.equals(methodInsnNode.desc)) {
-                        if ((methodNode.access & Opcodes.ACC_ABSTRACT) != 0) {
+                        if ((methodNode.access & MyOpcodes.ACC_ABSTRACT) != 0) {
                             return true;
                         }
                     }
@@ -46,10 +44,10 @@ public class DirtyTemplateMethod {
         return false;
     }
 
-    private boolean isAMethodCall(AbstractInsnNode node) {
+    private boolean isAMethodCall(MyAbstractInsnNode node) {
         int opcode = node.getOpcode();
-        return opcode == Opcodes.INVOKEVIRTUAL || opcode == Opcodes.INVOKEINTERFACE ||
-                opcode == Opcodes.INVOKESPECIAL || opcode == Opcodes.INVOKEDYNAMIC;
+        return opcode == MyOpcodes.INVOKEVIRTUAL || opcode == MyOpcodes.INVOKEINTERFACE ||
+                opcode == MyOpcodes.INVOKESPECIAL || opcode == MyOpcodes.INVOKEDYNAMIC;
     }
 
 }

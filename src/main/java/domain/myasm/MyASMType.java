@@ -4,7 +4,7 @@ import domain.MyType;
 import org.objectweb.asm.Type;
 
 public class MyASMType extends MyType {
-    private Type type;
+    private final Type type;
 
     public MyASMType(Type type) {
         this.type = type;

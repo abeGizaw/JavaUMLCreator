@@ -315,6 +315,10 @@ package domain {
         +MyASMFieldInsnNode(fieldInsnNode: FieldInsnNode)
     }
 
+    +class MyDefaultInsnNode{
+
+    }
+
     +interface MyOpcodes {
         + {static}{final} ISTORE: int
         + {static}{final} LSTORE: int
@@ -415,6 +419,7 @@ MyLabelNode -|> MyAbstractInsnNode
 MyVarInsnNode -up-|> MyAbstractInsnNode
 MyASMFieldInsnNode -up-|> MyFieldInsnNode
 MyFieldInsnNode -up-|> MyAbstractInsnNode
+MyDefaultInsnNode -up-|> MyAbstractInsnNode
 
 MyASMAbstractInsnNodeFactory ..> MyAbstractInsnNode
 MyMethodNode ..> MyASMAbstractInsnNodeFactory

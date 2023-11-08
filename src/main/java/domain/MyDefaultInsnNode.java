@@ -1,18 +1,16 @@
 package domain;
 
-public class MyDefaultInsnNode extends MyAbstractInsnNode {
-    public MyDefaultInsnNode() {
-        super(-1);
-    }
+import org.objectweb.asm.tree.AbstractInsnNode;
 
+public class MyDefaultInsnNode extends MyAbstractInsnNode {
     @Override
     public MyAbstractInsnNode getNext() {
         return null;
     }
 
     @Override
-    public MyAbstractInsnNode getPrevious() {
-        return null;
+    public int getOpcode() {
+        return -1;
     }
 
     @Override

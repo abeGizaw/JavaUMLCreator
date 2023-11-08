@@ -6,5 +6,5 @@ import domain.MyClassNode;
 import java.util.List;
 
 public interface Check {
-    public List<Message> run(MyClassNode classNode);
+    List<Message> run(MyClassNode classNode);
 }
