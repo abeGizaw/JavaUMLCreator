@@ -16,11 +16,11 @@ public class MyASMClassNode extends MyClassNode {
     public MyASMClassNode(ClassNode classNode) {
         this.classNode = classNode;
         super.access = classNode.access;
-        super.fields = convertFields();
-        super.interfaces = classNode.interfaces;
-        super.methods = convertMethods();
         super.name = classNode.name;
         super.superName = classNode.superName;
+        super.interfaces = classNode.interfaces;
+        super.fields = convertFields();
+        super.methods = convertMethods();
     }
 
     private List<MyFieldNode> convertFields() {
