@@ -1,6 +1,6 @@
 package domain.kianascode;
 
 public class Client {
-    private Adapter adapter;
-    private Adapter2 adapter2;
+    private Target target;
+    private Target2 target2;
 }

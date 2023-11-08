@@ -1,4 +1,4 @@
 package domain.kianascode;
 
-public class ConcreteClass1 {
+public interface Target {
 }
