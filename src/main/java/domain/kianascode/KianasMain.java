@@ -61,11 +61,15 @@ public class KianasMain {
         List<String> classNames = new ArrayList<>();
         classNames.add("domain/kianascode/PLKTestClass");
 
-        PrincipleOfLeastKnowledge qdPLKCheck = new PrincipleOfLeastKnowledge();
+        PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
+        List<Message> messages = new ArrayList<>();
         for (String className : classNames) {
             MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
+            messages.addAll(plkCheck.run(myClassNode));
+        }
 
-            qdPLKCheck.run(myClassNode);
+        for (Message message : messages) {
+            System.out.println(message.toString());
         }
     }
 }
