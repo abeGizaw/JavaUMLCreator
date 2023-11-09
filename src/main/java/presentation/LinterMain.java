@@ -19,6 +19,8 @@ public class LinterMain {
     private static String basePath;
     private static List<String> paths;
 
+    // need to add logic using the base path
+
     public static void main(String[] args) {
         promptUserForDirectory();
         String outputPath = promptUserForOutputFileName();
