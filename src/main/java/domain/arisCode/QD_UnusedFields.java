@@ -2,8 +2,6 @@ package domain.arisCode;
 
 import domain.CheckType;
 import domain.Message;
-import domain.checks.QD_ClassNodeToFile;
-import domain.checks.QD_FieldsRemover;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
@@ -124,7 +122,7 @@ public class QD_UnusedFields {
     private void exportModifiedClassNode() {
         for (ClassNode classNode : modifiedClassNodes) {
             String[] nameArray = classNode.name.split("/");
-            QD_ClassNodeToFile QDClassNodeToFile = new QD_ClassNodeToFile(outputPath);
+            ClassNodeToFile QDClassNodeToFile = new ClassNodeToFile(outputPath);
             QDClassNodeToFile.writeClassNodeToFile(classNode);
 
         }

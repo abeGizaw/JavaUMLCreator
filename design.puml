@@ -23,10 +23,13 @@ package presentation {
 package domain {
     +class Linter {
         -checkTypeToCheck: Map<CheckType, Check>
+        -transformTypeToTransformation: Map<TransformType, Transformation>
         -myClassNodeCreator: MyClassNodeCreator
         -myClassNodes: List<MyClassNode>
+
         +Linter(classPaths: List<String>, myClassNodeCreator: MyClassNodeCreator)
-        +runSelectedChecks(List<CheckType>): List<Message>
+        +runSelectedChecks(checks: List<CheckType>): List<Message>
+        +runSelectedTransformation(transforms: List<TransformType>)
         -createClassNodes(classPaths: List<String>): List<MyClassNode>
         -createSelectedChecks(List<CheckType>): List<Check>
     }
@@ -45,6 +48,11 @@ package domain {
         STRATEGY,
         ADAPTER
     }
+
+    +enum TransformType{
+        REMOVE_UNUSED_FIELDS
+    }
+
     +class Message {
         -checkType: CheckType
         -message: String
@@ -173,6 +181,21 @@ package domain {
         -containsAbstractMethodCall(instructions: <MyAbstractInsnNode>, methods: List<MyMethodNode>): boolean
         -isAMethodCall(node: MyAbstractInsnNode): boolean
     }
+
+
+    +class DetectUnusedFields{
+
+
+    }
+
+    +interface Transformation{
+
+    }
+
+    +class RemoveUnusedFields {
+
+    }
+
 
 
     +abstract class MyAbstractInsnNode {
@@ -485,6 +508,13 @@ InterfaceOverImplementation ..> MyClassNode
 
 
 LocalVariableInfo -->"2" MyLabel
+
+
+DetectUnusedFields .up.|> Check
+RemoveUnusedFields .up.|> Transformation
+Linter -down->"*" Transformation
+Linter ->"*" TransformType
+
 
 'MyASMAbstractInsnNode --> org.objectweb.asm.AbstractInsnNode
 'MyASMAbstractInsnNode ..> org.objectweb.asm.AbstractInsnNode

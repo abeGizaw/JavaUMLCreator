@@ -23,15 +23,14 @@ public class NamingConventionTest {
      * - All method names are camelCase
      */
     private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final Check namingConventionCheck = new NamingConventionCheck();
 
     @Test
     public void runValidNames() throws IOException {
         String className = "domain/checks/NamingConventionMockTestClasses/ValidNaming";
 
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
-        NamingConventionCheck namingConventionCheck = new NamingConventionCheck();
         List<Message> messageList = namingConventionCheck.run(classNode);
-        printMessages(messageList);
 
         assertEquals(0, messageList.size());
     }
@@ -39,9 +38,7 @@ public class NamingConventionTest {
     private void runInvalid(String className, List<String> expectedMessages) {
 
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
-        NamingConventionCheck namingConventionCheck = new NamingConventionCheck();
         List<Message> messageList = namingConventionCheck.run(classNode);
-        printMessages(messageList);
 
         for (int i = 0; i < messageList.size(); i++) {
             assertEquals(CheckType.NAMING_CONVENTION, messageList.get(i).getCheckType());
@@ -109,13 +106,5 @@ public class NamingConventionTest {
 
         runInvalid(className, expectedMessages);
     }
-
-
-    private static void printMessages(List<Message> messageList) {
-        for (Message message : messageList) {
-            System.out.println(message.toString());
-        }
-    }
-
 
 }

@@ -1,4 +1,4 @@
-package domain.checks;
+package domain.arisCode;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -7,10 +7,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class QD_ClassNodeToFile {
+public class ClassNodeToFile {
     private final String outputPath;
 
-    public QD_ClassNodeToFile(String outputPath) {
+    public ClassNodeToFile(String outputPath) {
         this.outputPath = outputPath;
     }
 

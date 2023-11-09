@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FavorCompositionTest {
 
     private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final Check compOverInheritance = new FavorCompOverInheritance();
 
     @Test
     public void runViolatesCompositionWithInheritance() throws IOException {
@@ -28,9 +29,7 @@ public class FavorCompositionTest {
         String superName = "domain/checks/FavorCompositionMockTestClasses/SuperClass";
 
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
-        FavorCompOverInheritance compOverInheritance = new FavorCompOverInheritance();
         List<Message> messageList = compOverInheritance.run(classNode);
-        printMessages(messageList);
 
         String expectedMessage = String.format("Consider composition instead of inheritance. " + classNode.name + " EXTENDS " + superName);
 
@@ -44,16 +43,9 @@ public class FavorCompositionTest {
         String className = "domain/checks/FavorCompositionMockTestClasses/ValidComp";
 
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
-        FavorCompOverInheritance compOverInheritance = new FavorCompOverInheritance();
         List<Message> messageList = compOverInheritance.run(classNode);
-        printMessages(messageList);
 
         assertEquals(0, messageList.size());
     }
 
-    private static void printMessages(List<Message> messageList) {
-        for (Message message : messageList) {
-            System.out.println(message.toString());
-        }
-    }
 }

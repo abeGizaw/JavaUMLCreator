@@ -1,6 +1,8 @@
-package domain.checks;
+package domain.arisCode;
 
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
 
 import java.util.List;
 
@@ -29,10 +31,12 @@ public class QD_FieldsRemover extends ClassVisitor {
 
     private static class CustomMethodVisitor extends MethodVisitor {
         private final List<String> fieldsToRemove;
+
         public CustomMethodVisitor(int api, MethodVisitor mv, List<String> fieldsToRemove) {
             super(api, mv);
             this.fieldsToRemove = fieldsToRemove;
         }
+
         @Override
         public void visitFieldInsn(int opcode, String owner, String name, String descriptor) {
             if (fieldsToRemove.contains(name)) {
