@@ -4,11 +4,11 @@ import org.objectweb.asm.*;
 
 import java.util.List;
 
-public class FieldsRemover extends ClassVisitor {
+public class QD_FieldsRemover extends ClassVisitor {
 
-    private List<String> fieldsToRemove;
+    private final List<String> fieldsToRemove;
 
-    public FieldsRemover(int api, ClassVisitor cv, List<String> fieldsToRemove) {
+    public QD_FieldsRemover(int api, ClassVisitor cv, List<String> fieldsToRemove) {
         super(api, cv);
         this.fieldsToRemove = fieldsToRemove;
     }

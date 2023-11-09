@@ -1,7 +1,9 @@
-package domain.checks;
+package domain.arisCode;
 
 import domain.CheckType;
 import domain.Message;
+import domain.checks.QD_ClassNodeToFile;
+import domain.checks.QD_FieldsRemover;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
@@ -16,30 +18,30 @@ public class QD_UnusedFields {
     private final Map<FieldNode, ClassNode> fieldToClass;
     private final Map<String, FieldNode> nameToFieldNode;
     private final List<ClassNode> modifiedClassNodes;
+    private final String outputPath;
 
-    public QD_UnusedFields(List<ClassNode> classNodes) {
+    public QD_UnusedFields(List<ClassNode> classNodes, String outputPath) {
         this.classNodes = classNodes;
         this.fieldToClass = new HashMap<>();
         this.fieldUsageMap = new HashMap<>();
         this.nameToFieldNode = new HashMap<>();
         this.modifiedClassNodes = new ArrayList<>();
+        this.outputPath = outputPath;
     }
 
     public List<Message> run() {
         populateFieldMaps();
         detectAllUnusedFields(classNodes);
 
-        for(ClassNode classNode: classNodes){
+        for (ClassNode classNode : classNodes) {
             ClassNode modifiedClassNode = deleteUnusedFields(classNode);
             modifiedClassNodes.add(modifiedClassNode);
             boolean removedAllFields = checkIfAllDeleted(modifiedClassNode, getNamesToDelete());
-            if(!removedAllFields){
+            if (!removedAllFields) {
                 throw new RuntimeException("UNUSED FIELDS REMAIN");
             }
         }
-        for (ClassNode classNode : modifiedClassNodes) {
-            printAllFields(classNode);
-        }
+        exportModifiedClassNode();
         return generateUnusedMessages();
     }
 
@@ -80,24 +82,10 @@ public class QD_UnusedFields {
         }
     }
 
-
-    public void printFieldUsageMap() {
-        for (FieldNode fieldNode : fieldUsageMap.keySet()) {
-            System.out.printf(" %s   %s \n", fieldNode.name, fieldUsageMap.get(fieldNode));
-        }
-    }
-
-    public void printFieldToClassMap() {
-        for (FieldNode fieldNode : fieldToClass.keySet()) {
-            System.out.printf("%s   IN   %s\n", fieldNode.name, fieldToClass.get(fieldNode).name);
-        }
-    }
-
-
     private ClassNode deleteUnusedFields(ClassNode classNode) {
         List<String> fieldsToDelete = getNamesToDelete();
         ClassNode modifiedClassNode = new ClassNode();
-        FieldsRemover fieldsDeleter = new FieldsRemover(Opcodes.ASM8, modifiedClassNode, fieldsToDelete);
+        QD_FieldsRemover fieldsDeleter = new QD_FieldsRemover(Opcodes.ASM8, modifiedClassNode, fieldsToDelete);
         classNode.accept(fieldsDeleter);
         return modifiedClassNode;
     }
@@ -113,7 +101,7 @@ public class QD_UnusedFields {
             for (AbstractInsnNode instruction : method.instructions) {
                 if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
                     FieldInsnNode node = (FieldInsnNode) instruction;
-                    if(namesToDelete.contains(node.name)){
+                    if (namesToDelete.contains(node.name)) {
                         return false;
                     }
                 }
@@ -133,20 +121,12 @@ public class QD_UnusedFields {
         return namesToDelete;
     }
 
-    private void printAllFields(ClassNode classNode) {
-        System.out.println("Class: " + classNode.name);
-        for (FieldNode fieldNode : classNode.fields) {
-            System.out.println("    " + fieldNode.name);
-        }
+    private void exportModifiedClassNode() {
+        for (ClassNode classNode : modifiedClassNodes) {
+            String[] nameArray = classNode.name.split("/");
+            QD_ClassNodeToFile QDClassNodeToFile = new QD_ClassNodeToFile(outputPath);
+            QDClassNodeToFile.writeClassNodeToFile(classNode);
 
-        for (MethodNode method: classNode.methods){
-            for(AbstractInsnNode instruction: method.instructions){
-                if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
-                    FieldInsnNode node = (FieldInsnNode) instruction;
-                    System.out.println("    Assigning: " + node.name);
-                }
-            }
         }
     }
-
 }
