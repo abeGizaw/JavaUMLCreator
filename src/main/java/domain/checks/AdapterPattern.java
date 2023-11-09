@@ -114,7 +114,7 @@ public class AdapterPattern implements Check {
                     "\ttarget: %s\n" +
                     "\tadaptee: %s\n" +
                     "\tclient: %s.\n", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
-            String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdaptee(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
+            String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
             Message message = new Message(CheckType.ADAPTER_PATTERN, messageText, classes);
             messages.add(message);
         }

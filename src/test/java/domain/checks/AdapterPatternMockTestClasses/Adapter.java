@@ -1,4 +1,4 @@
-package domain.kianascode;
+package domain.checks.AdapterPatternMockTestClasses;
 
 public class Adapter implements Target {
     private Adaptee adaptee;
