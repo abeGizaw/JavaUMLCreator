@@ -27,7 +27,6 @@ public class Linter {
         createSelectedChecks(checkTypes);
         List<Message> messages = new ArrayList<>();
         for (CheckType checkType : checkTypes) {
-            System.out.println("running " + checkType);
             if (checkType == CheckType.ADAPTER_PATTERN) {
                 messages.addAll(checkTypeToCheck.get(checkType).run(myClassNodes.get(0)));
             } else {
