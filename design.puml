@@ -12,7 +12,7 @@ package presentation {
         -lint(): void
         -promptUserForDirectory(): String
         -promptUserForOutputFileName(): String
-        -promptUserForChecks(): String
+        -promptUserForChecks(): List<CheckType>
         -validateUserSelectedChecks(checks: String): List<CheckType>
         -prettyPrint(Messages: List<Message>): void
         -saveToFile(message: String): void
