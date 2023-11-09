@@ -1,5 +1,6 @@
 package presentation;
 
+import datasource.MessageSaver;
 import datasource.Saver;
 import domain.CheckType;
 import domain.Linter;
@@ -15,8 +16,6 @@ import java.util.*;
 
 public class LinterMain {
 
-    private Saver saver;
-    private Linter linter;
     private static String basePath;
     private static List<String> paths;
 
@@ -25,24 +24,26 @@ public class LinterMain {
         String outputPath = promptUserForOutputFileName();
         Set<CheckType> checks = promptUserForChecks();
 
-        for(String p: paths){
+        for (String p : paths) {
             System.out.println(p);
         }
-        System.out.println("OUTPUT PATH: " +  outputPath);
+        System.out.println("OUTPUT PATH: " + outputPath);
 
-        for(CheckType type: checks){
+        for (CheckType type : checks) {
             System.out.println(type.toString());
         }
-
-//        lint(checks);
+        List<Message> messages = lint(checks);
+        prettyPrint(messages);
+        saveToFile(messages, outputPath);
 
     }
 
-//    private static void lint(Set<CheckType> checks) {
-//        (MyClassNodeCreator)  creator =  new MyASMClassNodeCreator();
-//        Linter linter  = new Linter(paths, creator);
-//
-//    }
+    private static List<Message> lint(Set<CheckType> checks) {
+        MyClassNodeCreator creator = new MyASMClassNodeCreator();
+        Linter linter = new Linter(paths, creator);
+        return linter.runSelectedChecks(checks);
+
+    }
 
 
     private static void promptUserForDirectory() {
@@ -94,7 +95,7 @@ public class LinterMain {
         allChecks.addAll(promptUserForPatters());
         allChecks.addAll(promptUserForPrinciples());
 
-        return  allChecks;
+        return allChecks;
 
     }
 
@@ -127,7 +128,7 @@ public class LinterMain {
 
 
         }
-            return styleChecks;
+        return styleChecks;
     }
 
     private static Set<CheckType> promptUserForPatters() {
@@ -166,8 +167,8 @@ public class LinterMain {
         Set<CheckType> styleChecks = new HashSet<>();
         String[] inputArray = userInput.split(",");
 
-        for(String s: inputArray){
-            switch (s.toUpperCase()){
+        for (String s : inputArray) {
+            switch (s.toUpperCase()) {
                 case "NC":
                     styleChecks.add(CheckType.NAMING_CONVENTION);
                     break;
@@ -199,11 +200,18 @@ public class LinterMain {
     }
 
 
-    private void prettyPrint(List<Message> messages) {
-
+    private static void prettyPrint(List<Message> messages) {
+        for(Message message: messages){
+            System.out.println(message.toString());
+        }
     }
 
-    private void saveToFile(String message) {
+    private static void saveToFile(List<Message> messages, String outputPath) {
+        Saver saver = new MessageSaver(outputPath);
+        for(Message message: messages){
+            saver.saveMessage(message.toString());
+        }
+
     }
 
 
