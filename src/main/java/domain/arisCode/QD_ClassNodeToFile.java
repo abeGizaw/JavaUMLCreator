@@ -15,13 +15,15 @@ public class QD_ClassNodeToFile {
     }
 
     public void writeClassNodeToFile(ClassNode classNode) {
+        // The classWriter and the accept method are ok to rely on 3rd party
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         classNode.accept(classWriter);
 
         byte[] bytecode = classWriter.toByteArray();
         String[] classNameArray = classNode.name.split("/");
         String className = classNameArray[classNameArray.length - 1];
-        System.out.println(className);
+
+        // This goes in the dataSource Layer
         File classFile = new File(outputPath + File.separator + className + ".class");
         try (FileOutputStream fos = new FileOutputStream(classFile)) {
             fos.write(bytecode);
