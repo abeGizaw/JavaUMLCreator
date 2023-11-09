@@ -2,9 +2,7 @@ package domain.checks;
 import domain.*;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +28,6 @@ public class ProgramInterfaceNotImplementation implements Check{
             if(isPrimitive(field.desc)) continue;
 
             String className= getClassName(field.desc);
-
 
             if(isJavaAPIClass(className)){
                 readJavaDefinedClass(classNode, className, field, invalidUses);
@@ -58,8 +55,7 @@ public class ProgramInterfaceNotImplementation implements Check{
     }
 
     private boolean isJavaAPIClass(String className) {
-        String classPackage = className.replace('/', '.');
-        return classPackage.startsWith("java.");
+        return className.startsWith("java/");
     }
 
     private String findRelativePath(String desc) {
@@ -67,6 +63,7 @@ public class ProgramInterfaceNotImplementation implements Check{
         String pathToFind = desc.replace('/', File.separatorChar);
         int separator = pathToFind.lastIndexOf(filePackage);
         if(separator == -1){
+            //Class is not in given package
             return desc;
         }
         return pathToFind.substring(separator + filePackage.length());
@@ -83,15 +80,12 @@ public class ProgramInterfaceNotImplementation implements Check{
     private void readUserDefinedClass(MyClassNode classNode, String relativePath, MyFieldNode field, List<Message> invalidUses) {
         Path classFilePath = basePath.resolve(basePath + relativePath +".class");
 
-        if (!Files.exists(classFilePath)) {
-            System.out.println("The class file for " + relativePath + " cannot be found. Please provide the correct directory.");
-        } else {
-            MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
-            if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
-                String message = "Where you need to Programming to interface instead of implementation: " + field.name;
-                invalidUses.add(new Message(CheckType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
-            }
+        MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
+        if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
+            String message = "Where you need to Programming to interface instead of implementation: " + field.name;
+            invalidUses.add(new Message(CheckType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
         }
+
     }
 
 

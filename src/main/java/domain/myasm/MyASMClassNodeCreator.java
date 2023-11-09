@@ -31,7 +31,7 @@ public class MyASMClassNodeCreator implements MyClassNodeCreator {
             classNode = new ClassNode();
             reader.accept(classNode, ClassReader.EXPAND_FRAMES);
         } catch (IOException e) {
-            throw new RuntimeException("This is not a valid file path " + path);
+            throw new RuntimeException("The class file for " + path + " cannot be found. Please provide the correct directory.");
         }
 
         return new MyASMClassNode(classNode);

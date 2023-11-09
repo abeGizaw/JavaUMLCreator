@@ -43,11 +43,11 @@ public class AbesMain {
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-//        FieldHiding fieldHider = new FieldHiding();
-//        List<Message> hiddenFields = fieldHider.run(myClassNode);
-//        for(Message message: hiddenFields){
-//            System.out.println(message.toString());
-//        }
+        FieldHiding fieldHider = new FieldHiding();
+        List<Message> hiddenFields = fieldHider.run(myClassNode);
+        for(Message message: hiddenFields){
+            System.out.println(message.toString());
+        }
 
         ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator, startPath);
         List<Message> badImplementation = designPrinciple.run(myClassNode);
@@ -55,14 +55,12 @@ public class AbesMain {
             System.out.println(message.toString());
         }
 
-//        TemplateMethodPattern designPattern = new TemplateMethodPattern();
-//        List<Message> usesPattern = designPattern.run(myClassNode);
-//        for(Message message : usesPattern){
-//            System.out.println(message.toString());
-//        }
+        TemplateMethodPattern designPattern = new TemplateMethodPattern();
+        List<Message> usesPattern = designPattern.run(myClassNode);
+        for(Message message : usesPattern){
+            System.out.println(message.toString());
+        }
 
         System.out.println("\n");
-
-
     }
 }

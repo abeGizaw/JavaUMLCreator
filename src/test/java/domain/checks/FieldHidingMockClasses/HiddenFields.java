@@ -3,7 +3,7 @@ package domain.checks.FieldHidingMockClasses;
 import java.util.Deque;
 import java.util.List;
 
-public class HidesFields {
+public class HiddenFields {
     String similarName;
     int differentName;
     List<String> slightlySimilar;
