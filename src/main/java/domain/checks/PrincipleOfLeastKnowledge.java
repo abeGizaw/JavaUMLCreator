@@ -5,7 +5,7 @@ import domain.myasm.MyASMType;
 
 import java.util.*;
 
-public class PrincipleOfLeastKnowledge {
+public class PrincipleOfLeastKnowledge implements Check {
     private static final Set<Integer> METHOD_OPCODES = Set.of(MyOpcodes.H_INVOKEVIRTUAL, MyOpcodes.H_INVOKESTATIC, MyOpcodes.H_INVOKESPECIAL, MyOpcodes.H_INVOKEINTERFACE);
 
     Stack<MyAbstractInsnNode> instructionStack;
@@ -14,10 +14,11 @@ public class PrincipleOfLeastKnowledge {
         instructionStack = new Stack<>();
     }
 
-    public void run(MyClassNode classNode) {
+    public List<Message> run(MyClassNode classNode) {
         for (MyMethodNode myMethodNode : classNode.methods) {
             checkMethod(myMethodNode);
         }
+        return null;
     }
 
     private void checkMethod(MyMethodNode myMethodNode) {

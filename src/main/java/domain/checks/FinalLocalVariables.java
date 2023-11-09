@@ -4,18 +4,19 @@ import domain.*;
 
 import java.util.*;
 
-public class FinalLocalVariables {
+public class FinalLocalVariables implements Check {
     private static final Set<Integer> STORE_OPCODES = Set.of(MyOpcodes.ISTORE, MyOpcodes.LSTORE, MyOpcodes.FSTORE, MyOpcodes.DSTORE, MyOpcodes.ASTORE);
 
     private LocalVariableManager localVariableManager;
 
-    public void run(MyClassNode myClassNode) {
+    public List<Message> run(MyClassNode myClassNode) {
         for (MyMethodNode myMethodNode : myClassNode.methods) {
             System.out.printf("Method: %s\n", myMethodNode.name);
             localVariableManager = new LocalVariableManager(myMethodNode);
             checkMethodForFinalLocalVariables(myMethodNode);
             printResults();
         }
+        return null;
     }
 
     private void checkMethodForFinalLocalVariables(MyMethodNode myMethodNode) {

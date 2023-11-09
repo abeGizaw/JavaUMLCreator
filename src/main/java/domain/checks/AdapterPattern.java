@@ -1,6 +1,7 @@
 package domain.checks;
 
 import domain.AdapterPatternClasses;
+import domain.Message;
 import domain.MyClassNode;
 import domain.MyFieldNode;
 
@@ -9,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AdapterPattern {
+public class AdapterPattern implements Check {
     private List<MyClassNode> myClassNodes;
     private List<String> classNames;
     private Set<String> interfaceNames;
@@ -25,8 +26,9 @@ public class AdapterPattern {
         interfaceNames = new HashSet<>();
     }
 
-    public void run(MyClassNode myClassNode) {
+    public List<Message> run(MyClassNode myClassNode) {
         printAdapterPatterns(findAdapterPatterns());
+        return null;
     }
 
     private List<AdapterPatternClasses> findAdapterPatterns() {
