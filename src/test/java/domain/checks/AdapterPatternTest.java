@@ -108,7 +108,7 @@ public class AdapterPatternTest {
 
     @Test
     public void runAdapterPatternNoPatternsExpectNoAdapterPatterns() {
-        String directoryPath = "AdapterPatternMockTestClasses/Invalid/";
+        String directoryPath = "AdapterPatternMockTestClasses/NoAdapterPattern/";
         String otherClassPath = String.format("%sOtherClass", directoryPath);
         String adapterPath = String.format("%sAdapter", directoryPath);
         String clientPath = String.format("%sClient", directoryPath);
