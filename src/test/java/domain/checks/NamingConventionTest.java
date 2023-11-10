@@ -24,7 +24,7 @@ public class NamingConventionTest {
      * - All method names are camelCase
      */
     private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
-            Path.of("G:\\My Drive")
+            Path.of("src/test/java/domain/checks/NamingConventionMockTestClasses")
     );
     private final Check namingConventionCheck = new NamingConventionCheck();
 

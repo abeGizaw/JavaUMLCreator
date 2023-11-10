@@ -166,16 +166,15 @@ package domain {
 
     package transformations{
         +class DeleteUnusedFields {
-                - {final} modifiedClassNodes: List<ClassNode>
-                - {final} outputPath: String
-                - {final} fieldsToDelete: List<String>
-                - {final} byteCodeExporter: Exporter
+             - modifiedClassNodes: List<ClassNode>
+             - outputPath: String
+             - byteCodeExporter: Exporter
 
-                + DeleteUnusedFields(path: String, fieldsToDelete: List<String>)
-                + run(classNodes: List<ClassNode>): List<Message>
-                - deleteUnusedFields(classNode: ClassNode): ClassNode
-                - exportModifiedClassNodes(): List<Message>
-            }
+             + DeleteUnusedFields(path: String)
+             + run(classNodes: List<MyClassNode>): List<Message>
+             - deleteUnusedFields(classNode: ClassNode, fieldsToDelete: List<String>): ClassNode
+             - exportModifiedClassNodes(): List<Message>
+        }
 
         +class FieldsRemover {
              - {final}fieldsToRemove: List<String>
@@ -262,18 +261,20 @@ package domain {
         }
     }
 
-    +class Linter {
-        -checkTypeToCheck: Map<LintType, Check>
-        -transformTypeToTransformation: Map<LintType, Transformation>
-        -myClassNodeCreator: MyClassNodeCreator
-        -myClassNodes: List<MyClassNode>
+     +class Linter {
+        - creator: MyClassNodeCreator
+        - myClassNodes: List<MyClassNode>
+        - checkTypeToCheck: Map<LintType, Check>
+        - transformationTypeToTransformation: Map<LintType, Transformation>
 
-        +Linter(classPaths: List<String>, myClassNodeCreator: MyClassNodeCreator)
-        +runSelectedChecks(checks: List<LintType>): List<Message>
-        +runSelectedTransformation(transforms: List<LintType>)
-        -createClassNodes(classPaths: List<String>): List<MyClassNode>
-        -createSelectedChecks(List<LintType>): List<Check>
-    }
+        + Linter(classPaths: List<String>, myClassNodeCreator: MyClassNodeCreator, outputPath: String)
+        + runSelectedChecks(lintTypes: Set<LintType>): List<Message>
+        + runSelectedTransformations(transformations: Set<LintType>): List<Message>
+        - populateTransformMap(outputPath: String): void
+        - populateCheckMap(): void
+        - createClassNodes(classPaths: List<String>): List<MyClassNode>
+        - runCheckOnAllNodes(lintType: LintType): List<Message>
+        }
 
     +enum LintType {
         HIDDEN_FIELDS,
@@ -462,6 +463,9 @@ Linter --> MyClassNodeCreator
 Linter -> "*" MyClassNode
 Linter ..> LintType
 Linter .up.> Message
+Linter -->"*" Transformation
+Linter ...> Transformation
+
 
 Message --> LintType
 
@@ -564,9 +568,11 @@ DeleteUnusedFields .> org.objectweb.asm.ClassNode
 DeleteUnusedFields -> "*"org.objectweb.asm.ClassNode
 DeleteUnusedFields .> FieldsRemover
 DeleteUnusedFields -> Exporter
-DeleteUnusedFields .> ByteCodeExporter
-DeleteUnusedFields .> org.objectweb.asm.ClassWriter
-Transformation ..> Message
+DeleteUnusedFields ..> ByteCodeExporter
+DeleteUnusedFields ..> org.objectweb.asm.ClassWriter
+DeleteUnusedFields .> MyClassNode
+DeleteUnusedFields ..> DetectUnusedFields
+Transformation .> Message
 
 CustomMethodVisitor -|> org.objectweb.asm.MethodVisitor
 CustomMethodVisitor .> org.objectweb.asm.MethodVisitor
@@ -577,8 +583,6 @@ FieldsRemover .> CustomMethodVisitor
 FieldsRemover ..> org.objectweb.asm.FieldVisitor
 FieldsRemover .> org.objectweb.asm.MethodVisitor
 
-
-Linter -down->"*" Transformation
 
 MyASMClassNode --> org.objectweb.asm.ClassNode
 MyASMClassNode ..> org.objectweb.asm.ClassNode

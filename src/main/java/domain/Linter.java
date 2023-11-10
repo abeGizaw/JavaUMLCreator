@@ -1,10 +1,8 @@
 package domain;
 
 import domain.checks.*;
-import domain.myasm.MyASMClassNode;
 import domain.transformations.DeleteUnusedFields;
 import domain.transformations.Transformation;
-import org.objectweb.asm.tree.ClassNode;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -25,9 +23,7 @@ public class Linter {
     }
 
     private void populateTransformMap(String outputPath) {
-        DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
-        detectUnusedFields.run(null);
-        transformationTypeToTransformation.put(LintType.UNUSED_FIELD, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
+        transformationTypeToTransformation.put(LintType.UNUSED_FIELD, new DeleteUnusedFields(outputPath));
     }
 
     private void populateCheckMap() {
@@ -64,7 +60,6 @@ public class Linter {
     }
 
 
-
     private List<Message> runCheckOnAllNodes(LintType lintType) {
         List<Message> messages = new ArrayList<>();
         Check check = checkTypeToCheck.get(lintType);
@@ -83,32 +78,12 @@ public class Linter {
      */
     public List<Message> runSelectedTransformations(Set<LintType> transformations) {
         List<Message> allMessages = new ArrayList<>();
-        for(LintType type: transformations){
+        for (LintType type : transformations) {
             Transformation transformation = transformationTypeToTransformation.get(type);
-            List<ClassNode> classNodes = new ArrayList<>();
-            for(MyClassNode myClassNode : myClassNodes){
-                MyASMClassNode asmClassNode = (MyASMClassNode) myClassNode;
-                classNodes.add(asmClassNode.getClassNode());
-            }
-            List<Message> messages = transformation.run(classNodes);
+            List<Message> messages = transformation.run(myClassNodes);
             allMessages.addAll(messages);
-
         }
         return allMessages;
     }
 
-//    private void createSelectedTransformation(Set<LintType> transformations, String outputPath) {
-//        for(LintType type: transformations){
-//            System.out.println("TYPE");
-//            System.out.println(type);
-//            switch (type){
-//                case UNUSED_FIELD:
-//                    DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
-//                    detectUnusedFields.run(null);
-//                    transformationTypeToTransformation.put(LintType.UNUSED_FIELD, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
-//                default:
-//                    break;
-//            }
-//       }
-//    }
 }

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StrategyPatternTest {
     private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
-            Path.of("G:\\My Drive")
+            Path.of("src/test/java/domain/checks/StrategyPatternMockTestClasses")
     );
 
     private void testValidStrategyPattern(String className, String strategyClassName, String fieldName, String setterName) {
