@@ -39,4 +39,14 @@ public class TemplateMethodTest {
         assertEquals(0, followsPattern.size());
     }
 
+    @Test
+    public void validateTemplateMethodCheck_WithClassThatHasNoAbstract_expectNoMessage(){
+        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\TemplateMethodMockTestClasses\\NoAbstractTemplateMock.class");
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
+        List<Message> followsPattern = templateMethodPattern.run(classNode);
+
+        assertEquals(0, followsPattern.size());
+    }
+
 }
