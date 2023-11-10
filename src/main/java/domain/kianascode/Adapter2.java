@@ -1,4 +1,5 @@
 package domain.kianascode;
 
-public abstract class Adapter2 {
+public class Adapter2 extends Target2 {
+    private Adaptee adaptee;
 }

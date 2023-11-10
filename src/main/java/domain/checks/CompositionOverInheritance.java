@@ -7,7 +7,7 @@ import domain.MyClassNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavorCompOverInheritance implements Check {
+public class CompositionOverInheritance implements Check {
     public List<Message> run(MyClassNode classNode) {
         return checkForInheritance(classNode);
     }

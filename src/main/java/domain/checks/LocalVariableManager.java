@@ -1,4 +1,6 @@
-package domain;
+package domain.checks;
+
+import domain.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,8 +23,11 @@ public class LocalVariableManager {
         for (MyLocalVariableNode myLocalVariableNode : myMethodNode.localVariables) {
             LocalVariableInfo newLocalVariable = new LocalVariableInfo(myLocalVariableNode.name, myLocalVariableNode.start.getLabel(), myLocalVariableNode.end.getLabel(), myLocalVariableNode.index);
             localVariables.add(newLocalVariable);
-            if (myLocalVariableNode.index != 0 && myLocalVariableNode.start.getLabel().equals(startLabel)) {
+            if (myLocalVariableNode.index == 0) {
+                newLocalVariable.setIsInScope(true);
+            } else if (myLocalVariableNode.index != 0 && myLocalVariableNode.start.getLabel().equals(startLabel)) {
                 parameters.add(newLocalVariable);
+                newLocalVariable.setIsInScope(true);
             }
         }
 

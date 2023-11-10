@@ -33,7 +33,7 @@ public class NamingConventionCheck implements Check {
         String name = parts[parts.length - 1];
 
         if (invalidPascalCase(name)) {
-            return new Message(CheckType.NAMING_CONVENTION, "Invalid Name: Must be in PascalCase: " + name, classNode.name);
+            return new Message(CheckType.NAMING_CONVENTION, "Invalid Class Name: Must be in PascalCase: " + name, classNode.name);
         }
         return null;
     }
@@ -68,7 +68,7 @@ public class NamingConventionCheck implements Check {
     }
 
     private boolean invalidCamelCase(String name) {
-        return !name.matches("^(?:[a-z]+[A-Z]?[a-zA-Z]*)+$");
+        return !name.matches("[a-zA-Z0-9]+(?:[a-z][a-zA-Z0-9]*|[A-Z0-9]*(?:[a-z][a-zA-Z0-9]*)?)");
     }
 
     private boolean invalidPascalCase(String name) {
