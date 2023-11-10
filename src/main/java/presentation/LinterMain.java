@@ -2,13 +2,9 @@ package presentation;
 
 import datasource.MessageSaver;
 import datasource.Saver;
-import domain.CheckType;
-import domain.Linter;
-import domain.Message;
-import domain.MyClassNodeCreator;
+import domain.*;
 import domain.myasm.MyASMClassNodeCreator;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +21,7 @@ public class LinterMain {
         promptUserForDirectory();
         String outputPath = promptUserForOutputFileName();
         Set<CheckType> checks = promptUserForChecks();
+        Set<TransformationType> transformations =  promptUserForTransformations();
 
         for (String p : paths) {
             System.out.println(p);
@@ -34,15 +31,16 @@ public class LinterMain {
         for (CheckType type : checks) {
             System.out.println(type.toString());
         }
-        List<Message> messages = lint(checks);
+        List<Message> messages = lint(checks, transformations, outputPath);
         prettyPrint(messages);
 //        saveToFile(messages, outputPath);
 
     }
 
-    private static List<Message> lint(Set<CheckType> checks) {
+    private static List<Message> lint(Set<CheckType> checks, Set<TransformationType> transformations, String outputPath) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator();
         Linter linter = new Linter(paths, creator);
+        linter.runSelectedTransformations(transformations, outputPath);
         return linter.runSelectedChecks(checks);
 
     }
@@ -51,12 +49,12 @@ public class LinterMain {
     private static void promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
         Path startPath = Paths.get(userInput);
-        paths = new ArrayList<>();
         try {
+            paths = new ArrayList<>();
             Files.walk(startPath)
                     .filter(p -> p.toString().endsWith(".class"))
                     .forEach(file -> paths.add(file.toString()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Error reading package \n");
             promptUserForDirectory();
         }
@@ -101,8 +99,10 @@ public class LinterMain {
 
     }
 
+
+
     private static Set<CheckType> promptUserForPrinciples() {
-        String userInput = promptUser("Enter Principle Checks to run separated by comma: \n Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL");
+        String userInput = promptUser("Enter Principle Checks to run separated by comma: \n Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL, NONE");
 
         Set<CheckType> styleChecks = new HashSet<>();
         String[] inputArray = userInput.split(",");
@@ -123,6 +123,8 @@ public class LinterMain {
                     styleChecks.add(CheckType.PLK);
                     styleChecks.add(CheckType.INTERFACE_OVER_IMPLEMENTATION);
                     break;
+                case "NONE":
+                    break;
                 default:
                     System.out.println("Invalid Input. Please Enter Abbreviations. ");
                     promptUserForPrinciples();
@@ -134,7 +136,7 @@ public class LinterMain {
     }
 
     private static Set<CheckType> promptUserForPatters() {
-        String userInput = promptUser("Enter Pattern Checks to run separated by comma: \n Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL");
+        String userInput = promptUser("Enter Pattern Checks to run separated by comma: \n Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL, NONE");
 
         Set<CheckType> styleChecks = new HashSet<>();
         String[] inputArray = userInput.split(",");
@@ -155,6 +157,8 @@ public class LinterMain {
                     styleChecks.add(CheckType.ADAPTER_PATTERN);
                     styleChecks.add(CheckType.TEMPLATE_METHOD_PATTERN);
                     break;
+                case "NONE":
+                    break;
                 default:
                     System.out.println("Invalid Input. Please Enter Abbreviations. ");
                     promptUserForPatters();
@@ -164,7 +168,7 @@ public class LinterMain {
     }
 
     private static Set<CheckType> promptUserForStyle() {
-        String userInput = promptUser("Enter Style Checks to run separated by comma: \n Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), ALL");
+        String userInput = promptUser("Enter Style Checks to run separated by comma: \n Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), ALL, NONE");
 
         Set<CheckType> styleChecks = new HashSet<>();
         String[] inputArray = userInput.split(",");
@@ -185,6 +189,8 @@ public class LinterMain {
                     styleChecks.add(CheckType.FINAL_LOCAL_VARIABLES);
                     styleChecks.add(CheckType.HIDDEN_FIELDS);
                     break;
+                case "NONE":
+                    break;
                 default:
                     System.out.println("Invalid Input. Please Enter Abbreviations. ");
                     promptUserForStyle();
@@ -195,6 +201,23 @@ public class LinterMain {
         return styleChecks;
     }
 
+    private static Set<TransformationType> promptUserForTransformations() {
+        String userInput = promptUser("Enter Transformations to run: \n Remove Unused Fields (RUF), NONE");
+
+        Set<TransformationType> transformations = new HashSet<>();
+
+        switch (userInput.toUpperCase()) {
+            case "RUF":
+                transformations.add(TransformationType.REMOVE_UNUSED_FIELDS);
+            case "NONE":
+                break;
+            default:
+                System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                promptUserForTransformations();
+        }
+        return transformations;
+    }
+
     private static String promptUser(String prompt) {
         Scanner keyboard = new Scanner(System.in);
         System.out.println(prompt);
@@ -203,14 +226,14 @@ public class LinterMain {
 
 
     private static void prettyPrint(List<Message> messages) {
-        for(Message message: messages){
+        for (Message message : messages) {
             System.out.println(message.toString());
         }
     }
 
     private static void saveToFile(List<Message> messages, String outputPath) {
         Saver saver = new MessageSaver(outputPath);
-        for(Message message: messages){
+        for (Message message : messages) {
             saver.saveMessage(message.toString());
         }
 

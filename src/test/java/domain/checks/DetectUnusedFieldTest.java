@@ -44,7 +44,7 @@ public class DetectUnusedFieldTest {
 
         for (Message message: messageList){
             assertEquals(message.getCheckType(), CheckType.UNUSED_FIELD);
-            assertTrue(expectedClassNames.contains(message.getClassOfInterest()));
+            assertTrue(expectedClassNames.contains(message.getClassesOfInterest()));
             assertTrue(expectedMessages.contains(message.getMessage()));
         }
     }

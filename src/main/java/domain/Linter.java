@@ -1,24 +1,32 @@
 package domain;
 
 import domain.checks.*;
+import domain.myasm.MyASMClassNode;
+import domain.transformations.DeleteUnusedFields;
+import domain.transformations.Transformation;
+import org.objectweb.asm.tree.ClassNode;
 
+import java.nio.file.Path;
 import java.util.*;
 
 public class Linter {
-    private MyClassNodeCreator creator;
-    private List<MyClassNode> myClassNodes;
-    private Map<CheckType, Check> checkTypeToCheck;
+    private final MyClassNodeCreator creator;
+    private final List<MyClassNode> myClassNodes;
+    private final Map<CheckType, Check> checkTypeToCheck;
+    private final Map<TransformationType, Transformation> transformationTypeToTransformation;
 
     public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator) {
         this.creator = myClassNodeCreator;
         this.myClassNodes = createClassNodes(classPaths);
         this.checkTypeToCheck = new HashMap<>();
+        this.transformationTypeToTransformation = new HashMap<>();
     }
 
     private List<MyClassNode> createClassNodes(List<String> classPaths) {
         List<MyClassNode> myNodes = new ArrayList<>();
         for (String path : classPaths) {
-            myNodes.add(creator.createMyClassNodeFromName(path));
+            Path p = Path.of(path);
+            myNodes.add(creator.createMyClassNodeFromFile(p.toFile()));
         }
         return myNodes;
     }
@@ -67,5 +75,38 @@ public class Linter {
             messages.addAll(check.run(myClassNode));
         }
         return messages;
+    }
+
+    /**
+     * NOTE: This method makes linter rely on ASM but is necessary to run Transformations
+     * This is to reduce scope and not create adapters for all visitors
+      * @param transformations
+     * @param outputPath
+     */
+    public void runSelectedTransformations(Set<TransformationType> transformations, String outputPath) {
+        createSelectedTransformation(transformations, outputPath);
+        for(TransformationType type: transformations){
+            Transformation transformation = transformationTypeToTransformation.get(type);
+            List<ClassNode> classNodes = new ArrayList<>();
+            for(MyClassNode myClassNode : myClassNodes){
+                MyASMClassNode asmClassNode = (MyASMClassNode) myClassNode;
+                classNodes.add(asmClassNode.getClassNode());
+            }
+            transformation.run(classNodes);
+
+        }
+    }
+
+    private void createSelectedTransformation(Set<TransformationType> transformations, String outputPath) {
+        for(TransformationType type: transformations){
+            switch (type){
+                case REMOVE_UNUSED_FIELDS:
+                    DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
+                    detectUnusedFields.run(null);
+                    transformationTypeToTransformation.put(TransformationType.REMOVE_UNUSED_FIELDS, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
+                default:
+                    throw new RuntimeException("Invalid Transformation");
+            }
+        }
     }
 }

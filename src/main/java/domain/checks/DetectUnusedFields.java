@@ -55,7 +55,7 @@ public class DetectUnusedFields implements Check {
         }
     }
 
-    private List<String> getNamesToDelete() {
+    public List<String> getNamesToDelete() {
         List<String> namesToDelete = new ArrayList<>();
         for (MyFieldNode fieldNode : fieldUsageMap.keySet()) {
             if (!fieldUsageMap.get(fieldNode)) {

@@ -69,9 +69,9 @@ package domain {
 
            + DetectUnusedFields(classNodes: List<MyClassNode>)
            + run(classNode: MyClassNode): List<Message>
+           + getNamesToDelete(): List<String>
            - detectAllUnusedFields(classNodes: List<MyClassNode>): void
            - populateFieldMaps(): void
-           - getNamesToDelete(): List<String>
            - generateUnusedMessages(): List<Message>
        }
 

@@ -53,7 +53,7 @@ public class NamingConventionTest {
         String className = "domain/checks/NamingConventionMockTestClasses/invalidClassName";
         String[] parts = className.split("/");
         String name = parts[parts.length - 1];
-        String expectedMessage = "Invalid Name: Must be in PascalCase: " + name;
+        String expectedMessage = "Invalid Class Name: Must be in PascalCase: " + name;
         List<String> expectedMessages = new ArrayList<>();
         expectedMessages.add(expectedMessage);
 
