@@ -26,7 +26,7 @@ Abe Gizaw, Ari Duvall, Kiana Fan
 When running the Linter the user will be prompted through the command line for the following information:
 - File Location Information
   - Absolute path for the directory containing the .class files to process
-  - To process more than one of the options above, sepearte each path with a comma. 
+  - To process more than one of the options above, sepearte each path with a comma and no spaces. 
 - Desired Style Checks to run [Naming Convention, Final Local Variables, Hidden Fields]
 - Desired Principle Checks to run [Favor Composition over Inheritance, PLK, Program to Interface not Implementation]
 - Desired Pattern Checks to run [Strategy Pattern, Adapter Pattern, Template Method Pattern]
@@ -37,7 +37,7 @@ Example Input
 > -> Please provide the absolute path(s) to the directory containing the .class files to process:     
      &nbsp;  &nbsp; &nbsp; C:\Users\duvallar\OneDrive\1.RoseHulman\3.Junior\Fall\CSSE374\project-202410-team02-202410\target\classes\domain\ariscode\testclasses    
 > -> Choose the Style Checks to run [Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), ALL]    
-     &nbsp; &nbsp; &nbsp; NC HF    
+     &nbsp; &nbsp; &nbsp; NC,HF    
 > -> Choose the Principle Checks to run [Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL]    
      &nbsp; &nbsp; &nbsp; ALL   
 > -> Choose the Pattern Checks to run [Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL]    
