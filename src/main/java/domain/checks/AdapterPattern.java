@@ -63,7 +63,7 @@ public class AdapterPattern implements Check {
         List<String> fieldTypes = new ArrayList<>();
         for (MyFieldNode myFieldNode : myClassNode.fields) {
             if (myFieldNode.desc.length() > 1) { // if the type isn't something like I, which is an int
-                String fieldType = myFieldNode.desc.substring(1,myFieldNode.desc.length() - 1);
+                String fieldType = myFieldNode.desc.substring(1, myFieldNode.desc.length() - 1);
                 if (this.fieldTypeIsClass(fieldType)) {
                     fieldTypes.add(fieldType);
                 }
