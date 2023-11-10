@@ -27,7 +27,9 @@ package domain {
             -myClassNodes: List<MyClassNode>
             -classNames: List<String>
             -interfaceNames: Set<String>
+
             +AdapterPattern(classNodes: List<MyClassNode>)
+            +run(myClassNode: MyClassNode): List<Message>
             -findAdapterPatterns(): List<AdapterPatternClasses>
             -getImplementedInterfaces(myClassNode: MyClassNode): List<String>
             -getNotJavaClassFieldTypes(myClassNode: MyClassNode): List<String>
@@ -44,6 +46,7 @@ package domain {
                 -target: String
                 -adaptee: String
                 -client: String
+
                 +AdapterPatternClasses(adapter: String, target: String, adaptee: String, client: String)
                 +AdapterPatternClasses(adapter: String, taret: String, adaptee: String)
                 +getAdapter(): String
@@ -76,19 +79,14 @@ package domain {
        }
 
         +class FinalLocalVariables {
-            -{static}{final} STORE_OPCODES
-            -localVariables: List<LocalVariableInfo>
-            -prevInsnIsLabel: boolean
-            -prevInsn: MyAbstractInsnNode
+            -{static}{final}STORE_OPCODES: Set<Integer>
+            -localVariableManager: LocalVariableManager
 
             +FinalLocalVariables()
-            +run(classNode: MyClassNode): List<Message>
-            -checkMethodForFinalLocalVariables(methodNode: MyMethodNode): void
-            -addLocalVariable(methodNode: MyMethodNode): void
-            -updateVariableScopes(insn: MyAbstractInsnNode): void
-            -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
-            -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
+            +run(myClassNode: MyClassNode): List<Message>
+            -checkMethodForFinalLocalVariables(myMethodNode: MyMethodNode): void
             -handleValueStored(localVariableInfo: LocalVariableInfo): void
+            -createMessagesForMethod(className: String, methodName: String): List<Message>
         }
 
         +class HiddenFields {
@@ -545,6 +543,14 @@ FinalLocalVariables ..> MyMethodNode
 FinalLocalVariables -->"*" MyOpcodes
 FinalLocalVariables ..> MyVarInsnNode
 
+FinalLocalVariables ..> LintType
+FinalLocalVariables ..> LocalVariableInfo
+FinalLocalVariables --> LocalVariableManager
+FinalLocalVariables ..> LocalVariableManager
+FinalLocalVariables ..> MyAbstractInsnNode
+FinalLocalVariables ..> MyMethodNode
+FinalLocalVariables ..> MyOpcodes
+
 HiddenFields ..> MyClassNode
 HiddenFields ..> Message
 
@@ -619,7 +625,4 @@ MyLocalVariableNode -->"2" MyLabelNode
 
 MyMethodNode -->"*" MyLocalVariableNode
 MyMethodNode -->"*" MyAbstractInsnNode
-
-
-
 @enduml
