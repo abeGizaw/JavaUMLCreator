@@ -1,6 +1,6 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -8,11 +8,12 @@ import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterPatternTest {
-    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of(""));
 
     @Test
     public void runAdapterPatternAbstractTargetExpectOneAdapterPattern() {
@@ -36,7 +37,7 @@ public class AdapterPatternTest {
         AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
 
         int expectedNumMessages = 1;
-        CheckType expectedCheckType = CheckType.ADAPTER_PATTERN;
+        LintType expectedCheckType = LintType.ADAPTER_PATTERN;
         String expectedAdapteePath = String.format("domain/checks/%s", adapteePath);
         String expectedAdapterPath = String.format("domain/checks/%s", adapterPath);
         String expectedClientPath = String.format("domain/checks/%s", clientPath);
@@ -80,7 +81,7 @@ public class AdapterPatternTest {
         AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
 
         int expectedNumMessages = 2;
-        CheckType expectedCheckType = CheckType.ADAPTER_PATTERN;
+        LintType expectedCheckType = LintType.ADAPTER_PATTERN;
         String expectedAdapteePath = createExpectedPath(adapteePath);
         String expectedAdapterPath = createExpectedPath(adapterPath);
         String expectedClientPath = createExpectedPath(clientPath);

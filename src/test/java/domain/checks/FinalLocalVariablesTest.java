@@ -1,6 +1,6 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -8,13 +8,14 @@ import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class FinalLocalVariablesTest {
-    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of(""));
 
     @Test
     public void runFinalLocalVariablesOneScopeTwoMethodsExpectMethod1XMethod2X() {
@@ -23,7 +24,7 @@ public class FinalLocalVariablesTest {
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
 
         int expectedNumMessages = 2;
-        CheckType expectedCheckType = CheckType.FINAL_LOCAL_VARIABLES;
+        LintType expectedCheckType = LintType.FINAL_LOCAL_VARIABLES;
         List<String> expectedMessages = new ArrayList<>();
         expectedMessages.add(createExpectedMessageText("method1", "x"));
         expectedMessages.add(createExpectedMessageText("method2", "x"));
@@ -47,7 +48,7 @@ public class FinalLocalVariablesTest {
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
 
         int expectedNumMessages = 4;
-        CheckType expectedCheckType = CheckType.FINAL_LOCAL_VARIABLES;
+        LintType expectedCheckType = LintType.FINAL_LOCAL_VARIABLES;
         Set<String> expectedMessages = new HashSet<>();
         expectedMessages.add(createExpectedMessageText("method1", "z"));
         expectedMessages.add(createExpectedMessageText("method1", "w"));

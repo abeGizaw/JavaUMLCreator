@@ -5,10 +5,11 @@ import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public class PLKTest {
-    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of(""));
 
     @Test
     public void runPLKIsFieldOfThisExpectNoMessage() {
@@ -30,14 +31,14 @@ public class PLKTest {
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
         int expectedNumMessages = 1;
-        CheckType expectedCheck = CheckType.PLK;
+        LintType expectedCheck = LintType.PLK;
         String expectedMessage = createExpectedMessageText("method1", "testClass1.testClass2", "checkNotField");
         String expectedClasses = "domain/checks/PLKMockTestClasses/IsFieldOfNotThis";
 
         List<Message> actualMessages = plkCheck.run(myClassNode);
 
         Assertions.assertEquals(expectedNumMessages, actualMessages.size());
-        Assertions.assertEquals(expectedCheck, CheckType.PLK);
+        Assertions.assertEquals(expectedCheck, LintType.PLK);
         Assertions.assertEquals(expectedMessage, actualMessages.get(0).getMessage());
         Assertions.assertEquals(expectedClasses, actualMessages.get(0).getClassesOfInterest());
     }
@@ -75,14 +76,14 @@ public class PLKTest {
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
         int expectedNumMessages = 1;
-        CheckType expectedCheck = CheckType.PLK;
+        LintType expectedCheck = LintType.PLK;
         String expectedMessage = createExpectedMessageText("method1", "testClass1", "checkReturned");
         String expectedClasses = "domain/checks/PLKMockTestClasses/IsReturned";
 
         List<Message> actualMessages = plkCheck.run(myClassNode);
 
         Assertions.assertEquals(expectedNumMessages, actualMessages.size());
-        Assertions.assertEquals(expectedCheck, CheckType.PLK);
+        Assertions.assertEquals(expectedCheck, LintType.PLK);
         Assertions.assertEquals(expectedMessage, actualMessages.get(0).getMessage());
         Assertions.assertEquals(expectedClasses, actualMessages.get(0).getClassesOfInterest());
     }
