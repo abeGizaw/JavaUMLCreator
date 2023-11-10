@@ -69,7 +69,7 @@ public class DetectUnusedFields implements Check {
         List<Message> messages = new ArrayList<>();
         for (MyFieldNode fieldNode : fieldUsageMap.keySet()) {
             if (!fieldUsageMap.get(fieldNode)) {
-                String messageValue = String.format("%s is a field in %s that was not used and was remove.", fieldNode.name, fieldToClass.get(fieldNode).name);
+                String messageValue = String.format("%s is an unused field in %s", fieldNode.name, fieldToClass.get(fieldNode).name);
                 messages.add(new Message(LintType.UNUSED_FIELD, messageValue, fieldToClass.get(fieldNode).name));
             }
         }

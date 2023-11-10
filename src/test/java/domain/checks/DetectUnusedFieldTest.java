@@ -51,7 +51,7 @@ public class DetectUnusedFieldTest {
     }
 
     private String makeExpectedMessage (String fieldName, String className){
-       return String.format("%s is a field in %s that was not used and was remove.",fieldName , className);
+       return String.format("%s is an unused field in %s",fieldName , className);
     }
 }
 
