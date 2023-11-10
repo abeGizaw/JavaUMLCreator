@@ -1,13 +1,11 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ public class DetectUnusedFieldTest {
         expectedMessages.add(makeExpectedMessage("unusedSupportLocal", className2));
 
         for (Message message: messageList){
-            assertEquals(message.getCheckType(), CheckType.UNUSED_FIELD);
+            assertEquals(message.getCheckType(), LintType.UNUSED_FIELD);
             assertTrue(expectedClassNames.contains(message.getClassesOfInterest()));
             assertTrue(expectedMessages.contains(message.getMessage()));
         }

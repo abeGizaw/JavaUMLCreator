@@ -12,8 +12,8 @@ import java.util.*;
 public class Linter {
     private final MyClassNodeCreator creator;
     private final List<MyClassNode> myClassNodes;
-    private final Map<CheckType, Check> checkTypeToCheck;
-    private final Map<TransformationType, Transformation> transformationTypeToTransformation;
+    private final Map<LintType, Check> checkTypeToCheck;
+    private final Map<LintType, Transformation> transformationTypeToTransformation;
 
     public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator) {
         this.creator = myClassNodeCreator;
@@ -31,46 +31,46 @@ public class Linter {
         return myNodes;
     }
 
-    public List<Message> runSelectedChecks(Set<CheckType> checkTypes) {
-        createSelectedChecks(checkTypes);
+    public List<Message> runSelectedChecks(Set<LintType> lintTypes) {
+        createSelectedChecks(lintTypes);
         List<Message> messages = new ArrayList<>();
-        for (CheckType checkType : checkTypes) {
-            if (checkType == CheckType.ADAPTER_PATTERN) {
-                messages.addAll(checkTypeToCheck.get(checkType).run(myClassNodes.get(0)));
+        for (LintType lintType : lintTypes) {
+            if (lintType == LintType.ADAPTER_PATTERN) {
+                messages.addAll(checkTypeToCheck.get(lintType).run(myClassNodes.get(0)));
             } else {
-                messages.addAll(runCheckOnAllNodes(checkType));
+                messages.addAll(runCheckOnAllNodes(lintType));
             }
         }
         return messages;
     }
 
-    private void createSelectedChecks(Set<CheckType> checkTypes) {
-        for (CheckType checkType : checkTypes) {
-            if (checkType == CheckType.FINAL_LOCAL_VARIABLES) {
-                checkTypeToCheck.put(CheckType.FINAL_LOCAL_VARIABLES, new FinalLocalVariables());
-            } else if (checkType == CheckType.HIDDEN_FIELDS) {
-                checkTypeToCheck.put(CheckType.HIDDEN_FIELDS, new HiddenFields());
-            } else if (checkType == CheckType.NAMING_CONVENTION) {
-                checkTypeToCheck.put(CheckType.NAMING_CONVENTION, new NamingConventionCheck());
-            } else if (checkType == CheckType.COMPOSITION_OVER_INHERITANCE) {
-                checkTypeToCheck.put(CheckType.COMPOSITION_OVER_INHERITANCE, new CompositionOverInheritance());
-            } else if (checkType == CheckType.INTERFACE_OVER_IMPLEMENTATION) {
-                checkTypeToCheck.put(CheckType.INTERFACE_OVER_IMPLEMENTATION, new InterfaceOverImplementation());
-            } else if (checkType == CheckType.PLK) {
-                checkTypeToCheck.put(CheckType.PLK, new PrincipleOfLeastKnowledge());
-            } else if (checkType == CheckType.ADAPTER_PATTERN) {
-                checkTypeToCheck.put(CheckType.ADAPTER_PATTERN, new AdapterPattern(myClassNodes));
-            } else if (checkType == CheckType.STRATEGY_PATTERN) {
-                checkTypeToCheck.put(CheckType.STRATEGY_PATTERN, new StrategyPattern(creator));
-            } else if (checkType == CheckType.TEMPLATE_METHOD_PATTERN) {
-                checkTypeToCheck.put(CheckType.TEMPLATE_METHOD_PATTERN, new TemplateMethodPattern());
+    private void createSelectedChecks(Set<LintType> lintTypes) {
+        for (LintType lintType : lintTypes) {
+            if (lintType == LintType.FINAL_LOCAL_VARIABLES) {
+                checkTypeToCheck.put(LintType.FINAL_LOCAL_VARIABLES, new FinalLocalVariables());
+            } else if (lintType == LintType.HIDDEN_FIELDS) {
+                checkTypeToCheck.put(LintType.HIDDEN_FIELDS, new HiddenFields());
+            } else if (lintType == LintType.NAMING_CONVENTION) {
+                checkTypeToCheck.put(LintType.NAMING_CONVENTION, new NamingConventionCheck());
+            } else if (lintType == LintType.COMPOSITION_OVER_INHERITANCE) {
+                checkTypeToCheck.put(LintType.COMPOSITION_OVER_INHERITANCE, new CompositionOverInheritance());
+            } else if (lintType == LintType.INTERFACE_OVER_IMPLEMENTATION) {
+                checkTypeToCheck.put(LintType.INTERFACE_OVER_IMPLEMENTATION, new InterfaceOverImplementation());
+            } else if (lintType == LintType.PLK) {
+                checkTypeToCheck.put(LintType.PLK, new PrincipleOfLeastKnowledge());
+            } else if (lintType == LintType.ADAPTER_PATTERN) {
+                checkTypeToCheck.put(LintType.ADAPTER_PATTERN, new AdapterPattern(myClassNodes));
+            } else if (lintType == LintType.STRATEGY_PATTERN) {
+                checkTypeToCheck.put(LintType.STRATEGY_PATTERN, new StrategyPattern(creator));
+            } else if (lintType == LintType.TEMPLATE_METHOD_PATTERN) {
+                checkTypeToCheck.put(LintType.TEMPLATE_METHOD_PATTERN, new TemplateMethodPattern());
             }
         }
     }
 
-    private List<Message> runCheckOnAllNodes(CheckType checkType) {
+    private List<Message> runCheckOnAllNodes(LintType lintType) {
         List<Message> messages = new ArrayList<>();
-        Check check = checkTypeToCheck.get(checkType);
+        Check check = checkTypeToCheck.get(lintType);
         for (MyClassNode myClassNode : myClassNodes) {
             messages.addAll(check.run(myClassNode));
         }
@@ -80,32 +80,37 @@ public class Linter {
     /**
      * NOTE: This method makes linter rely on ASM but is necessary to run Transformations
      * This is to reduce scope and not create adapters for all visitors
-      * @param transformations
+     *
+     * @param transformations
      * @param outputPath
+     * @return
      */
-    public void runSelectedTransformations(Set<TransformationType> transformations, String outputPath) {
+    public List<Message> runSelectedTransformations(Set<LintType> transformations, String outputPath) {
         createSelectedTransformation(transformations, outputPath);
-        for(TransformationType type: transformations){
+        List<Message> allMessages = new ArrayList<>();
+        for(LintType type: transformations){
             Transformation transformation = transformationTypeToTransformation.get(type);
             List<ClassNode> classNodes = new ArrayList<>();
             for(MyClassNode myClassNode : myClassNodes){
                 MyASMClassNode asmClassNode = (MyASMClassNode) myClassNode;
                 classNodes.add(asmClassNode.getClassNode());
             }
-            transformation.run(classNodes);
+            List<Message> messages = transformation.run(classNodes);
+            allMessages.addAll(messages);
 
         }
+        return allMessages;
     }
 
-    private void createSelectedTransformation(Set<TransformationType> transformations, String outputPath) {
-        for(TransformationType type: transformations){
+    private void createSelectedTransformation(Set<LintType> transformations, String outputPath) {
+        for(LintType type: transformations){
             System.out.println("TYPE");
             System.out.println(type);
             switch (type){
-                case REMOVE_UNUSED_FIELDS:
+                case UNUSED_FIELD:
                     DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
                     detectUnusedFields.run(null);
-                    transformationTypeToTransformation.put(TransformationType.REMOVE_UNUSED_FIELDS, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
+                    transformationTypeToTransformation.put(LintType.UNUSED_FIELD, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
                 default:
                     break;
             }

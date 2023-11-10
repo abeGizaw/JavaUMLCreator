@@ -33,7 +33,7 @@ public class NamingConventionCheck implements Check {
         String name = parts[parts.length - 1];
 
         if (invalidPascalCase(name)) {
-            return new Message(CheckType.NAMING_CONVENTION, "Invalid Class Name: Must be in PascalCase: " + name, classNode.name);
+            return new Message(LintType.NAMING_CONVENTION, "Invalid Class Name: Must be in PascalCase: " + name, classNode.name);
         }
         return null;
     }
@@ -45,12 +45,12 @@ public class NamingConventionCheck implements Check {
         for (MyFieldNode field : classNode.fields) {
             if (((field.access & MyOpcodes.ACC_FINAL) != 0) && ((field.access & MyOpcodes.ACC_STATIC) != 0)) {
                 if (!isAllCaps(field.name)) {
-                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Static Final Fields must be in all caps:   " + field.name, classNode.name));
+                    invalidFieldMessages.add(new Message(LintType.NAMING_CONVENTION, "Invalid Field Name: Static Final Fields must be in all caps:   " + field.name, classNode.name));
                 }
 
             } else {
                 if (invalidCamelCase(field.name)) {
-                    invalidFieldMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid Field Name: Must be in camelCase:   " + field.name, classNode.name));
+                    invalidFieldMessages.add(new Message(LintType.NAMING_CONVENTION, "Invalid Field Name: Must be in camelCase:   " + field.name, classNode.name));
                 }
             }
         }
@@ -61,7 +61,7 @@ public class NamingConventionCheck implements Check {
         List<Message> invalidMethodMessages = new ArrayList<>();
         for (MyMethodNode method : classNode.methods) {
             if (invalidCamelCase(method.name) && !method.name.equals("<init>")) {
-                invalidMethodMessages.add(new Message(CheckType.NAMING_CONVENTION, "Invalid method name: Must be in camelCase:  " + method.name, classNode.name));
+                invalidMethodMessages.add(new Message(LintType.NAMING_CONVENTION, "Invalid method name: Must be in camelCase:  " + method.name, classNode.name));
             }
         }
         return invalidMethodMessages;

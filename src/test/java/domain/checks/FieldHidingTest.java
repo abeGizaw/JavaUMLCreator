@@ -1,5 +1,5 @@
 package domain.checks;
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -50,7 +50,7 @@ public class FieldHidingTest {
         List<Message> hiddenFields = fieldHidingCheck.run(classNode);
         for(int i = 0; i < hiddenFields.size(); i ++){
             Message hiddenField = hiddenFields.get(i);
-            assertEquals(hiddenField.getCheckType(), CheckType.HIDDEN_FIELDS);
+            assertEquals(hiddenField.getCheckType(), LintType.HIDDEN_FIELDS);
             assertEquals(hiddenField.getClassOfInterest(), classNode.name);
             assertEquals(hiddenField.getMessage(), expectedMessages.get(i));
         }

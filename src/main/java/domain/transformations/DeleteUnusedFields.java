@@ -2,10 +2,13 @@ package domain.transformations;
 
 import datasource.ByteCodeExporter;
 import datasource.Exporter;
+import domain.LintType;
+import domain.Message;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +27,12 @@ public class DeleteUnusedFields implements Transformation {
         this.byteCodeExporter = new ByteCodeExporter();
     }
 
-    public void run(List<ClassNode> classNodes) {
+    public List<Message> run(List<ClassNode> classNodes) {
         for (ClassNode classNode : classNodes) {
             ClassNode modifiedClassNode = deleteUnusedFields(classNode);
             modifiedClassNodes.add(modifiedClassNode);
         }
-        exportModifiedClassNodes();
+        return exportModifiedClassNodes();
     }
 
     private ClassNode deleteUnusedFields(ClassNode classNode) {
@@ -39,7 +42,8 @@ public class DeleteUnusedFields implements Transformation {
         return modifiedClassNode;
     }
 
-    private void exportModifiedClassNodes() {
+    private List<Message> exportModifiedClassNodes() {
+       List<Message> messages = new ArrayList<>();
         for (ClassNode classNode : modifiedClassNodes) {
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             classNode.accept(classWriter);
@@ -48,6 +52,9 @@ public class DeleteUnusedFields implements Transformation {
             String[] classNameArray = classNode.name.split("/");
             String className = classNameArray[classNameArray.length - 1];
             byteCodeExporter.save(outputPath, className, bytecode);
+            String m = String.format("Exported Modifications to Remove Unused Fields to: %s\n", outputPath + File.separator + className + ".class");
+            messages.add(new Message(LintType.UNUSED_FIELD,m ,className));
         }
+        return messages;
     }
 }

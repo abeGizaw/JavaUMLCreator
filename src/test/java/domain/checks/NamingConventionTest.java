@@ -1,6 +1,6 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -41,7 +41,7 @@ public class NamingConventionTest {
         List<Message> messageList = namingConventionCheck.run(classNode);
 
         for (int i = 0; i < messageList.size(); i++) {
-            assertEquals(CheckType.NAMING_CONVENTION, messageList.get(i).getCheckType());
+            assertEquals(LintType.NAMING_CONVENTION, messageList.get(i).getCheckType());
             assertEquals(className, messageList.get(i).getClassesOfInterest());
             assertEquals(expectedMessages.get(i), messageList.get(i).getMessage());
 

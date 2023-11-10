@@ -45,7 +45,7 @@ public class FinalLocalVariables implements Check {
         List<Message> messages = new ArrayList<>();
         for (LocalVariableInfo localVariableInfo : localVariableManager.getHasBeenStoredOnce()) {
             String messageText = String.format("Method: %s; %s can be final since its value is not changed.\n", methodName, localVariableInfo.getName());
-            Message message = new Message(CheckType.FINAL_LOCAL_VARIABLES, messageText, className);
+            Message message = new Message(LintType.FINAL_LOCAL_VARIABLES, messageText, className);
             messages.add(message);
         }
         return messages;

@@ -3,7 +3,6 @@ package domain.checks;
 import domain.*;
 
 import java.util.*;
-import static presentation.ANSIColors.*;
 
 public class FieldHiding implements Check{
 
@@ -24,7 +23,7 @@ public class FieldHiding implements Check{
                 for (MyLocalVariableNode variable : method.localVariables) {
                     if (allFields.contains(variable.name)) {
                         String message = "Field " + variable.name + " is hidden by method " + method.name;
-                        hiddenFields.add(new Message(CheckType.HIDDEN_FIELDS, message, classNode.name));
+                        hiddenFields.add(new Message(LintType.HIDDEN_FIELDS, message, classNode.name));
                     }
                 }
             }

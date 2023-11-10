@@ -121,7 +121,7 @@ public class AdapterPattern implements Check {
                     "\tadaptee: %s\n" +
                     "\tclient: %s.\n", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
             String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdaptee(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
-            Message message = new Message(CheckType.ADAPTER_PATTERN, messageText, classes);
+            Message message = new Message(LintType.ADAPTER_PATTERN, messageText, classes);
             messages.add(message);
         }
         return messages;

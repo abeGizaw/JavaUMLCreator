@@ -1,6 +1,6 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -33,7 +33,7 @@ public class StrategyPatternTest {
         String expectedMessage = String.format("STRATEGY PATTERN: %s stores an instance of L%s; in the field %s. The setter is %s.\n", className, strategyClassName, fieldName, setterName);
 
         assertEquals(className, messageList.get(0).getClassesOfInterest());
-        assertEquals(CheckType.STRATEGY_PATTERN, messageList.get(0).getCheckType());
+        assertEquals(LintType.STRATEGY_PATTERN, messageList.get(0).getCheckType());
         assertEquals(expectedMessage, messageList.get(0).getMessage());
     }
 

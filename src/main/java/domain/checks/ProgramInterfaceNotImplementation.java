@@ -71,7 +71,7 @@ public class ProgramInterfaceNotImplementation implements Check{
         MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromName(classNamePath);
         if(implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
             String message = "Where you need to Programming to interface instead of implementation: " + field.name;
-            invalidUses.add(new Message(CheckType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
+            invalidUses.add(new Message(LintType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
         }
     }
 
@@ -81,7 +81,7 @@ public class ProgramInterfaceNotImplementation implements Check{
         MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
         if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
             String message = "Where you need to Programming to interface instead of implementation: " + field.name;
-            invalidUses.add(new Message(CheckType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
+            invalidUses.add(new Message(LintType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
         }
 
     }

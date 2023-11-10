@@ -112,7 +112,7 @@ public class PrincipleOfLeastKnowledge implements Check {
     private List<Message> createMessagesForMethod(List<String> messageTexts, String className) {
         List<Message> messages = new ArrayList<>();
         for (String messageText : messageTexts) {
-            Message message = new Message(CheckType.PLK, messageText, className);
+            Message message = new Message(LintType.PLK, messageText, className);
             messages.add(message);
         }
         return messages;

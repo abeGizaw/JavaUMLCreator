@@ -15,7 +15,7 @@ public class TemplateMethodPattern implements Check{
             for(MyMethodNode method: myClassNode.methods){
                 if((method.access & MyOpcodes.ACC_FINAL) != 0 && containsAbstractMethodCall(method.instructions, myClassNode.methods)){
                     String message = "The Class "+ myClassNode.name + " uses the templateMethod Pattern";
-                    usesTemplatePattern.add(new Message(CheckType.TEMPLATE_METHOD_PATTERN, message, myClassNode.name));
+                    usesTemplatePattern.add(new Message(LintType.TEMPLATE_METHOD_PATTERN, message, myClassNode.name));
                 }
             }
         }

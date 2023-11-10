@@ -1,6 +1,6 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -34,7 +34,7 @@ public class FavorCompositionTest {
         String expectedMessage = String.format("Consider composition instead of inheritance. " + classNode.name + " EXTENDS " + superName);
 
         assertEquals(className, messageList.get(0).getClassesOfInterest());
-        assertEquals(CheckType.COMPOSITION_OVER_INHERITANCE, messageList.get(0).getCheckType());
+        assertEquals(LintType.COMPOSITION_OVER_INHERITANCE, messageList.get(0).getCheckType());
         assertEquals(expectedMessage, messageList.get(0).getMessage());
     }
 

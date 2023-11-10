@@ -1,5 +1,5 @@
 package domain.checks;
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -24,7 +24,7 @@ public class TemplateMethodTest {
 
         assertEquals(1, followsPattern.size());
         Message pattern = followsPattern.get(0);
-        assertEquals(CheckType.TEMPLATE_METHOD_PATTERN, pattern.getCheckType());
+        assertEquals(LintType.TEMPLATE_METHOD_PATTERN, pattern.getCheckType());
         assertEquals(classNode.name, pattern.getClassOfInterest());
         assertEquals("The Class "+ classNode.name + " uses the templateMethod Pattern", pattern.getMessage());
     }

@@ -1,6 +1,6 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -46,7 +46,7 @@ public class ProgramToInterfaceTest {
         List<Message> badImplementations = programInterfaceNotImplementation.run(classNode);
         for(int i = 0; i < badImplementations.size(); i ++){
             Message badImplementation = badImplementations.get(i);
-            assertEquals(badImplementation.getCheckType(), CheckType.INTERFACE_OVER_IMPLEMENTATION);
+            assertEquals(badImplementation.getCheckType(), LintType.INTERFACE_OVER_IMPLEMENTATION);
             assertEquals(badImplementation.getClassOfInterest(), classNode.name);
             assertEquals(badImplementation.getMessage(), expectedMessages.get(i));
         }

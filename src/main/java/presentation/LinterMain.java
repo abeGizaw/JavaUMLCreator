@@ -20,15 +20,15 @@ public class LinterMain {
     public static void main(String[] args) {
         promptUserForDirectory();
         String outputPath = promptUserForOutputFileName();
-        Set<CheckType> checks = promptUserForChecks();
-        Set<TransformationType> transformations =  promptUserForTransformations();
+        Set<LintType> checks = promptUserForChecks();
+        Set<LintType> transformations =  promptUserForTransformations();
 
         for (String p : paths) {
             System.out.println(p);
         }
         System.out.println("OUTPUT PATH: " + outputPath);
 
-        for (CheckType type : checks) {
+        for (LintType type : checks) {
             System.out.println(type.toString());
         }
         List<Message> messages = lint(checks, transformations, outputPath);
@@ -37,12 +37,13 @@ public class LinterMain {
 
     }
 
-    private static List<Message> lint(Set<CheckType> checks, Set<TransformationType> transformations, String outputPath) {
+    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator();
         Linter linter = new Linter(paths, creator);
-        linter.runSelectedTransformations(transformations, outputPath);
-        return linter.runSelectedChecks(checks);
-
+        List<Message> allMessages = new ArrayList<>();
+        allMessages.addAll(linter.runSelectedTransformations(transformations, outputPath));
+        allMessages.addAll(linter.runSelectedChecks(checks));
+        return allMessages;
     }
 
 
@@ -88,9 +89,9 @@ public class LinterMain {
         return promptUser("Please enter an output file path");
     }
 
-    private static Set<CheckType> promptUserForChecks() {
+    private static Set<LintType> promptUserForChecks() {
 
-        Set<CheckType> allChecks = new HashSet<>();
+        Set<LintType> allChecks = new HashSet<>();
         allChecks.addAll(promptUserForStyle());
         allChecks.addAll(promptUserForPatters());
         allChecks.addAll(promptUserForPrinciples());
@@ -101,27 +102,27 @@ public class LinterMain {
 
 
 
-    private static Set<CheckType> promptUserForPrinciples() {
+    private static Set<LintType> promptUserForPrinciples() {
         String userInput = promptUser("Enter Principle Checks to run separated by comma: \n Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL, NONE");
 
-        Set<CheckType> styleChecks = new HashSet<>();
+        Set<LintType> styleChecks = new HashSet<>();
         String[] inputArray = userInput.split(",");
 
         for (String s : inputArray) {
             switch (s.toUpperCase()) {
                 case "FCOI":
-                    styleChecks.add(CheckType.COMPOSITION_OVER_INHERITANCE);
+                    styleChecks.add(LintType.COMPOSITION_OVER_INHERITANCE);
                     break;
                 case "PLK":
-                    styleChecks.add(CheckType.PLK);
+                    styleChecks.add(LintType.PLK);
                     break;
                 case "PINI":
-                    styleChecks.add(CheckType.INTERFACE_OVER_IMPLEMENTATION);
+                    styleChecks.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
                     break;
                 case "ALL":
-                    styleChecks.add(CheckType.COMPOSITION_OVER_INHERITANCE);
-                    styleChecks.add(CheckType.PLK);
-                    styleChecks.add(CheckType.INTERFACE_OVER_IMPLEMENTATION);
+                    styleChecks.add(LintType.COMPOSITION_OVER_INHERITANCE);
+                    styleChecks.add(LintType.PLK);
+                    styleChecks.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
                     break;
                 case "NONE":
                     break;
@@ -135,27 +136,27 @@ public class LinterMain {
         return styleChecks;
     }
 
-    private static Set<CheckType> promptUserForPatters() {
+    private static Set<LintType> promptUserForPatters() {
         String userInput = promptUser("Enter Pattern Checks to run separated by comma: \n Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL, NONE");
 
-        Set<CheckType> styleChecks = new HashSet<>();
+        Set<LintType> styleChecks = new HashSet<>();
         String[] inputArray = userInput.split(",");
 
         for (String s : inputArray) {
             switch (s.toUpperCase()) {
                 case "SP":
-                    styleChecks.add(CheckType.STRATEGY_PATTERN);
+                    styleChecks.add(LintType.STRATEGY_PATTERN);
                     break;
                 case "AP":
-                    styleChecks.add(CheckType.ADAPTER_PATTERN);
+                    styleChecks.add(LintType.ADAPTER_PATTERN);
                     break;
                 case "TMP":
-                    styleChecks.add(CheckType.TEMPLATE_METHOD_PATTERN);
+                    styleChecks.add(LintType.TEMPLATE_METHOD_PATTERN);
                     break;
                 case "ALL":
-                    styleChecks.add(CheckType.STRATEGY_PATTERN);
-                    styleChecks.add(CheckType.ADAPTER_PATTERN);
-                    styleChecks.add(CheckType.TEMPLATE_METHOD_PATTERN);
+                    styleChecks.add(LintType.STRATEGY_PATTERN);
+                    styleChecks.add(LintType.ADAPTER_PATTERN);
+                    styleChecks.add(LintType.TEMPLATE_METHOD_PATTERN);
                     break;
                 case "NONE":
                     break;
@@ -167,27 +168,30 @@ public class LinterMain {
         return styleChecks;
     }
 
-    private static Set<CheckType> promptUserForStyle() {
-        String userInput = promptUser("Enter Style Checks to run separated by comma: \n Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), ALL, NONE");
+    private static Set<LintType> promptUserForStyle() {
+        String userInput = promptUser("Enter Style Checks to run separated by comma: \n Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), Unused Fields (UF), ALL, NONE");
 
-        Set<CheckType> styleChecks = new HashSet<>();
+        Set<LintType> styleChecks = new HashSet<>();
         String[] inputArray = userInput.split(",");
 
         for (String s : inputArray) {
             switch (s.toUpperCase()) {
                 case "NC":
-                    styleChecks.add(CheckType.NAMING_CONVENTION);
+                    styleChecks.add(LintType.NAMING_CONVENTION);
                     break;
                 case "FLV":
-                    styleChecks.add(CheckType.FINAL_LOCAL_VARIABLES);
+                    styleChecks.add(LintType.FINAL_LOCAL_VARIABLES);
                     break;
                 case "HF":
-                    styleChecks.add(CheckType.HIDDEN_FIELDS);
+                    styleChecks.add(LintType.HIDDEN_FIELDS);
                     break;
                 case "ALL":
-                    styleChecks.add(CheckType.NAMING_CONVENTION);
-                    styleChecks.add(CheckType.FINAL_LOCAL_VARIABLES);
-                    styleChecks.add(CheckType.HIDDEN_FIELDS);
+                    styleChecks.add(LintType.NAMING_CONVENTION);
+                    styleChecks.add(LintType.FINAL_LOCAL_VARIABLES);
+                    styleChecks.add(LintType.HIDDEN_FIELDS);
+                    break;
+                case "UF":
+                    styleChecks.add(LintType.UNUSED_FIELD);
                     break;
                 case "NONE":
                     break;
@@ -201,14 +205,14 @@ public class LinterMain {
         return styleChecks;
     }
 
-    private static Set<TransformationType> promptUserForTransformations() {
+    private static Set<LintType> promptUserForTransformations() {
         String userInput = promptUser("Enter Transformations to run: \n Remove Unused Fields (RUF), NONE");
 
-        Set<TransformationType> transformations = new HashSet<>();
+        Set<LintType> transformations = new HashSet<>();
 
         switch (userInput.toUpperCase()) {
             case "RUF":
-                transformations.add(TransformationType.REMOVE_UNUSED_FIELDS);
+                transformations.add(LintType.UNUSED_FIELD);
             case "NONE":
                 break;
             default:

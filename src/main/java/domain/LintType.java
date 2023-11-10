@@ -1,6 +1,6 @@
 package domain;
 
-public enum CheckType {
+public enum LintType {
 
     ADAPTER_PATTERN,
     FINAL_LOCAL_VARIABLES,
