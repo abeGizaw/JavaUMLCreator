@@ -2,6 +2,7 @@
 
 ## Dependencies
 Specified in pom.xml
+Java: 11
 
 ## Contributors
 Abe Gizaw, Ari Duvall, Kiana Fan
