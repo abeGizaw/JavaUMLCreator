@@ -29,4 +29,14 @@ public class TemplateMethodTest {
         assertEquals("The Class "+ classNode.name + " uses the templateMethod Pattern", pattern.getMessage());
     }
 
+    @Test
+    public void validateTemplateMethodCheck_WithClassThatHasNoFinal_expectNoMessage(){
+        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\TemplateMethodMockTestClasses\\NoFinalTemplateMethodMock.class");
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
+        List<Message> followsPattern = templateMethodPattern.run(classNode);
+
+        assertEquals(0, followsPattern.size());
+    }
+
 }
