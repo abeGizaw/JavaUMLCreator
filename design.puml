@@ -94,6 +94,28 @@ package domain {
             -checkFieldHiding(classNode: MyClassNode): List<Message>
         }
 
+        +class LocalVariableInfo {
+            -{final}name: String
+            -{final}firstLabel: MyLabel
+            -{final}lastLabel: MyLabel
+            -{final}index: int
+            -isInScope: boolean
+            -hasBeenStored: boolean
+            -hasBeenStoredOnce: boolean
+
+            +LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
+            +setIsInScope(isInScope: boolean): void
+            +setHasBeenStored(hasBeenStored: boolean): void
+            +setHasBeenStoredOnce(hasBeenStoredOnce: boolean): void
+            +getName(): String
+            +getFirstLabel(): MyLabel
+            +getLastLabel(): MyLabel
+            +getIndex(): int
+            +getIsInScope(): boolean
+            +getHasBeenStored(): boolean
+            +getHasBeenStoredOnce(): boolean
+        }
+
         +class ProgramToInterfaceNotImplementation {
             -myClassNodeCreator: MyClassNodeCreator
 
@@ -108,24 +130,6 @@ package domain {
             -readJavaDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
             -readUserDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
 
-        }
-
-        +class LocalVariableInfo {
-            -{final}name: String
-            -{final}firstLabel: MyLabel
-            -{final}lastLabel: MyLabel
-            -{final}index: int
-            -isInScope: boolean
-            -hasBeenStored: boolean
-            -hasBeenStoredOnce: boolean
-
-            +LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
-            +setIsInScope(isInScope: boolean): void
-            +setHasBeenStored(hasBeenStored: boolean): void
-            +setHasBeenStoredOnce(hasBeenStoredOnce: boolean): void
-            +getIsInScope(): boolean
-            +getHasBeenStored(): boolean
-            +getHasBeenStoredOnce(): boolean
         }
 
          +class NamingConvention {
@@ -532,17 +536,6 @@ AdapterPattern ..> LintType
 AdapterPattern -->"*" MyClassNode
 AdapterPattern ..> MyFieldNode
 
-FinalLocalVariables -->"*" LocalVariableInfo
-FinalLocalVariables ..> LocalVariableInfo
-FinalLocalVariables --> MyAbstractInsnNode
-FinalLocalVariables --> MyClassNode
-FinalLocalVariables ..> MyLabel
-FinalLocalVariables ..> MyLabelNode
-FinalLocalVariables .....> MyLocalVariableNode
-FinalLocalVariables ..> MyMethodNode
-FinalLocalVariables -->"*" MyOpcodes
-FinalLocalVariables ..> MyVarInsnNode
-
 FinalLocalVariables ..> LintType
 FinalLocalVariables ..> LocalVariableInfo
 FinalLocalVariables --> LocalVariableManager
@@ -554,13 +547,12 @@ FinalLocalVariables ..> MyOpcodes
 HiddenFields ..> MyClassNode
 HiddenFields ..> Message
 
+LocalVariableInfo -->"2" MyLabel
+
 ProgramToInterfaceNotImplementation ..> MyClassNode
 ProgramToInterfaceNotImplementation ..> MyFieldNode
 ProgramToInterfaceNotImplementation --> MyClassNodeCreator
 ProgramToInterfaceNotImplementation ..> Message
-
-
-LocalVariableInfo -->"2" MyLabel
 
 DetectUnusedFields ---> MyClassNode
 DetectUnusedFields -> MyFieldNode
@@ -587,7 +579,6 @@ FieldsRemover -> CustomMethodVisitor
 FieldsRemover .> CustomMethodVisitor
 FieldsRemover ..> org.objectweb.asm.FieldVisitor
 FieldsRemover .> org.objectweb.asm.MethodVisitor
-
 
 MyASMClassNode --> org.objectweb.asm.ClassNode
 MyASMClassNode ..> org.objectweb.asm.ClassNode
