@@ -1,23 +1,19 @@
-package domain.abescode;
+package domain.checks;
 
-import domain.MyClassNode;
-import domain.MyFieldNode;
-import domain.MyLocalVariableNode;
-import domain.MyMethodNode;
+import domain.*;
 
 import java.util.*;
 import static presentation.ANSIColors.*;
 
-public class DirtyFieldHiding {
+public class FieldHiding implements Check{
 
-    public void run(MyClassNode myClassNode) {
-        List<String> hiddenFields = checkFieldHiding(myClassNode);
-        System.out.println(RED + "The Fields that are hidden: " + hiddenFields + RESET);
+    public List<Message> run(MyClassNode myClassNode) {
+        return checkFieldHiding(myClassNode);
     }
 
-    private List<String> checkFieldHiding(MyClassNode classNode) {
+    private List<Message> checkFieldHiding(MyClassNode classNode) {
+        List<Message> hiddenFields = new ArrayList<>();
         Set<String> allFields = new HashSet<>();
-        List<String> hiddenFields = new ArrayList<>();
 
         for (MyFieldNode field : classNode.fields) {
             allFields.add(field.name);
@@ -27,11 +23,13 @@ public class DirtyFieldHiding {
             if (method.localVariables != null) {
                 for (MyLocalVariableNode variable : method.localVariables) {
                     if (allFields.contains(variable.name)) {
-                        hiddenFields.add(variable.name);
+                        String message = "Field " + variable.name + " is hidden by method " + method.name;
+                        hiddenFields.add(new Message(CheckType.HIDDEN_FIELDS, message, classNode.name));
                     }
                 }
             }
         }
+
         return hiddenFields;
     }
 }

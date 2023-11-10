@@ -1,13 +1,18 @@
 package domain.abescode;
 
+import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.abescode.alevelfeature.ConvertASMToUML;
+import domain.checks.FieldHiding;
+import domain.checks.ProgramInterfaceNotImplementation;
+import domain.checks.TemplateMethodPattern;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.io.File;
 import java.nio.file.*;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class AbesMain {
@@ -22,33 +27,41 @@ public class AbesMain {
         try {
             Files.walk(startPath)
                     .filter(p -> p.toString().endsWith(".class"))
-                    .forEach(AbesMain::processClassFile);
+                    .forEach(filePath -> processClassFile(filePath, startPath));
         } catch (IOException e) {
-            System.err.println("Error reading package \n");
+            System.err.println("Error walking the directory: " + e.getMessage());
         }
 
         ConvertASMToUML aLevel = new ConvertASMToUML();
         aLevel.run();
     }
 
-    private static void processClassFile(Path filePath) {
+    private static void processClassFile(Path filePath, Path startPath) {
         File file = filePath.toFile();
         String[] fileProperties = file.toString().split("\\\\");
 
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
 
+        System.out.println("File is: " + file + " with path " + filePath);
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-        DirtyFieldHiding fieldHider = new DirtyFieldHiding();
-        fieldHider.run(myClassNode);
+        FieldHiding fieldHider = new FieldHiding();
+        List<Message> hiddenFields = fieldHider.run(myClassNode);
+        for(Message message: hiddenFields){
+            System.out.println(message.toString());
+        }
 
-        DirtyInterfaceNotImplementation designPrinciple = new DirtyInterfaceNotImplementation(creator);
-        designPrinciple.run(myClassNode);
-
-        DirtyTemplateMethod designPattern = new DirtyTemplateMethod();
-        designPattern.run(myClassNode);
+//        ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator, startPath);
+//        List<Message> badImplementation = designPrinciple.run(myClassNode);
+//        for(Message message: badImplementation){
+//            System.out.println(message.toString());
+//        }
+//
+//        TemplateMethodPattern designPattern = new TemplateMethodPattern();
+//        List<Message> usesPattern = designPattern.run(myClassNode);
+//        for(Message message : usesPattern){
+//            System.out.println(message.toString());
+//        }
 
         System.out.println("\n");
-
-
     }
 }
