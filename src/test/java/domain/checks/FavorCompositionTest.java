@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FavorCompositionTest {
 
     private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
-    private final Check compOverInheritance = new FavorCompOverInheritance();
+    private final Check compOverInheritance = new CompositionOverInheritance();
 
     @Test
     public void runViolatesCompositionWithInheritance() throws IOException {

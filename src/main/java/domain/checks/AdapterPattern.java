@@ -1,6 +1,5 @@
 package domain.checks;
 
-import domain.AdapterPatternClasses;
 import domain.MyClassNode;
 import domain.MyFieldNode;
 

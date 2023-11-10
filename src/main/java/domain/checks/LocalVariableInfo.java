@@ -1,4 +1,6 @@
-package domain;
+package domain.checks;
+
+import domain.MyLabel;
 
 public class LocalVariableInfo {
     private final String name;

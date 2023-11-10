@@ -1,4 +1,4 @@
-package domain;
+package domain.checks;
 
 public class AdapterPatternClasses {
     private String adapter;
