@@ -104,8 +104,9 @@ public class PrincipleOfLeastKnowledge implements Check {
     private void removeMethodArgument() {
         MyAbstractInsnNode abstractInsnNode = instructionStack.pop();
         int methodArgumentInsnOpcode = abstractInsnNode.getOpcode();
-        if (methodArgumentInsnOpcode == MyOpcodes.GETFIELD || methodArgumentInsnOpcode == MyOpcodes.GETSTATIC) {
-            instructionStack.pop();
+        while (methodArgumentInsnOpcode == MyOpcodes.GETFIELD || methodArgumentInsnOpcode == MyOpcodes.GETSTATIC) {
+            abstractInsnNode = instructionStack.pop();
+            methodArgumentInsnOpcode = abstractInsnNode.getOpcode();
         }
     }
 

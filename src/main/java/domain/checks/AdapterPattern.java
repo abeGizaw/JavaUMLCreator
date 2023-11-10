@@ -120,20 +120,10 @@ public class AdapterPattern implements Check {
                     "\ttarget: %s\n" +
                     "\tadaptee: %s\n" +
                     "\tclient: %s.\n", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
-            String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdaptee(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
+            String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
             Message message = new Message(LintType.ADAPTER_PATTERN, messageText, classes);
             messages.add(message);
         }
         return messages;
-    }
-
-    private void printAdapterPatterns(List<AdapterPatternClasses> adapterPatterns) {
-        for (AdapterPatternClasses adapterPatternClasses : adapterPatterns) {
-            System.out.printf("There is a possible use of the Adapter Pattern with\n" +
-                    "\tadapter: %s\n" +
-                    "\ttarget: %s\n" +
-                    "\tadaptee: %s\n" +
-                    "\tclient: %s.\n", adapterPatternClasses.getAdapter(), adapterPatternClasses.getTarget(), adapterPatternClasses.getAdaptee(), adapterPatternClasses.getClient());
-        }
     }
 }

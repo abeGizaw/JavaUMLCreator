@@ -28,6 +28,8 @@ public class LocalVariableManager {
             } else if (myLocalVariableNode.index != 0 && myLocalVariableNode.start.getLabel().equals(startLabel)) {
                 parameters.add(newLocalVariable);
                 newLocalVariable.setIsInScope(true);
+                newLocalVariable.setHasBeenStored(true);
+                newLocalVariable.setHasBeenStoredOnce(true);
             }
         }
 
