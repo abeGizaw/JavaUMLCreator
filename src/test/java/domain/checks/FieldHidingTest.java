@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class FieldHidingTest {
     MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator();
@@ -56,11 +55,5 @@ public class FieldHidingTest {
             assertEquals(hiddenField.getMessage(), expectedMessages.get(i));
         }
 
-    }
-
-    private static void printMessages(List<Message> messageList) {
-        for (Message message : messageList) {
-            System.out.println(message.toString());
-        }
     }
 }

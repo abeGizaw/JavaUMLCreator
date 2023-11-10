@@ -26,12 +26,13 @@ public class MyASMClassNodeCreator implements MyClassNodeCreator {
 
     public MyClassNode createMyClassNodeFromFile(File path) {
         ClassNode classNode;
+        String className = path.toString().substring(path.toString().lastIndexOf(File.separatorChar) + 1);
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             ClassReader reader = new ClassReader(fileInputStream);
             classNode = new ClassNode();
             reader.accept(classNode, ClassReader.EXPAND_FRAMES);
         } catch (IOException e) {
-            throw new RuntimeException("The class file for " + path + " cannot be found. Please provide the correct directory.");
+            throw new RuntimeException("The class file for " + path + " cannot be found.\nProvide the correct directory with .class file for " + className);
         }
 
         return new MyASMClassNode(classNode);

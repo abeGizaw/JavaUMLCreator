@@ -6,15 +6,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static presentation.ANSIColors.*;
-
 public class ProgramInterfaceNotImplementation implements Check{
     private final MyClassNodeCreator classNodeCreator;
-    private final Path basePath;
+    private final Path packagePath;
 
     public ProgramInterfaceNotImplementation(MyClassNodeCreator nodeCreator, Path startPath){
         this.classNodeCreator = nodeCreator;
-        this.basePath = startPath;
+        this.packagePath = startPath;
     }
 
     public List<Message> run(MyClassNode myClassNode){
@@ -59,7 +57,7 @@ public class ProgramInterfaceNotImplementation implements Check{
     }
 
     private String findRelativePath(String desc) {
-        String filePackage = basePath.toString().substring(basePath.toString().lastIndexOf(File.separatorChar) + 1);
+        String filePackage = packagePath.toString().substring(packagePath.toString().lastIndexOf(File.separatorChar) + 1);
         String pathToFind = desc.replace('/', File.separatorChar);
         int separator = pathToFind.lastIndexOf(filePackage);
         if(separator == -1){
@@ -78,7 +76,7 @@ public class ProgramInterfaceNotImplementation implements Check{
     }
 
     private void readUserDefinedClass(MyClassNode classNode, String relativePath, MyFieldNode field, List<Message> invalidUses) {
-        Path classFilePath = basePath.resolve(basePath + relativePath +".class");
+        Path classFilePath = packagePath.resolve(packagePath + relativePath +".class");
 
         MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
         if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
@@ -105,7 +103,7 @@ public class ProgramInterfaceNotImplementation implements Check{
             MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
             return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
         } else {
-            Path classFilePath = basePath.resolve(basePath + findRelativePath(superName) + ".class");
+            Path classFilePath = packagePath.resolve(packagePath + findRelativePath(superName) + ".class");
             MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
             return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
         }
