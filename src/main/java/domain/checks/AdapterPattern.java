@@ -62,9 +62,11 @@ public class AdapterPattern implements Check {
     private List<String> getNotJavaClassFieldTypes(MyClassNode myClassNode) {
         List<String> fieldTypes = new ArrayList<>();
         for (MyFieldNode myFieldNode : myClassNode.fields) {
-            String fieldType = myFieldNode.desc.substring(1,myFieldNode.desc.length() - 1);
-            if (this.fieldTypeIsClass(fieldType)) {
-                fieldTypes.add(fieldType);
+            if (myFieldNode.desc.length() > 1) { // if the type isn't something like I, which is an int
+                String fieldType = myFieldNode.desc.substring(1, myFieldNode.desc.length() - 1);
+                if (this.fieldTypeIsClass(fieldType)) {
+                    fieldTypes.add(fieldType);
+                }
             }
         }
         return fieldTypes;
@@ -83,9 +85,11 @@ public class AdapterPattern implements Check {
         List<AdapterPatternClasses> adapterPatterns = new ArrayList<>();
         for (MyClassNode myClassNode : myClassNodes) {
             for (MyFieldNode myFieldNode : myClassNode.fields) {
-                String fieldType = myFieldNode.desc.substring(1,myFieldNode.desc.length() - 1);
-                for (String interfaceName : this.findImplementedInterfaces(fieldType)) {
-                    adapterPatterns.addAll(getAdapterPatternClassesForInterface(interfaceName, possibleAdapterPatterns, myClassNode));
+                if (myFieldNode.desc.length() > 1) { // if the type isn't something like I, which is an int
+                    String fieldType = myFieldNode.desc.substring(1, myFieldNode.desc.length() - 1);
+                    for (String interfaceName : this.findImplementedInterfaces(fieldType)) {
+                        adapterPatterns.addAll(getAdapterPatternClassesForInterface(interfaceName, possibleAdapterPatterns, myClassNode));
+                    }
                 }
             }
         }
