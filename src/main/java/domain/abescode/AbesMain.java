@@ -4,9 +4,7 @@ import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.abescode.alevelfeature.ConvertASMToUML;
-import domain.checks.FieldHiding;
-import domain.checks.ProgramInterfaceNotImplementation;
-import domain.checks.TemplateMethodPattern;
+import domain.checks.HiddenFields;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.io.File;
@@ -16,7 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AbesMain {
-    private static MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private static MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses"));
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
@@ -44,7 +42,7 @@ public class AbesMain {
 
         System.out.println("File is: " + file + " with path " + filePath);
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-        FieldHiding fieldHider = new FieldHiding();
+        HiddenFields fieldHider = new HiddenFields();
         List<Message> hiddenFields = fieldHider.run(myClassNode);
         for(Message message: hiddenFields){
             System.out.println(message.toString());

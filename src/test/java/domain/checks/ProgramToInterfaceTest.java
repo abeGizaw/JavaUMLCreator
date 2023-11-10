@@ -15,7 +15,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProgramToInterfaceTest {
-    MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator();
+    MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator(
+            Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses")
+    );
 
     @Test
     public void validateProgramToInterface_withClassThatViolates_expectViolations(){
@@ -34,7 +36,7 @@ public class ProgramToInterfaceTest {
         Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses\\GoodInterfaceUse.class");
         Path packagePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses");
         MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
-        ProgramInterfaceNotImplementation programInterfaceNotImplementation = new ProgramInterfaceNotImplementation(classNodeCreator, packagePath);
+        ProgramInterfaceNotImplementation programInterfaceNotImplementation = new ProgramInterfaceNotImplementation(classNodeCreator);
         List<Message> badImplementations = programInterfaceNotImplementation.run(classNode);
         assertEquals(0, badImplementations.size());
     }
@@ -42,12 +44,12 @@ public class ProgramToInterfaceTest {
     private void validate(Path classPath, List<String> expectedMessages){
         Path packagePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses");
         MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(classPath.toFile());
-        ProgramInterfaceNotImplementation programInterfaceNotImplementation = new ProgramInterfaceNotImplementation(classNodeCreator, packagePath);
+        ProgramInterfaceNotImplementation programInterfaceNotImplementation = new ProgramInterfaceNotImplementation(classNodeCreator);
         List<Message> badImplementations = programInterfaceNotImplementation.run(classNode);
         for(int i = 0; i < badImplementations.size(); i ++){
             Message badImplementation = badImplementations.get(i);
             assertEquals(badImplementation.getCheckType(), LintType.INTERFACE_OVER_IMPLEMENTATION);
-            assertEquals(badImplementation.getClassOfInterest(), classNode.name);
+            assertEquals(badImplementation.getClassesOfInterest(), classNode.name);
             assertEquals(badImplementation.getMessage(), expectedMessages.get(i));
         }
 

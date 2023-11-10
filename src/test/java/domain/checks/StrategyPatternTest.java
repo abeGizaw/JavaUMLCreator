@@ -8,6 +8,7 @@ import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 
 public class StrategyPatternTest {
-    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
+            Path.of("G:\\My Drive")
+    );
 
     private void testValidStrategyPattern(String className, String strategyClassName, String fieldName, String setterName) {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);

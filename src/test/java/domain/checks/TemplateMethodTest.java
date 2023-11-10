@@ -13,7 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class TemplateMethodTest {
-    MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator();
+    MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator(
+            Path.of("G:\\My Drive")
+    );
 
     @Test
     public void validateTemplateMethodCheck_WithClassThatFollows_expectTrueMessage(){
@@ -25,7 +27,7 @@ public class TemplateMethodTest {
         assertEquals(1, followsPattern.size());
         Message pattern = followsPattern.get(0);
         assertEquals(LintType.TEMPLATE_METHOD_PATTERN, pattern.getCheckType());
-        assertEquals(classNode.name, pattern.getClassOfInterest());
+        assertEquals(classNode.name, pattern.getClassesOfInterest());
         assertEquals("The Class "+ classNode.name + " uses the templateMethod Pattern", pattern.getMessage());
     }
 

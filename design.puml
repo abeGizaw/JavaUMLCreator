@@ -93,17 +93,23 @@ package domain {
 
         +class HiddenFields {
             +run(classNode: MyClassNode): List<Message>
-            -checkFieldHiding(classNode: MyClassNode): List<String>
+            -checkFieldHiding(classNode: MyClassNode): List<Message>
         }
 
-        +class InterfaceOverImplementation {
+        +class ProgramToInterfaceNotImplementation {
             -myClassNodeCreator: MyClassNodeCreator
 
-            +InterfaceOverImplementation(myClassNodeCreator: MyClassNodeCreator)
+            +ProgramToInterfaceNotImplementation(myClassNodeCreator: MyClassNodeCreator)
             +run(classNode: MyClassNode): List<Message>
-            -checkImplementInterface(classNode: MyClassNode): List<String>
+            -checkImplementInterface(classNode: MyClassNode): List<Message>
             -implementsOrExtendsClass(fieldClassNode: MyClassNode): boolean
             -checkIfAbstract(superName: String): boolean
+            -getClassName(desc: String): String
+            -isPrimitive(desc: String): boolean
+            -isJavaAPIClass(className: String):boolean
+            -readJavaDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
+            -readUserDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
+
         }
 
         +class LocalVariableInfo {
@@ -151,8 +157,9 @@ package domain {
 
         +class TemplateMethodPattern{
             +run(classNode: MyClassNode): List<Message>
-            -detectTemplateMethod(myClassNode: ClassNode): boolean
+            -detectTemplateMethod(myClassNode: ClassNode): List<Message>
             -containsAbstractMethodCall(instructions: <MyAbstractInsnNode>, methods: List<MyMethodNode>): boolean
+            -similarAbstractMethodInsn(methodInsNode: MethodInsnNode, methodNode: MyMethodNode):boolean
             -isAMethodCall(node: MyAbstractInsnNode): boolean
         }
     }
@@ -485,7 +492,7 @@ Check <|.. AdapterPattern
 Check <|.. FinalLocalVariables
 Check <|.. PrincipleOfLeastKnowledge
 Check <|.. HiddenFields
-Check <|.. InterfaceOverImplementation
+Check <|.. ProgramToInterfaceNotImplementation
 Check <|.. TemplateMethodPattern
 Check <|.. StrategyPattern
 Check <|.. NamingConvention
@@ -496,7 +503,7 @@ Check <|.. DetectUnusedFields
 MyClassNodeCreator ..> MyClassNode
 MyClassNodeCreator ..> MyClassReader
 
-InterfaceOverImplementation --> MyClassNodeCreator
+ProgramToInterfaceNotImplementation --> MyClassNodeCreator
 
 StrategyPattern --> MyClassNodeCreator
 StrategyPattern ..> MyClassNode
@@ -509,6 +516,7 @@ StrategyPattern ..> MyOpcodes
 TemplateMethodPattern ..> MyAbstractInsnNode
 TemplateMethodPattern ..> MyMethodNode
 TemplateMethodPattern ..> MyClassNode
+TemplateMethodPattern ..> Message
 
 CompositionOverInheritance ..> MyClassNode
 
@@ -535,8 +543,12 @@ FinalLocalVariables -->"*" MyOpcodes
 FinalLocalVariables ..> MyVarInsnNode
 
 HiddenFields ..> MyClassNode
+HiddenFields ..> Message
 
-InterfaceOverImplementation ..> MyClassNode
+ProgramToInterfaceNotImplementation ..> MyClassNode
+ProgramToInterfaceNotImplementation ..> MyFieldNode
+ProgramToInterfaceNotImplementation --> MyClassNodeCreator
+ProgramToInterfaceNotImplementation ..> Message
 
 
 LocalVariableInfo -->"2" MyLabel
