@@ -41,13 +41,13 @@ package domain {
 
          +class AdapterPatternClasses {
                 -adapter: String
-                -concreteAdapter: String
+                -target: String
                 -adaptee: String
                 -client: String
-                +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String, client: String)
-                +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String)
+                +AdapterPatternClasses(adapter: String, target: String, adaptee: String, client: String)
+                +AdapterPatternClasses(adapter: String, taret: String, adaptee: String)
                 +getAdapter(): String
-                +getConcreteAdapter(): String
+                +getTarget(): String
                 +getAdaptee(): String
                 +getClient(): String
         }
