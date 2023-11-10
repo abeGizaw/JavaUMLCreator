@@ -14,7 +14,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FieldHidingTest {
-    MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator();
+    MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator(
+            Path.of("G:\\My Drive")
+    );
     @Test
     public void validateHiddenFieldsCheck_withHiddenFieldsOfDiffTypes_Expect4Hidden(){
         Path basePath= Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\FieldHidingMockClasses\\HiddenFieldsVaryTypes.class");

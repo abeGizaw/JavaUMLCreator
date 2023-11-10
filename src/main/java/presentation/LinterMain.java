@@ -3,7 +3,6 @@ package presentation;
 import datasource.MessageSaver;
 import datasource.Saver;
 import domain.*;
-import domain.checks.*;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.nio.file.Files;
@@ -35,7 +34,7 @@ public class LinterMain {
         for (LintType type : checks) {
             System.out.println(type.toString());
         }
-        List<Message> messages = lint(checks, transformations, outputPath, files);
+        List<Message> messages = lint(checks, transformations, outputPath, files, directoryPath);
         prettyPrint(messages);
 //        saveToFile(messages, outputPath);
 
@@ -55,8 +54,8 @@ public class LinterMain {
         return files;
     }
 
-    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files) {
-        MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files, Path directoryPath) {
+        MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
         Linter linter = new Linter(files, creator, outputPath);
         List<Message> allMessages = new ArrayList<>();
         allMessages.addAll(linter.runSelectedTransformations(transformations));
@@ -68,6 +67,7 @@ public class LinterMain {
     private static Path promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
         if(!isValidPath(userInput)){
+            System.err.println("Invalid package");
             return promptUserForDirectory();
         } else {
             return Path.of(userInput);
@@ -98,8 +98,8 @@ public class LinterMain {
 
         Set<LintType> allChecks = new HashSet<>();
         allChecks.addAll(promptUserForStyle());
-//        allChecks.addAll(promptUserForPatters());
-//        allChecks.addAll(promptUserForPrinciples());
+        allChecks.addAll(promptUserForPatters());
+        allChecks.addAll(promptUserForPrinciples());
 
         return allChecks;
 

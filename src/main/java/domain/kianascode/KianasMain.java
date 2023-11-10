@@ -8,13 +8,14 @@ import domain.checks.FinalLocalVariables;
 import domain.checks.PrincipleOfLeastKnowledge;
 import domain.MyClassNode;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.io.IOException;
 
 public class KianasMain {
-    private static MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private static MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses"));
 
     public static void main(String[] args) throws IOException {
         runFinalLocalVariables();

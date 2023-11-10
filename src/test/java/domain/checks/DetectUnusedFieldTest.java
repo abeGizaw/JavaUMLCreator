@@ -8,6 +8,7 @@ import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DetectUnusedFieldTest {
-    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
+            Path.of("G:\\My Drive")
+    );
 
     @Test
     public void runDetect() throws IOException {

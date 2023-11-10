@@ -8,6 +8,7 @@ import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,9 @@ public class NamingConventionTest {
      * - All other fields are camelCase
      * - All method names are camelCase
      */
-    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
+            Path.of("G:\\My Drive")
+    );
     private final Check namingConventionCheck = new NamingConventionCheck();
 
     @Test

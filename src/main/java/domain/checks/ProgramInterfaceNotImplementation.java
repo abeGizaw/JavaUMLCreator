@@ -8,11 +8,9 @@ import java.util.List;
 
 public class ProgramInterfaceNotImplementation implements Check{
     private final MyClassNodeCreator classNodeCreator;
-    private final Path packagePath;
 
-    public ProgramInterfaceNotImplementation(MyClassNodeCreator nodeCreator, Path startPath){
+    public ProgramInterfaceNotImplementation(MyClassNodeCreator nodeCreator){
         this.classNodeCreator = nodeCreator;
-        this.packagePath = startPath;
     }
 
     public List<Message> run(MyClassNode myClassNode){
@@ -30,8 +28,7 @@ public class ProgramInterfaceNotImplementation implements Check{
             if(isJavaAPIClass(className)){
                 readJavaDefinedClass(classNode, className, field, invalidUses);
             } else {
-                String relativePath = findRelativePath(className);
-                readUserDefinedClass(classNode, relativePath, field, invalidUses);
+                readUserDefinedClass(classNode, className, field, invalidUses);
             }
 
         }
@@ -56,16 +53,6 @@ public class ProgramInterfaceNotImplementation implements Check{
         return className.startsWith("java/");
     }
 
-    private String findRelativePath(String desc) {
-        String filePackage = packagePath.toString().substring(packagePath.toString().lastIndexOf(File.separatorChar) + 1);
-        String pathToFind = desc.replace('/', File.separatorChar);
-        int separator = pathToFind.lastIndexOf(filePackage);
-        if(separator == -1){
-            //Class is not in given package
-            return desc;
-        }
-        return pathToFind.substring(separator + filePackage.length());
-    }
 
     private void readJavaDefinedClass(MyClassNode classNode, String classNamePath, MyFieldNode field, List<Message> invalidUses) {
         MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromName(classNamePath);
@@ -75,10 +62,8 @@ public class ProgramInterfaceNotImplementation implements Check{
         }
     }
 
-    private void readUserDefinedClass(MyClassNode classNode, String relativePath, MyFieldNode field, List<Message> invalidUses) {
-        Path classFilePath = packagePath.resolve(packagePath + relativePath +".class");
-
-        MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
+    private void readUserDefinedClass(MyClassNode classNode, String className, MyFieldNode field, List<Message> invalidUses) {
+        MyClassNode fieldClassNode = classNodeCreator.createUniqueMyClassNodeFromName(className);
         if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
             String message = "Where you need to Programming to interface instead of implementation: " + field.name;
             invalidUses.add(new Message(LintType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
@@ -103,8 +88,7 @@ public class ProgramInterfaceNotImplementation implements Check{
             MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
             return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
         } else {
-            Path classFilePath = packagePath.resolve(packagePath + findRelativePath(superName) + ".class");
-            MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromFile(classFilePath.toFile());
+            MyClassNode myClassNode = classNodeCreator.createUniqueMyClassNodeFromName(superName);
             return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
         }
     }

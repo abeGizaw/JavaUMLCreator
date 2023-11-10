@@ -37,7 +37,7 @@ public class Linter {
         checkTypeToCheck.put(LintType.HIDDEN_FIELDS, new FieldHiding());
         checkTypeToCheck.put(LintType.NAMING_CONVENTION, new NamingConventionCheck());
         checkTypeToCheck.put(LintType.COMPOSITION_OVER_INHERITANCE, new CompositionOverInheritance());
-        checkTypeToCheck.put(LintType.INTERFACE_OVER_IMPLEMENTATION, new InterfaceOverImplementation());
+        checkTypeToCheck.put(LintType.INTERFACE_OVER_IMPLEMENTATION, new ProgramInterfaceNotImplementation(creator));
         checkTypeToCheck.put(LintType.PLK, new PrincipleOfLeastKnowledge());
         checkTypeToCheck.put(LintType.ADAPTER_PATTERN, new AdapterPattern(myClassNodes));
         checkTypeToCheck.put(LintType.STRATEGY_PATTERN, new StrategyPattern(creator));
