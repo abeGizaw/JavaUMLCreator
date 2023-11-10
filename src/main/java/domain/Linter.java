@@ -9,17 +9,39 @@ import org.objectweb.asm.tree.ClassNode;
 import java.nio.file.Path;
 import java.util.*;
 
+import static presentation.ANSIColors.*;
+
 public class Linter {
     private final MyClassNodeCreator creator;
     private final List<MyClassNode> myClassNodes;
     private final Map<LintType, Check> checkTypeToCheck;
     private final Map<LintType, Transformation> transformationTypeToTransformation;
 
-    public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator) {
+    public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator, String outputPath) {
         this.creator = myClassNodeCreator;
         this.myClassNodes = createClassNodes(classPaths);
         this.checkTypeToCheck = new HashMap<>();
         this.transformationTypeToTransformation = new HashMap<>();
+        populateCheckMap();
+        populateTransformMap(outputPath);
+    }
+
+    private void populateTransformMap(String outputPath) {
+        DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
+        detectUnusedFields.run(null);
+        transformationTypeToTransformation.put(LintType.UNUSED_FIELD, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
+    }
+
+    private void populateCheckMap() {
+        checkTypeToCheck.put(LintType.FINAL_LOCAL_VARIABLES, new FinalLocalVariables());
+        checkTypeToCheck.put(LintType.HIDDEN_FIELDS, new FieldHiding());
+        checkTypeToCheck.put(LintType.NAMING_CONVENTION, new NamingConventionCheck());
+        checkTypeToCheck.put(LintType.COMPOSITION_OVER_INHERITANCE, new CompositionOverInheritance());
+        checkTypeToCheck.put(LintType.INTERFACE_OVER_IMPLEMENTATION, new InterfaceOverImplementation());
+        checkTypeToCheck.put(LintType.PLK, new PrincipleOfLeastKnowledge());
+        checkTypeToCheck.put(LintType.ADAPTER_PATTERN, new AdapterPattern(myClassNodes));
+        checkTypeToCheck.put(LintType.STRATEGY_PATTERN, new StrategyPattern(creator));
+        checkTypeToCheck.put(LintType.TEMPLATE_METHOD_PATTERN, new TemplateMethodPattern());
     }
 
     private List<MyClassNode> createClassNodes(List<String> classPaths) {
@@ -32,7 +54,6 @@ public class Linter {
     }
 
     public List<Message> runSelectedChecks(Set<LintType> lintTypes) {
-        createSelectedChecks(lintTypes);
         List<Message> messages = new ArrayList<>();
         for (LintType lintType : lintTypes) {
             if (lintType == LintType.ADAPTER_PATTERN) {
@@ -44,29 +65,7 @@ public class Linter {
         return messages;
     }
 
-    private void createSelectedChecks(Set<LintType> lintTypes) {
-        for (LintType lintType : lintTypes) {
-            if (lintType == LintType.FINAL_LOCAL_VARIABLES) {
-                checkTypeToCheck.put(LintType.FINAL_LOCAL_VARIABLES, new FinalLocalVariables());
-            } else if (lintType == LintType.HIDDEN_FIELDS) {
-                checkTypeToCheck.put(LintType.HIDDEN_FIELDS, new HiddenFields());
-            } else if (lintType == LintType.NAMING_CONVENTION) {
-                checkTypeToCheck.put(LintType.NAMING_CONVENTION, new NamingConventionCheck());
-            } else if (lintType == LintType.COMPOSITION_OVER_INHERITANCE) {
-                checkTypeToCheck.put(LintType.COMPOSITION_OVER_INHERITANCE, new CompositionOverInheritance());
-            } else if (lintType == LintType.INTERFACE_OVER_IMPLEMENTATION) {
-                checkTypeToCheck.put(LintType.INTERFACE_OVER_IMPLEMENTATION, new InterfaceOverImplementation());
-            } else if (lintType == LintType.PLK) {
-                checkTypeToCheck.put(LintType.PLK, new PrincipleOfLeastKnowledge());
-            } else if (lintType == LintType.ADAPTER_PATTERN) {
-                checkTypeToCheck.put(LintType.ADAPTER_PATTERN, new AdapterPattern(myClassNodes));
-            } else if (lintType == LintType.STRATEGY_PATTERN) {
-                checkTypeToCheck.put(LintType.STRATEGY_PATTERN, new StrategyPattern(creator));
-            } else if (lintType == LintType.TEMPLATE_METHOD_PATTERN) {
-                checkTypeToCheck.put(LintType.TEMPLATE_METHOD_PATTERN, new TemplateMethodPattern());
-            }
-        }
-    }
+
 
     private List<Message> runCheckOnAllNodes(LintType lintType) {
         List<Message> messages = new ArrayList<>();
@@ -82,11 +81,9 @@ public class Linter {
      * This is to reduce scope and not create adapters for all visitors
      *
      * @param transformations
-     * @param outputPath
      * @return
      */
-    public List<Message> runSelectedTransformations(Set<LintType> transformations, String outputPath) {
-        createSelectedTransformation(transformations, outputPath);
+    public List<Message> runSelectedTransformations(Set<LintType> transformations) {
         List<Message> allMessages = new ArrayList<>();
         for(LintType type: transformations){
             Transformation transformation = transformationTypeToTransformation.get(type);
@@ -102,18 +99,18 @@ public class Linter {
         return allMessages;
     }
 
-    private void createSelectedTransformation(Set<LintType> transformations, String outputPath) {
-        for(LintType type: transformations){
-            System.out.println("TYPE");
-            System.out.println(type);
-            switch (type){
-                case UNUSED_FIELD:
-                    DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
-                    detectUnusedFields.run(null);
-                    transformationTypeToTransformation.put(LintType.UNUSED_FIELD, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
-                default:
-                    break;
-            }
-        }
-    }
+//    private void createSelectedTransformation(Set<LintType> transformations, String outputPath) {
+//        for(LintType type: transformations){
+//            System.out.println("TYPE");
+//            System.out.println(type);
+//            switch (type){
+//                case UNUSED_FIELD:
+//                    DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
+//                    detectUnusedFields.run(null);
+//                    transformationTypeToTransformation.put(LintType.UNUSED_FIELD, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
+//                default:
+//                    break;
+//            }
+//       }
+//    }
 }

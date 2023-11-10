@@ -3,6 +3,7 @@ package presentation;
 import datasource.MessageSaver;
 import datasource.Saver;
 import domain.*;
+import domain.checks.*;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.nio.file.Files;
@@ -16,6 +17,8 @@ public class LinterMain {
 
 
     // need to add logic using the base path
+
+
 
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
@@ -38,6 +41,8 @@ public class LinterMain {
 
     }
 
+
+
     private static List<String> parseDirectory(Path directoryPath) {
         List<String> files = new ArrayList<>();
         try (Stream<Path> stream = Files.walk(directoryPath)){
@@ -52,9 +57,9 @@ public class LinterMain {
 
     private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator();
-        Linter linter = new Linter(files, creator);
+        Linter linter = new Linter(files, creator, outputPath);
         List<Message> allMessages = new ArrayList<>();
-        allMessages.addAll(linter.runSelectedTransformations(transformations, outputPath));
+        allMessages.addAll(linter.runSelectedTransformations(transformations));
         allMessages.addAll(linter.runSelectedChecks(checks));
         return allMessages;
     }
@@ -93,8 +98,8 @@ public class LinterMain {
 
         Set<LintType> allChecks = new HashSet<>();
         allChecks.addAll(promptUserForStyle());
-        allChecks.addAll(promptUserForPatters());
-        allChecks.addAll(promptUserForPrinciples());
+//        allChecks.addAll(promptUserForPatters());
+//        allChecks.addAll(promptUserForPrinciples());
 
         return allChecks;
 
