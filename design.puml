@@ -24,10 +24,9 @@ package domain {
 
    package checks{
         +class AdapterPattern {
-            -classNodes: List<MyClassNode>
+            -myClassNodes: List<MyClassNode>
             -classNames: List<String>
             -interfaceNames: Set<String>
-
             +AdapterPattern(classNodes: List<MyClassNode>)
             -findAdapterPatterns(): List<AdapterPatternClasses>
             -getImplementedInterfaces(classNode: MyClassNode): List<String>
