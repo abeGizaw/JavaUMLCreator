@@ -96,8 +96,8 @@ public class LinterMain {
 
         Set<LintType> allChecks = new HashSet<>();
         allChecks.addAll(promptUserForStyle());
-        allChecks.addAll(promptUserForPatters());
-        allChecks.addAll(promptUserForPrinciples());
+//        allChecks.addAll(promptUserForPatters());
+//        allChecks.addAll(promptUserForPrinciples());
 
         return allChecks;
 

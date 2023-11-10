@@ -58,14 +58,6 @@ public class Linter {
             } else {
                 messages.addAll(runCheckOnAllNodes(lintType));
             }
-
-//            if(lintType.equals(LintType.UNUSED_FIELD)){
-//                DetectUnusedFields d = (DetectUnusedFields) checkTypeToCheck.get(lintType);
-//                d.printUsageMap();
-//
-//            }
-            System.out.println("Finished lintType messages size" + messages.size());
-
         }
         return new ArrayList<>(messages);
     }
@@ -77,7 +69,6 @@ public class Linter {
         for (MyClassNode myClassNode : myClassNodes) {
             messages.addAll(check.run(myClassNode));
         }
-        System.out.println(RED + "IN RUNCHECKONALLNODES " + messages.size()+ RESET);
         return new ArrayList<>(messages);
     }
 
