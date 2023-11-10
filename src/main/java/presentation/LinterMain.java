@@ -16,9 +16,6 @@ public class LinterMain {
 
 
     // need to add logic using the base path
-
-
-
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
         List<String> files = parseDirectory(directoryPath);

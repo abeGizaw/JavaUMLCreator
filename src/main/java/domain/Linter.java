@@ -36,6 +36,7 @@ public class Linter {
         checkTypeToCheck.put(LintType.ADAPTER_PATTERN, new AdapterPattern(myClassNodes));
         checkTypeToCheck.put(LintType.STRATEGY_PATTERN, new StrategyPattern(creator));
         checkTypeToCheck.put(LintType.TEMPLATE_METHOD_PATTERN, new TemplateMethodPattern());
+        checkTypeToCheck.put(LintType.UNUSED_FIELD, new DetectUnusedFields(myClassNodes));
     }
 
     private List<MyClassNode> createClassNodes(List<String> classPaths) {
