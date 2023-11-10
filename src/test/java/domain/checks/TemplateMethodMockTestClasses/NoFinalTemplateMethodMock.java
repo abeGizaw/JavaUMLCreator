@@ -1,4 +1,4 @@
-package domain.abescode.templatemethodmocks;
+package domain.checks.TemplateMethodMockTestClasses;
 
 public abstract class NoFinalTemplateMethodMock {
     public abstract void doNothing();
