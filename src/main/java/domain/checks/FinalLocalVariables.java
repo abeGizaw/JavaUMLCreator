@@ -11,11 +11,12 @@ public class FinalLocalVariables implements Check {
 
     public List<Message> run(MyClassNode myClassNode) {
         List<Message> messages = new ArrayList<>();
-
         for (MyMethodNode myMethodNode : myClassNode.methods) {
-            localVariableManager = new LocalVariableManager(myMethodNode);
-            checkMethodForFinalLocalVariables(myMethodNode);
-            messages.addAll(createMessagesForMethod(myClassNode.name, myMethodNode.name));
+            if ((myMethodNode.access & MyOpcodes.ACC_ABSTRACT) == 0 && !myMethodNode.name.equals("<clinit>")) { // if it is not abstract and not a constructor for a constant
+                localVariableManager = new LocalVariableManager(myMethodNode);
+                checkMethodForFinalLocalVariables(myMethodNode);
+                messages.addAll(createMessagesForMethod(myClassNode.name, myMethodNode.name));
+            }
         }
         return messages;
     }
