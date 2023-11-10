@@ -4,9 +4,7 @@ import domain.*;
 
 import java.util.*;
 
-import static presentation.ANSIColors.*;
-
-public class FieldHiding implements Check{
+public class HiddenFields implements Check{
 
     public List<Message> run(MyClassNode myClassNode) {
         return checkFieldHiding(myClassNode);

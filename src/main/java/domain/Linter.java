@@ -9,8 +9,6 @@ import org.objectweb.asm.tree.ClassNode;
 import java.nio.file.Path;
 import java.util.*;
 
-import static presentation.ANSIColors.*;
-
 public class Linter {
     private final MyClassNodeCreator creator;
     private final List<MyClassNode> myClassNodes;
@@ -34,7 +32,7 @@ public class Linter {
 
     private void populateCheckMap() {
         checkTypeToCheck.put(LintType.FINAL_LOCAL_VARIABLES, new FinalLocalVariables());
-        checkTypeToCheck.put(LintType.HIDDEN_FIELDS, new FieldHiding());
+        checkTypeToCheck.put(LintType.HIDDEN_FIELDS, new HiddenFields());
         checkTypeToCheck.put(LintType.NAMING_CONVENTION, new NamingConventionCheck());
         checkTypeToCheck.put(LintType.COMPOSITION_OVER_INHERITANCE, new CompositionOverInheritance());
         checkTypeToCheck.put(LintType.INTERFACE_OVER_IMPLEMENTATION, new ProgramInterfaceNotImplementation(creator));
