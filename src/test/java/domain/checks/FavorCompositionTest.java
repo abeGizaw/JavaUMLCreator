@@ -34,7 +34,7 @@ public class FavorCompositionTest {
 
         String expectedMessage = String.format("Consider composition instead of inheritance. " + classNode.name + " EXTENDS " + superName);
 
-        assertEquals(className, messageList.get(0).getClassOfInterest());
+        assertEquals(className, messageList.get(0).getClassesOfInterest());
         assertEquals(CheckType.COMPOSITION_OVER_INHERITANCE, messageList.get(0).getCheckType());
         assertEquals(expectedMessage, messageList.get(0).getMessage());
     }

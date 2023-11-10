@@ -1,5 +1,6 @@
 package domain.kianascode;
 
+import domain.Message;
 import domain.myasm.MyASMClassNodeCreator;
 import domain.MyClassNodeCreator;
 import domain.checks.AdapterPattern;
@@ -27,18 +28,21 @@ public class KianasMain {
         MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
 
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
-        finalLocalVariablesCheck.run(myClassNode);
+        List<Message> messages = finalLocalVariablesCheck.run(myClassNode);
+        for (Message message : messages) {
+            System.out.println(message.toString());
+        }
     }
     
     private static void runAdapterPattern() throws IOException {
         List<String> classNames = new ArrayList<>();
-        classNames.add("domain/kianascode/ConcreteAdapter");
         classNames.add("domain/kianascode/Adaptee");
         classNames.add("domain/kianascode/Adapter");
-        classNames.add("domain/kianascode/ConcreteClass1");
-        classNames.add("domain/kianascode/Client");
-        classNames.add("domain/kianascode/ConcreteAdapter2");
         classNames.add("domain/kianascode/Adapter2");
+        classNames.add("domain/kianascode/AdapterPatternConcreteClass1");
+        classNames.add("domain/kianascode/Client");
+        classNames.add("domain/kianascode/Target");
+        classNames.add("domain/kianascode/Target2");
 
         List<MyClassNode> myClassNodes = new ArrayList<>();
         for (String className : classNames) {
@@ -47,18 +51,25 @@ public class KianasMain {
         }
 
         AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
-        adapterPatternCheck.run(myClassNodes.get(0));
+        List<Message> messages = adapterPatternCheck.run(myClassNodes.get(0));
+        for (Message message : messages) {
+            System.out.println(message.toString());
+        }
     }
 
     private static void runPLK() throws IOException {
         List<String> classNames = new ArrayList<>();
         classNames.add("domain/kianascode/PLKTestClass");
 
-        PrincipleOfLeastKnowledge qdPLKCheck = new PrincipleOfLeastKnowledge();
+        PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
+        List<Message> messages = new ArrayList<>();
         for (String className : classNames) {
             MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
+            messages.addAll(plkCheck.run(myClassNode));
+        }
 
-            qdPLKCheck.run(myClassNode);
+        for (Message message : messages) {
+            System.out.println(message.toString());
         }
     }
 }
