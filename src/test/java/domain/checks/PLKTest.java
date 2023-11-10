@@ -68,6 +68,25 @@ public class PLKTest {
         Assertions.assertEquals(expectedNumMessages, actualMessages.size());
     }
 
+    @Test
+    public void runPLKIsReturnedExpectOneMessage() {
+        String classPath = "PLKMockTestClasses/IsReturned";
+        MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
+        PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
+
+        int expectedNumMessages = 1;
+        CheckType expectedCheck = CheckType.PLK;
+        String expectedMessage = createExpectedMessageText("method1", "testClass1", "checkReturned");
+        String expectedClasses = "domain/checks/PLKMockTestClasses/IsReturned";
+
+        List<Message> actualMessages = plkCheck.run(myClassNode);
+
+        Assertions.assertEquals(expectedNumMessages, actualMessages.size());
+        Assertions.assertEquals(expectedCheck, CheckType.PLK);
+        Assertions.assertEquals(expectedMessage, actualMessages.get(0).getMessage());
+        Assertions.assertEquals(expectedClasses, actualMessages.get(0).getClassesOfInterest());
+    }
+
     private String createExpectedMessageText(String methodName, String receiverName, String calledMethod) {
         return String.format("Method: %s; %s is an invalid receiver for %s", methodName, receiverName, calledMethod);
     }

@@ -6,4 +6,8 @@ public class PLKTestClass1 {
     public void checkField() {
 
     }
+
+    public void checkReturned() {
+
+    }
 }
