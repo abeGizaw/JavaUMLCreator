@@ -12,8 +12,8 @@ package presentation {
         -lint(): void
         -promptUserForDirectory(): String
         -promptUserForOutputFileName(): String
-        -promptUserForChecks(): String
-        -validateUserSelectedChecks(checks: String): List<CheckType>
+        -promptUserForChecks(): List<LintType>
+        -validateUserSelectedChecks(checks: String): List<LintType>
         -prettyPrint(Messages: List<Message>): void
         -saveToFile(message: String): void
     }
@@ -21,20 +21,262 @@ package presentation {
     }
 
 package domain {
-    +class Linter {
-        -checkTypeToCheck: Map<CheckType, Check>
-        -myClassNodeCreator: MyClassNodeCreator
-        -myClassNodes: List<MyClassNode>
-        +Linter(classPaths: List<String>, myClassNodeCreator: MyClassNodeCreator)
-        +runSelectedChecks(List<CheckType>): List<Message>
-        -createClassNodes(classPaths: List<String>): List<MyClassNode>
-        -createSelectedChecks(List<CheckType>): List<Check>
-    }
-    +interface Check {
-        +{abstract}run(classNode: MyClassNode): List<Message>
+
+   package checks{
+        +class AdapterPattern {
+            -classNodes: List<MyClassNode>
+            -classNames: List<String>
+            -interfaceNames: Set<String>
+
+            +AdapterPattern(classNodes: List<MyClassNode>)
+            -findAdapterPatterns(): List<AdapterPatternClasses>
+            -getImplementedInterfaces(classNode: MyClassNode): List<String>
+            -getNotJavaClassFieldTypes(classNode: MyClassNode): List<String>
+            -fieldTypeIsClass(fieldType: String): boolean
+            -findAdapterPatternClients(possibleAdapterPatterns: List<AdapterPatternClasses>): List<AdapterPatternClasses>
+            -findImplementedInterfaces(className: String): List<String>
+            -getAdapterPatternClassesForInterface(interfaceName: String,
+            possibleAdapterPatterns: List<AdapterPatternClasses>, classNode: MyClassNode): List<AdapterPatternClasses>
+        }
+
+         +class AdapterPatternClasses {
+                -adapter: String
+                -concreteAdapter: String
+                -adaptee: String
+                -client: String
+                +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String, client: String)
+                +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String)
+                +getAdapter(): String
+                +getConcreteAdapter(): String
+                +getAdaptee(): String
+                +getClient(): String
+        }
+
+        +interface Check {
+            +{abstract}run(classNode: MyClassNode): List<Message>
+        }
+
+        +class CompositionOverInheritance{
+            +run(classNode: MyClassNode): List<Message>
+            -checkForInheritance(): List<Message>
+        }
+
+        +class DetectUnusedFields {
+           - {final} classNodes: List<MyClassNode>
+           - {final} fieldUsageMap: Map<MyFieldNode, Boolean>
+           - {final} fieldToClass: Map<MyFieldNode, MyClassNode>
+           - {final} nameToFieldNode: Map<String, MyFieldNode>
+
+           + DetectUnusedFields(classNodes: List<MyClassNode>)
+           + run(classNode: MyClassNode): List<Message>
+           + getNamesToDelete(): List<String>
+           - detectAllUnusedFields(classNodes: List<MyClassNode>): void
+           - populateFieldMaps(): void
+           - generateUnusedMessages(): List<Message>
+       }
+
+        +class FinalLocalVariables {
+            -{static}{final} STORE_OPCODES
+            -localVariables: List<LocalVariableInfo>
+            -prevInsnIsLabel: boolean
+            -prevInsn: MyAbstractInsnNode
+
+            +FinalLocalVariables()
+            +run(classNode: MyClassNode): List<Message>
+            -checkMethodForFinalLocalVariables(methodNode: MyMethodNode): void
+            -addLocalVariable(methodNode: MyMethodNode): void
+            -updateVariableScopes(insn: MyAbstractInsnNode): void
+            -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
+            -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
+            -handleValueStored(localVariableInfo: LocalVariableInfo): void
+        }
+
+        +class HiddenFields {
+            +run(classNode: MyClassNode): List<Message>
+            -checkFieldHiding(classNode: MyClassNode): List<Message>
+        }
+
+        +class ProgramToInterfaceNotImplementation {
+            -myClassNodeCreator: MyClassNodeCreator
+
+            +ProgramToInterfaceNotImplementation(myClassNodeCreator: MyClassNodeCreator)
+            +run(classNode: MyClassNode): List<Message>
+            -checkImplementInterface(classNode: MyClassNode): List<Message>
+            -implementsOrExtendsClass(fieldClassNode: MyClassNode): boolean
+            -checkIfAbstract(superName: String): boolean
+            -getClassName(desc: String): String
+            -isPrimitive(desc: String): boolean
+            -isJavaAPIClass(className: String):boolean
+            -readJavaDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
+            -readUserDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
+
+        }
+
+        +class LocalVariableInfo {
+            -{final}name: String
+            -{final}firstLabel: MyLabel
+            -{final}lastLabel: MyLabel
+            -{final}index: int
+            -isInScope: boolean
+            -hasBeenStored: boolean
+            -hasBeenStoredOnce: boolean
+
+            +LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
+            +setIsInScope(isInScope: boolean): void
+            +setHasBeenStored(hasBeenStored: boolean): void
+            +setHasBeenStoredOnce(hasBeenStoredOnce: boolean): void
+            +getIsInScope(): boolean
+            +getHasBeenStored(): boolean
+            +getHasBeenStoredOnce(): boolean
+        }
+
+         +class NamingConvention {
+            +run(classNode: MyClassNode): List<Message>
+            -checkClassName(): void
+            -checkFieldNames(): void
+            -checkMethodName(): void
+            -invalidCamelCase(name: String): boolean
+            -invalidPascalCase(name: String): boolean
+        }
+
+        +class PrincipleOfLeastKnowledge {
+            +run(classNode: MyClassNode): List<Message>
+        }
+
+        +class StrategyPattern {
+            -myClassNodeCreator: MyClassNodeCreator
+
+            +StrategyPattern(myClassNodeCreator: MyClassNodeCreator)
+            +run(classNode: MyClassNode): List<Message>
+            -checkForStrategyPattern(): void
+            -checkFieldForStrategyPattern(field: MyFieldNode)
+            -fieldIsAbstractAndValidClass(name: String, originalClassName: String, fieldName: String): boolean
+            -fieldIsAbstractType(myClassNode: MyClassNode): boolean
+            -findSetter(myClassNode: MyClassNode, fieldName: String, fieldType): String
+        }
+
+        +class TemplateMethodPattern{
+            +run(classNode: MyClassNode): List<Message>
+            -detectTemplateMethod(myClassNode: ClassNode): List<Message>
+            -containsAbstractMethodCall(instructions: <MyAbstractInsnNode>, methods: List<MyMethodNode>): boolean
+            -similarAbstractMethodInsn(methodInsNode: MethodInsnNode, methodNode: MyMethodNode):boolean
+            -isAMethodCall(node: MyAbstractInsnNode): boolean
+        }
     }
 
-    +enum CheckType {
+    package transformations{
+        +class DeleteUnusedFields {
+             - modifiedClassNodes: List<ClassNode>
+             - outputPath: String
+             - byteCodeExporter: Exporter
+
+             + DeleteUnusedFields(path: String)
+             + run(classNodes: List<MyClassNode>): List<Message>
+             - deleteUnusedFields(classNode: ClassNode, fieldsToDelete: List<String>): ClassNode
+             - exportModifiedClassNodes(): List<Message>
+        }
+
+        +class FieldsRemover {
+             - {final}fieldsToRemove: List<String>
+             + FieldsRemover(api: int, cv: ClassVisitor, fieldsToRemove: List<String>)
+             + visitField(access: int, name: String, descriptor: String, signature: String, value: Object): FieldVisitor
+             + visitMethod(access: int, name: String, descriptor: String, signature: String, exceptions: String[]): MethodVisitor
+        }
+
+       -class CustomMethodVisitor {
+             - fieldsToRemove: List<String>
+             + CustomMethodVisitor(api: int, mv: MethodVisitor, fieldsToRemove: List<String>)
+             + visitFieldInsn(opcode: int, owner: String, name: String, descriptor: String): void
+       }
+
+       +interface Transformation{
+            +{abstract} run(classNodes: List<ClassNode>): List<Message>
+       }
+    }
+
+    package myasm{
+        +class MyASMAbstractInsnNodeFactory{
+            +MyASMAbstractInsnNode(abstractInsnNode: AbstractInsnNode)
+            +constructTypedInsnNode(insn: AbstractInsnNode): MyAbstractInsnNode
+        }
+        +class MyASMClassNode{
+            -classNode: ClassNode
+            //takes all fields of abstract
+            +MyASMClassNode(classNode: ClassNode)
+        }
+        +class MyASMClassReader{
+            -classReader: ClassReader
+
+            +MyASMClassReader(classReader: ClassReader)
+        }
+        +class MyASMFieldNode {
+            -fieldNode: FieldNode
+            //takes all fields of abstract
+
+            +MyASMFieldNode(fieldNode: FieldNode)
+        }
+        +class MyASMLabel{
+            - label: Label
+
+            +MyASMLabel(label: Label)
+        }
+        +class MyASMMethodNode{
+            -methodNode: MethodNode
+            //takes all fields of abstract
+
+            +MyASMMethodNode(methodNode: MethodNode)
+            -adaptInstructions(): List<MyAbstractInsnNode>
+            -adaptLocalVariables(): List<MyLocalVariableNode>
+        }
+        +class MyASMLocalVariableNode{
+           -localVariableNode: LocalVariableNode
+           //takes all fields of abstract
+
+           +MyASMLocalVariableNode(localVariableNode: LocalVariableNode)
+           -convertEndLabel(): MyLabelNode
+           -convertStartLabel(): MyLabelNode
+        }
+        +class MyASMLabelNode {
+            -labelNode: LabelNode
+
+            +MyASMLabelNode(labelNode: LabelNode)
+            (inherits all methods)
+        }
+        +class MyASMMethodInsnNode{
+                // takes all fields of abstract
+                - methodInsnNode: MethodInsnNode
+
+                +MyASMMethodInsnNode(methodInsNode: MethodInsnNode)
+        }
+        +class MyASMVarInsnNode {
+            - varInsnNode: VarInsnNode
+            //takes all fields of abstract
+
+            +MyASMVarInsnNode(varInsnNode: VarInsnNode)
+        }
+        +class MyASMFieldInsnNode{
+            -fieldInsnNode: FieldInsnNode
+
+            +MyASMFieldInsnNode(fieldInsnNode: FieldInsnNode)
+        }
+    }
+
+     +class Linter {
+        - creator: MyClassNodeCreator
+        - myClassNodes: List<MyClassNode>
+        - checkTypeToCheck: Map<LintType, Check>
+        - transformationTypeToTransformation: Map<LintType, Transformation>
+
+        + Linter(classPaths: List<String>, myClassNodeCreator: MyClassNodeCreator, outputPath: String)
+        + runSelectedChecks(lintTypes: Set<LintType>): List<Message>
+        + runSelectedTransformations(transformations: Set<LintType>): List<Message>
+        - populateTransformMap(outputPath: String): void
+        - populateCheckMap(): void
+        - createClassNodes(classPaths: List<String>): List<MyClassNode>
+        - runCheckOnAllNodes(lintType: LintType): List<Message>
+        }
+
+    +enum LintType {
         HIDDEN_FIELDS,
         NAMING_CONVENTIONS,
         MAGIC_NUMBERS,
@@ -43,14 +285,16 @@ package domain {
         PLK,
         TEMPLATE,
         STRATEGY,
-        ADAPTER
+        ADAPTER,
+        UNUSED_FIELD
     }
+
     +class Message {
-        -checkType: CheckType
+        -checkType: LintType
         -message: String
         -classOfInterest: String
-        +Message(checkType: CheckType, classOfInterest: String, message: String)
-        +getCheckType(): CheckType
+        +Message(checkType: LintType, classOfInterest: String, message: String)
+        +getLintType(): LintType
         +getMessage(): String
         +getClassOfInterest(): String
     }
@@ -59,122 +303,6 @@ package domain {
         +createMyClassNode(path: String): MyClassNode
     }
 
-    +class AdapterPattern {
-        -classNodes: List<MyClassNode>
-        -classNames: List<String>
-        -interfaceNames: Set<String>
-
-        +AdapterPattern(classNodes: List<MyClassNode>)
-        -findAdapterPatterns(): List<AdapterPatternClasses>
-        -getImplementedInterfaces(classNode: MyClassNode): List<String>
-        -getNotJavaClassFieldTypes(classNode: MyClassNode): List<String>
-        -fieldTypeIsClass(fieldType: String): boolean
-        -findAdapterPatternClients(possibleAdapterPatterns: List<AdapterPatternClasses>): List<AdapterPatternClasses>
-        -findImplementedInterfaces(className: String): List<String>
-        -getAdapterPatternClassesForInterface(interfaceName: String,
-        possibleAdapterPatterns: List<AdapterPatternClasses>, classNode: MyClassNode): List<AdapterPatternClasses>
-    }
-
-    +class AdapterPatternClasses {
-        -adapter: String
-        -concreteAdapter: String
-        -adaptee: String
-        -client: String
-        +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String, client: String)
-        +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String)
-        +getAdapter(): String
-        +getConcreteAdapter(): String
-        +getAdaptee(): String
-        +getClient(): String
-    }
-
-    +class CompositionOverInheritance{
-        +run(classNode: MyClassNode): List<Message>
-        -checkForInheritance(): List<Message>
-    }
-
-    +class FinalLocalVariables {
-        -{static}{final} STORE_OPCODES
-        -localVariables: List<LocalVariableInfo>
-        -prevInsnIsLabel: boolean
-        -prevInsn: MyAbstractInsnNode
-
-        +FinalLocalVariables()
-        +run(classNode: MyClassNode): List<Message>
-        -checkMethodForFinalLocalVariables(methodNode: MyMethodNode): void
-        -addLocalVariable(methodNode: MyMethodNode): void
-        -updateVariableScopes(insn: MyAbstractInsnNode): void
-        -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
-        -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
-        -handleValueStored(localVariableInfo: LocalVariableInfo): void
-    }
-
-    +class HiddenFields {
-        +run(classNode: MyClassNode): List<Message>
-        -checkFieldHiding(classNode: MyClassNode): List<String>
-    }
-
-    +class InterfaceOverImplementation {
-        -myClassNodeCreator: MyClassNodeCreator
-
-        +InterfaceOverImplementation(myClassNodeCreator: MyClassNodeCreator)
-        +run(classNode: MyClassNode): List<Message>
-        -checkImplementInterface(classNode: MyClassNode): List<String>
-        -implementsOrExtendsClass(fieldClassNode: MyClassNode): boolean
-        -checkIfAbstract(superName: String): boolean
-    }
-
-    +class LocalVariableInfo {
-        -{final}name: String
-        -{final}firstLabel: MyLabel
-        -{final}lastLabel: MyLabel
-        -{final}index: int
-        -isInScope: boolean
-        -hasBeenStored: boolean
-        -hasBeenStoredOnce: boolean
-
-        +LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
-        +setIsInScope(isInScope: boolean): void
-        +setHasBeenStored(hasBeenStored: boolean): void
-        +setHasBeenStoredOnce(hasBeenStoredOnce: boolean): void
-        +getIsInScope(): boolean
-        +getHasBeenStored(): boolean
-        +getHasBeenStoredOnce(): boolean
-    }
-
-     +class NamingConvention {
-        +run(classNode: MyClassNode): List<Message>
-        -checkClassName(): void
-        -checkFieldNames(): void
-        -checkMethodName(): void
-        -invalidCamelCase(name: String): boolean
-        -invalidPascalCase(name: String): boolean
-    }
-
-    +class PrincipleOfLeastKnowledge {
-        +run(classNode: MyClassNode): List<Message>
-    }
-
-    +class StrategyPattern {
-        -myClassNodeCreator: MyClassNodeCreator
-
-        +StrategyPattern(myClassNodeCreator: MyClassNodeCreator)
-        +run(classNode: MyClassNode): List<Message>
-        -checkForStrategyPattern(): void
-        -checkFieldForStrategyPattern(field: MyFieldNode)
-        -fieldIsAbstractAndValidClass(name: String, originalClassName: String, fieldName: String): boolean
-        -fieldIsAbstractType(myClassNode: MyClassNode): boolean
-        -findSetter(myClassNode: MyClassNode, fieldName: String, fieldType): String
-    }
-
-    +class TemplateMethodPattern{
-        +run(classNode: MyClassNode): List<Message>
-        -detectTemplateMethod(myClassNode: ClassNode): boolean
-        -containsAbstractMethodCall(instructions: <MyAbstractInsnNode>, methods: List<MyMethodNode>): boolean
-        -isAMethodCall(node: MyAbstractInsnNode): boolean
-    }
-
-
     +abstract class MyAbstractInsnNode {
         +{static}{final} LABEL: int
         +getNext(): MyAbstractInsnNode
@@ -182,11 +310,6 @@ package domain {
         +{abstract}getType(): int
 
     }
-
-    +class MyASMAbstractInsnNodeFactory{
-        +MyASMAbstractInsnNode(abstractInsnNode: AbstractInsnNode)
-        +constructTypedInsnNode(insn: AbstractInsnNode): MyAbstractInsnNode
-      }
 
     +abstract class MyClassNode {
         +access: int
@@ -197,19 +320,7 @@ package domain {
         +methods: List<MyMethodNode>
     }
 
-    +class MyASMClassNode{
-        -classNode: ClassNode
-        //takes all fields of abstract
-        +MyASMClassNode(classNode: ClassNode)
-    }
-
     +interface MyClassReader {
-    }
-
-    +class MyASMClassReader{
-        -classReader: ClassReader
-
-        +MyASMClassReader(classReader: ClassReader)
     }
 
     +abstract class MyFieldNode {
@@ -218,20 +329,7 @@ package domain {
         +access: int
     }
 
-    +class MyASMFieldNode {
-        -fieldNode: FieldNode
-        //takes all fields of abstract
-
-        +MyASMFieldNode(fieldNode: FieldNode)
-    }
-
     +interface MyLabel {
-    }
-
-    +class MyASMLabel{
-        - label: Label
-
-        +MyASMLabel(label: Label)
     }
 
     +abstract class MyMethodNode {
@@ -243,42 +341,15 @@ package domain {
         +localVariables: List<MyLocalVariableNode>
     }
 
-    +class MyASMMethodNode{
-        -methodNode: MethodNode
-        //takes all fields of abstract
-
-        +MyASMMethodNode(methodNode: MethodNode)
-        -adaptInstructions(): List<MyAbstractInsnNode>
-        -adaptLocalVariables(): List<MyLocalVariableNode>
-    }
-
-
     +abstract class MyLocalVariableNode {
         +end: MyLabelNode
         +index: int
         +name: String
         +start: MyLabelNode
-
-    }
-
-    +class MyASMLocalVariableNode{
-       -localVariableNode: LocalVariableNode
-       //takes all fields of abstract
-
-       +MyASMLocalVariableNode(localVariableNode: LocalVariableNode)
-       -convertEndLabel(): MyLabelNode
-       -convertStartLabel(): MyLabelNode
     }
 
     +abstract class MyLabelNode{
         +getLabel(): MyLabel
-    }
-
-    +class MyASMLabelNode {
-        -labelNode: LabelNode
-
-        +MyASMLabelNode(labelNode: LabelNode)
-        (inherits all methods)
     }
 
     +abstract class MyMethodInsnNode{
@@ -286,33 +357,13 @@ package domain {
         +desc: String
     }
 
-    +class MyASMMethodInsnNode{
-        // takes all fields of abstract
-        - methodInsnNode: MethodInsnNode
-
-        +MyASMMethodInsnNode(methodInsNode: MethodInsnNode)
-
-    }
-
     +abstract class MyVarInsnNode {
            +var: int
        }
-    +class MyASMVarInsnNode {
-        - varInsnNode: VarInsnNode
-        //takes all fields of abstract
-
-        +MyASMVarInsnNode(varInsnNode: VarInsnNode)
-    }
 
     +abstract class MyFieldInsnNode{
         +name: String
         +desc: String
-    }
-
-    +class MyASMFieldInsnNode{
-        -fieldInsnNode: FieldInsnNode
-
-        +MyASMFieldInsnNode(fieldInsnNode: FieldInsnNode)
     }
 
     +class MyDefaultInsnNode{
@@ -344,66 +395,80 @@ package datasource {
         +{abstract} saveMessage(message: String): void
     }
     +class MessageSaver implements Saver {
+        +MessageSaver(path:String)
         +saveMessage(message: String): void
     }
+
+    +interface Exporter{
+        +save(outputPath: String, className: String, bytecode:  byte[]): void
+    }
+
+    +class ByteCodeExporter{
+
+    }
+    note left of ByteCodeExporter
+        ByteCodeExporter depends on File
+        and FIleOutputStream
+    end note
+    ByteCodeExporter .up.|> Exporter
+
+
 }
 
 package org.objectweb.asm {
     +class AbstractInsnNode {
     }
-
     +class ClassNode {
     }
-
     +class ClassReader {
     }
-
     +class FieldNode {
     }
-
     +class Label {
     }
-
     +class LabelNode {
     }
-
     +class LocalVariableNode{
     }
-
     +class MethodInsnNode{
     }
-
     +class MethodNode {
     }
-
     +class VarInsnNode {
     }
     +class FieldInsnNode{
     }
+   +class MethodVisitor{
+   }
+   +class ClassVisitor{
+   }
+   +class MethodVisitor{
+   }
+   +class ClassWriter{
+   }
 }
 
 LinterMain ..> ANSIColors
-LinterMain ..> CheckType
+LinterMain ..> LintType
 LinterMain ..> Message
 LinterMain --> Linter
 LinterMain ..> Linter
 LinterMain ..> MyClassNodeCreator
 LinterMain --> Saver
-'LinterMain .down.> domain.MyClassNode
-'LinterMain .down.> domain.MyClassReader
 
-Linter -> "*"CheckType
+Linter -> "*"LintType
 Linter --> "*"Check
 Linter ..> Check
-Linter -> MyClassNodeCreator
-Linter --> "*" MyClassNode
-Linter ..> CheckType
+Linter --> MyClassNodeCreator
+Linter -> "*" MyClassNode
+Linter ..> LintType
 Linter .up.> Message
+Linter -->"*" Transformation
+Linter ...> Transformation
 
-Message --> CheckType
 
+Message --> LintType
 
-'MyASMAbstractInsnNode --up|>  MyAbstractInsnNode
 MyASMClassNode ..up|> MyClassNode
 MyASMClassReader .up|> MyClassReader
 MyASMFieldNode -up|> MyFieldNode
@@ -431,17 +496,18 @@ Check <|.. AdapterPattern
 Check <|.. FinalLocalVariables
 Check <|.. PrincipleOfLeastKnowledge
 Check <|.. HiddenFields
-Check <|.. InterfaceOverImplementation
+Check <|.. ProgramToInterfaceNotImplementation
 Check <|.. TemplateMethodPattern
 Check <|.. StrategyPattern
 Check <|.. NamingConvention
 Check <|.. CompositionOverInheritance
+Check <|.. DetectUnusedFields
 
 
 MyClassNodeCreator ..> MyClassNode
 MyClassNodeCreator ..> MyClassReader
 
-InterfaceOverImplementation --> MyClassNodeCreator
+ProgramToInterfaceNotImplementation --> MyClassNodeCreator
 
 StrategyPattern --> MyClassNodeCreator
 StrategyPattern ..> MyClassNode
@@ -454,6 +520,7 @@ StrategyPattern ..> MyOpcodes
 TemplateMethodPattern ..> MyAbstractInsnNode
 TemplateMethodPattern ..> MyMethodNode
 TemplateMethodPattern ..> MyClassNode
+TemplateMethodPattern ..> Message
 
 CompositionOverInheritance ..> MyClassNode
 
@@ -480,14 +547,42 @@ FinalLocalVariables -->"*" MyOpcodes
 FinalLocalVariables ..> MyVarInsnNode
 
 HiddenFields ..> MyClassNode
+HiddenFields ..> Message
 
-InterfaceOverImplementation ..> MyClassNode
+ProgramToInterfaceNotImplementation ..> MyClassNode
+ProgramToInterfaceNotImplementation ..> MyFieldNode
+ProgramToInterfaceNotImplementation --> MyClassNodeCreator
+ProgramToInterfaceNotImplementation ..> Message
 
 
 LocalVariableInfo -->"2" MyLabel
 
-'MyASMAbstractInsnNode --> org.objectweb.asm.AbstractInsnNode
-'MyASMAbstractInsnNode ..> org.objectweb.asm.AbstractInsnNode
+DetectUnusedFields ---> MyClassNode
+DetectUnusedFields -> MyFieldNode
+DetectUnusedFields -> MyMethodNode
+DetectUnusedFields -> MyAbstractInsnNode
+DetectUnusedFields -> MyFieldInsnNode
+
+DeleteUnusedFields .up.|> Transformation
+DeleteUnusedFields .> org.objectweb.asm.ClassNode
+DeleteUnusedFields -> "*"org.objectweb.asm.ClassNode
+DeleteUnusedFields .> FieldsRemover
+DeleteUnusedFields -> Exporter
+DeleteUnusedFields ..> ByteCodeExporter
+DeleteUnusedFields ..> org.objectweb.asm.ClassWriter
+DeleteUnusedFields .> MyClassNode
+DeleteUnusedFields ..> DetectUnusedFields
+Transformation .> Message
+
+CustomMethodVisitor -|> org.objectweb.asm.MethodVisitor
+CustomMethodVisitor .> org.objectweb.asm.MethodVisitor
+FieldsRemover -|> org.objectweb.asm.ClassVisitor
+FieldsRemover .> org.objectweb.asm.ClassVisitor
+FieldsRemover -> CustomMethodVisitor
+FieldsRemover .> CustomMethodVisitor
+FieldsRemover ..> org.objectweb.asm.FieldVisitor
+FieldsRemover .> org.objectweb.asm.MethodVisitor
+
 
 MyASMClassNode --> org.objectweb.asm.ClassNode
 MyASMClassNode ..> org.objectweb.asm.ClassNode

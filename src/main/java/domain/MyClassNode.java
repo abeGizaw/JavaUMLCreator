@@ -1,5 +1,7 @@
 package domain;
 
+import org.objectweb.asm.tree.ClassNode;
+
 import java.util.List;
 
 public abstract class MyClassNode {
@@ -9,4 +11,5 @@ public abstract class MyClassNode {
     public List<MyMethodNode> methods;
     public String name;
     public String superName;
+
 }

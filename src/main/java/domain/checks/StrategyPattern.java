@@ -38,7 +38,7 @@ public class StrategyPattern implements Check {
             if (!setterName.isEmpty()) {
                 String messageValue = String.format("STRATEGY PATTERN: %s stores an instance of %s in the field %s. The setter is %s.\n",
                         classNode.name, field.desc, field.name, setterName);
-                return new Message(CheckType.STRATEGY_PATTERN, messageValue, classNode.name);
+                return new Message(LintType.STRATEGY_PATTERN, messageValue, classNode.name);
 
             }
         }
