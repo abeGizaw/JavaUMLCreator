@@ -120,14 +120,4 @@ public class AdapterPattern implements Check {
         }
         return messages;
     }
-
-    private void printAdapterPatterns(List<AdapterPatternClasses> adapterPatterns) {
-        for (AdapterPatternClasses adapterPatternClasses : adapterPatterns) {
-            System.out.printf("There is a possible use of the Adapter Pattern with\n" +
-                    "\tadapter: %s\n" +
-                    "\ttarget: %s\n" +
-                    "\tadaptee: %s\n" +
-                    "\tclient: %s.\n", adapterPatternClasses.getAdapter(), adapterPatternClasses.getTarget(), adapterPatternClasses.getAdaptee(), adapterPatternClasses.getClient());
-        }
-    }
 }
