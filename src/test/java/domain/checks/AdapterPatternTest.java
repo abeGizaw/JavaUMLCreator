@@ -106,6 +106,34 @@ public class AdapterPatternTest {
         Assertions.assertEquals(expectedClasses1, actualMessages.get(1).getClassesOfInterest());
     }
 
+    @Test
+    public void runAdapterPatternNoPatternsExpectNoAdapterPatterns() {
+        String directoryPath = "AdapterPatternMockTestClasses/Invalid/";
+        String otherClassPath = String.format("%sOtherClass", directoryPath);
+        String adapterPath = String.format("%sAdapter", directoryPath);
+        String clientPath = String.format("%sClient", directoryPath);
+        String targetPath = String.format("%sTarget", directoryPath);
+
+        List<String> paths = new ArrayList<>();
+        paths.add(otherClassPath);
+        paths.add(adapterPath);
+        paths.add(clientPath);
+        paths.add(targetPath);
+
+        List<MyClassNode> myClassNodes = new ArrayList<>();
+        for (String path : paths) {
+            myClassNodes.add(creator.createMyClassNodeFromName(path));
+        }
+
+        AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
+
+        int expectedNumMessages = 0;
+
+        List<Message> actualMessages = adapterPatternCheck.run(myClassNodes.get(0));
+
+        Assertions.assertEquals(expectedNumMessages, actualMessages.size());
+    }
+
     private String createExpectedPath(String path) {
         return String.format("domain/checks/%s", path);
     }
