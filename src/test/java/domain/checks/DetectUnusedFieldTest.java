@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DetectUnusedFieldTest {
     private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
-            Path.of("G:\\My Drive")
+            Path.of("")
     );
 
     @Test
