@@ -25,7 +25,7 @@ public class TemplateMethodTest {
         assertEquals(1, followsPattern.size());
         Message pattern = followsPattern.get(0);
         assertEquals(LintType.TEMPLATE_METHOD_PATTERN, pattern.getCheckType());
-        assertEquals(classNode.name, pattern.getClassOfInterest());
+        assertEquals(classNode.name, pattern.getClassesOfInterest());
         assertEquals("The Class "+ classNode.name + " uses the templateMethod Pattern", pattern.getMessage());
     }
 

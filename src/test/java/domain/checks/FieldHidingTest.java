@@ -51,7 +51,7 @@ public class FieldHidingTest {
         for(int i = 0; i < hiddenFields.size(); i ++){
             Message hiddenField = hiddenFields.get(i);
             assertEquals(hiddenField.getCheckType(), LintType.HIDDEN_FIELDS);
-            assertEquals(hiddenField.getClassOfInterest(), classNode.name);
+            assertEquals(hiddenField.getClassesOfInterest(), classNode.name);
             assertEquals(hiddenField.getMessage(), expectedMessages.get(i));
         }
 

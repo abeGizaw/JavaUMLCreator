@@ -47,7 +47,7 @@ public class ProgramToInterfaceTest {
         for(int i = 0; i < badImplementations.size(); i ++){
             Message badImplementation = badImplementations.get(i);
             assertEquals(badImplementation.getCheckType(), LintType.INTERFACE_OVER_IMPLEMENTATION);
-            assertEquals(badImplementation.getClassOfInterest(), classNode.name);
+            assertEquals(badImplementation.getClassesOfInterest(), classNode.name);
             assertEquals(badImplementation.getMessage(), expectedMessages.get(i));
         }
 

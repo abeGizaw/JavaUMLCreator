@@ -15,7 +15,7 @@ public class Message {
         public String getMessage(){
             return  message;
         }
-        public String getClassOfInterest(){
+        public String getClassesOfInterest(){
             return classOfInterest;
         }
         public String toString(){

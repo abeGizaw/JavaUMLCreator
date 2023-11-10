@@ -6,24 +6,25 @@ import domain.*;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class LinterMain {
 
-    private static String basePath;
-    private static List<String> paths;
 
     // need to add logic using the base path
 
     public static void main(String[] args) {
-        promptUserForDirectory();
+        Path directoryPath = promptUserForDirectory();
+        List<String> files = parseDirectory(directoryPath);
         String outputPath = promptUserForOutputFileName();
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations =  promptUserForTransformations();
 
-        for (String p : paths) {
+        for (String p : files) {
             System.out.println(p);
         }
         System.out.println("OUTPUT PATH: " + outputPath);
@@ -31,15 +32,27 @@ public class LinterMain {
         for (LintType type : checks) {
             System.out.println(type.toString());
         }
-        List<Message> messages = lint(checks, transformations, outputPath);
+        List<Message> messages = lint(checks, transformations, outputPath, files);
         prettyPrint(messages);
 //        saveToFile(messages, outputPath);
 
     }
 
-    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath) {
+    private static List<String> parseDirectory(Path directoryPath) {
+        List<String> files = new ArrayList<>();
+        try (Stream<Path> stream = Files.walk(directoryPath)){
+            stream.filter(p -> p.toString().endsWith(".class"))
+                    .forEach(file -> files.add(file.toString()));
+        } catch (Exception e) {
+            System.err.println("Error walking through the directory: " + e.getMessage());
+        }
+
+        return files;
+    }
+
+    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator();
-        Linter linter = new Linter(paths, creator);
+        Linter linter = new Linter(files, creator);
         List<Message> allMessages = new ArrayList<>();
         allMessages.addAll(linter.runSelectedTransformations(transformations, outputPath));
         allMessages.addAll(linter.runSelectedChecks(checks));
@@ -47,43 +60,30 @@ public class LinterMain {
     }
 
 
-    private static void promptUserForDirectory() {
+    private static Path promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
-        Path startPath = Paths.get(userInput);
-        try {
-            paths = new ArrayList<>();
-            Files.walk(startPath)
-                    .filter(p -> p.toString().endsWith(".class"))
-                    .forEach(file -> paths.add(file.toString()));
-        } catch (Exception e) {
-            System.err.println("Error reading package \n");
-            promptUserForDirectory();
+        if(!isValidPath(userInput)){
+            return promptUserForDirectory();
+        } else {
+            return Path.of(userInput);
         }
-        basePath = userInput;
     }
 
+    public static boolean isValidPath(String inputPath) {
+        if (inputPath == null || inputPath.isEmpty()) {
+            return false;
+        }
 
-//    private static void processClassFile(Path filePath, String userInput) {
-//        File file = filePath.toFile();
-//
-//        // Remove later
-//        String[] fileProperties = file.toString().split("\\\\");
-//        System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
-//
-//        MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-//        DirtyFieldHiding fieldHider = new DirtyFieldHiding();
-//        fieldHider.run(myClassNode);
-//
-//        DirtyInterfaceNotImplementation designPrinciple = new DirtyInterfaceNotImplementation(creator);
-//        designPrinciple.run(myClassNode);
-//
-//        DirtyTemplateMethod designPattern = new DirtyTemplateMethod();
-//        designPattern.run(myClassNode);
-//
-//        System.out.println("\n");
-//
-//
-//    }
+        Path path;
+        try {
+            path = Paths.get(inputPath);
+        } catch (InvalidPathException e) {
+            return false;
+        }
+
+        return Files.exists(path);
+    }
+
 
     private static String promptUserForOutputFileName() {
         return promptUser("Please enter an output file path");
