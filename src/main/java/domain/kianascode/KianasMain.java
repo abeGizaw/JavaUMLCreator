@@ -24,8 +24,7 @@ public class KianasMain {
     }
     
     private static void runFinalLocalVariables() throws IOException {
-//        String className = "domain/kianascode/FinalLocalVariablesTestClass";
-        String className = "domain/kianascode/OneScope";
+        String className = "domain/kianascode/FinalLocalVariablesTestClass";
 
         MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
 
