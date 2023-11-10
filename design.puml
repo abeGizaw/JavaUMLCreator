@@ -136,6 +136,26 @@ package domain {
             +getHasBeenStoredOnce(): Set<LocalVariableInfo>
         }
 
+         +class NamingConvention {
+            +run(classNode: MyClassNode): List<Message>
+            -checkClassName(): void
+            -checkFieldNames(): void
+            -checkMethodName(): void
+            -invalidCamelCase(name: String): boolean
+            -invalidPascalCase(name: String): boolean
+        }
+
+        +class PrincipleOfLeastKnowledge {
+            -{static}{final}METHOD_OPCODES: Set<Integer>
+            -instructionStack: Stack<MyAbstractInsnNode>
+            +run(myClassNode: MyClassNode): List<Message>
+            -checkMethod(myMethodNode: MyMethodNode): List<String>
+            -isConstructor(myAbstractInsnNode: MyAbstractInsnNode): boolean
+            -getInvalidReceiverNode(myAbstractInsnNode: MyAbstractInsnNode, localVariableManager: LocalVariableManager): String
+            -removeMethodArgument(): void
+            -createMessagesForMethod(messageTexts: List<String>, className: String): List<Message>
+        }
+
         +class ProgramToInterfaceNotImplementation {
             -myClassNodeCreator: MyClassNodeCreator
 
@@ -150,19 +170,6 @@ package domain {
             -readJavaDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
             -readUserDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
 
-        }
-
-         +class NamingConvention {
-            +run(classNode: MyClassNode): List<Message>
-            -checkClassName(): void
-            -checkFieldNames(): void
-            -checkMethodName(): void
-            -invalidCamelCase(name: String): boolean
-            -invalidPascalCase(name: String): boolean
-        }
-
-        +class PrincipleOfLeastKnowledge {
-            +run(classNode: MyClassNode): List<Message>
         }
 
         +class StrategyPattern {
@@ -575,7 +582,18 @@ LocalVariableManager --> MyAbstractInsnNode
 LocalVariableManager ..> MyLabel
 LocalVariableManager ..> MyLabelNode
 LocalVariableManager ..> MyLocalVariableNode
+LocalVariableManager ..> MyOpcodes
 LocalVariableManager ..> MyVarInsnNode
+
+PrincipleOfLeastKnowledge ..> LintType
+PrincipleOfLeastKnowledge ..> LocalVariableManager
+PrincipleOfLeastKnowledge -->"*" MyAbstractInsnNode
+PrincipleOfLeastKnowledge ..> MyFieldInsnNode
+PrincipleOfLeastKnowledge ..> MyMethodNode
+PrincipleOfLeastKnowledge ..> MyMethodInsnNode
+PrincipleOfLeastKnowledge ..> MyOpcodes
+PrincipleOfLeastKnowledge ..> MyType
+PrincipleOfLeastKnowledge ..> MyVarInsnNode
 
 ProgramToInterfaceNotImplementation ..> MyClassNode
 ProgramToInterfaceNotImplementation ..> MyFieldNode
