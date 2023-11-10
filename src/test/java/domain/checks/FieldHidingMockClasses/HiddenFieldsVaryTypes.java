@@ -3,7 +3,7 @@ package domain.checks.FieldHidingMockClasses;
 import java.util.Deque;
 import java.util.List;
 
-public class HiddenFields {
+public class HiddenFieldsVaryTypes {
     String similarName;
     int differentName;
     List<String> slightlySimilar;
@@ -12,6 +12,6 @@ public class HiddenFields {
     }
 
 
-    public void doMoreNothing(Deque<Integer> anotherSimilar, List<String> similarName, String slightlySimilar){
+    public void doMoreNothing(Deque<Integer> anotherSimilar, List<String> similarName, int slightlySimilar){
     }
 }

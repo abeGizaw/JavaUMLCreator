@@ -13,7 +13,7 @@ public class ProgramInterfaceNotImplementation implements Check{
     private final Path basePath;
 
     public ProgramInterfaceNotImplementation(MyClassNodeCreator nodeCreator, Path startPath){
-        classNodeCreator = nodeCreator;
+        this.classNodeCreator = nodeCreator;
         this.basePath = startPath;
     }
 
