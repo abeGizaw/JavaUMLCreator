@@ -15,11 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HiddenFieldsTest {
     MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator(
-            Path.of("G:\\My Drive")
+            Path.of("").toAbsolutePath()
     );
     @Test
     public void validateHiddenFieldsCheck_withHiddenFieldsOfDiffTypes_Expect4Hidden(){
-        Path basePath= Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\FieldHidingMockClasses\\HiddenFieldsVaryTypes.class");
+        Path basePath= Path.of(
+                "target/test-classes/domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes.class"
+        ).toAbsolutePath();
         validate(basePath, new ArrayList<>(Arrays.asList(
                 "Field similarName is hidden by method doNothing",
                 "Field anotherSimilar is hidden by method doMoreNothing",
@@ -29,7 +31,9 @@ public class HiddenFieldsTest {
 
     @Test
     public void validateHiddenFieldsCheck_withHiddenFieldsOfSameTypes_Expect4Hidden(){
-        Path basePath= Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\FieldHidingMockClasses\\HiddenFieldsSameTypes.class");
+        Path basePath= Path.of(
+                "target/test-classes/domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes.class"
+        ).toAbsolutePath();
         validate(basePath, new ArrayList<>(Arrays.asList(
                 "Field similarName is hidden by method doNothing",
                 "Field anotherSimilar is hidden by method doMoreNothing",
@@ -39,7 +43,9 @@ public class HiddenFieldsTest {
 
     @Test
     public void validateHiddenFieldsCheck_withNoHiddenFields_ExpectNoMessages(){
-        Path basePath= Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\FieldHidingMockClasses\\NoHiddenFields.class");
+        Path basePath= Path.of(
+                "target/test-classes/domain/checks/FieldHidingMockClasses/NoHiddenFields.class"
+        ).toAbsolutePath();
         MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(basePath.toFile());
         HiddenFields hiddenFieldsCheck = new HiddenFields();
         List<Message> hiddenFields = hiddenFieldsCheck.run(classNode);
