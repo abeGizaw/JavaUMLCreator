@@ -2,11 +2,14 @@ package domain.checks;
 
 import domain.*;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.FieldNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static presentation.ANSIColors.*;
 
 public class DetectUnusedFields implements Check {
 
@@ -20,13 +23,28 @@ public class DetectUnusedFields implements Check {
         this.fieldToClass = new HashMap<>();
         this.fieldUsageMap = new HashMap<>();
         this.nameToFieldNode = new HashMap<>();
+        populateFieldMaps();
+        System.out.println(RED+"Just populated and map size is " + fieldUsageMap.size()+ RESET);
     }
 
     @Override
     public List<Message> run(MyClassNode classNode) {
-        populateFieldMaps();
         detectAllUnusedFields(classNodes);
+        System.out.println("RAN UNUSED FIELDS");
         return generateUnusedMessages();
+    }
+
+    public void printUsageMap() {
+        int falseCount =0;
+        System.out.println("PRINT MAP");
+        for(MyFieldNode fieldNode: fieldUsageMap.keySet()){
+            System.out.println(fieldNode.name + "  " +fieldToClass.get(fieldNode).name + "      " + fieldUsageMap.get(fieldNode));
+            if(fieldUsageMap.get(fieldNode).equals(false)){
+                falseCount++;
+            }
+        }
+        System.out.println(YELLOW + fieldUsageMap.size() + RESET);
+        System.out.println(YELLOW + "FALSE COUNT " + falseCount + RESET);
     }
 
     private void detectAllUnusedFields(List<MyClassNode> classNodes) {

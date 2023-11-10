@@ -56,7 +56,8 @@ public class LinterMain {
         Linter linter = new Linter(files, creator, outputPath);
         List<Message> allMessages = new ArrayList<>();
         allMessages.addAll(linter.runSelectedTransformations(transformations));
-        allMessages.addAll(linter.runSelectedChecks(checks));
+        List<Message> messages = linter.runSelectedChecks(checks);
+        allMessages.addAll(messages);
         return allMessages;
     }
 

@@ -7,6 +7,8 @@ import domain.transformations.Transformation;
 import java.nio.file.Path;
 import java.util.*;
 
+import static presentation.ANSIColors.*;
+
 public class Linter {
     private final MyClassNodeCreator creator;
     private final List<MyClassNode> myClassNodes;
@@ -49,25 +51,34 @@ public class Linter {
     }
 
     public List<Message> runSelectedChecks(Set<LintType> lintTypes) {
-        List<Message> messages = new ArrayList<>();
+        Set<Message> messages = new HashSet<>();
         for (LintType lintType : lintTypes) {
             if (lintType == LintType.ADAPTER_PATTERN) {
                 messages.addAll(checkTypeToCheck.get(lintType).run(myClassNodes.get(0)));
             } else {
                 messages.addAll(runCheckOnAllNodes(lintType));
             }
+
+//            if(lintType.equals(LintType.UNUSED_FIELD)){
+//                DetectUnusedFields d = (DetectUnusedFields) checkTypeToCheck.get(lintType);
+//                d.printUsageMap();
+//
+//            }
+            System.out.println("Finished lintType messages size" + messages.size());
+
         }
-        return messages;
+        return new ArrayList<>(messages);
     }
 
 
     private List<Message> runCheckOnAllNodes(LintType lintType) {
-        List<Message> messages = new ArrayList<>();
+        Set<Message> messages = new HashSet<>();
         Check check = checkTypeToCheck.get(lintType);
         for (MyClassNode myClassNode : myClassNodes) {
             messages.addAll(check.run(myClassNode));
         }
-        return messages;
+        System.out.println(RED + "IN RUNCHECKONALLNODES " + messages.size()+ RESET);
+        return new ArrayList<>(messages);
     }
 
     /**
