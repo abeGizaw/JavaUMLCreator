@@ -26,6 +26,16 @@ public class FieldHidingTest {
                 "Field slightlySimilar is hidden by method doMoreNothing")));
     }
 
+    @Test
+    public void hidesFieldsOfSameTypes(){
+        Path basePath= Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\FieldHidingMockClasses\\HiddenFieldsSameTypes.class");
+        validate(basePath, new ArrayList<>(Arrays.asList(
+                "Field similarName is hidden by method doNothing",
+                "Field anotherSimilar is hidden by method doMoreNothing",
+                "Field similarName is hidden by method doMoreNothing",
+                "Field slightlySimilar is hidden by method doMoreNothing")));
+    }
+
     private void validate(Path basePath, List<String> expectedMessages){
         MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(basePath.toFile());
         FieldHiding fieldHidingCheck = new FieldHiding();
