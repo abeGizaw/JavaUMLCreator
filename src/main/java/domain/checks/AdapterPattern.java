@@ -1,8 +1,12 @@
 package domain.checks;
 
+
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyFieldNode;
+
+import domain.*;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,8 +30,8 @@ public class AdapterPattern implements Check {
     }
 
     public List<Message> run(MyClassNode myClassNode) {
-        printAdapterPatterns(findAdapterPatterns());
-        return null;
+        List<AdapterPatternClasses> adapterPatterns = findAdapterPatterns();
+        return createMessages(adapterPatterns);
     }
 
     private List<AdapterPatternClasses> findAdapterPatterns() {
@@ -102,10 +106,25 @@ public class AdapterPattern implements Check {
         List<AdapterPatternClasses> matchingAdapterPatterns = new ArrayList<>();
         for (AdapterPatternClasses adapterPatternClasses : possibleAdapterPatterns) {
             if (adapterPatternClasses.getTarget().equals(interfaceName)) {
-                matchingAdapterPatterns.add(new AdapterPatternClasses(adapterPatternClasses.getTarget(), adapterPatternClasses.getAdapter(), adapterPatternClasses.getAdaptee(), myClassNode.name));
+                matchingAdapterPatterns.add(new AdapterPatternClasses(adapterPatternClasses.getAdapter(), adapterPatternClasses.getTarget(), adapterPatternClasses.getAdaptee(), myClassNode.name));
             }
         }
         return matchingAdapterPatterns;
+    }
+
+    private List<Message> createMessages(List<AdapterPatternClasses> adapterPatterns) {
+        List<Message> messages = new ArrayList<>();
+        for (AdapterPatternClasses adapterPattern : adapterPatterns) {
+            String messageText = String.format("There is a possible use of the Adapter Pattern with\n" +
+                    "\tadapter: %s\n" +
+                    "\ttarget: %s\n" +
+                    "\tadaptee: %s\n" +
+                    "\tclient: %s.\n", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
+            String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdaptee(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
+            Message message = new Message(CheckType.ADAPTER_PATTERN, messageText, classes);
+            messages.add(message);
+        }
+        return messages;
     }
 
     private void printAdapterPatterns(List<AdapterPatternClasses> adapterPatterns) {
@@ -114,7 +133,7 @@ public class AdapterPattern implements Check {
                     "\tadapter: %s\n" +
                     "\ttarget: %s\n" +
                     "\tadaptee: %s\n" +
-                    "\tclient: %s.\n", adapterPatternClasses.getAdaptee(), adapterPatternClasses.getTarget(), adapterPatternClasses.getAdaptee(), adapterPatternClasses.getClient());
+                    "\tclient: %s.\n", adapterPatternClasses.getAdapter(), adapterPatternClasses.getTarget(), adapterPatternClasses.getAdaptee(), adapterPatternClasses.getClient());
         }
     }
 }

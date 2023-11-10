@@ -10,13 +10,14 @@ public class FinalLocalVariables implements Check {
     private LocalVariableManager localVariableManager;
 
     public List<Message> run(MyClassNode myClassNode) {
+        List<Message> messages = new ArrayList<>();
+
         for (MyMethodNode myMethodNode : myClassNode.methods) {
-            System.out.printf("Method: %s\n", myMethodNode.name);
             localVariableManager = new LocalVariableManager(myMethodNode);
             checkMethodForFinalLocalVariables(myMethodNode);
-            printResults();
+            messages.addAll(createMessagesForMethod(myClassNode.name, myMethodNode.name));
         }
-        return null;
+        return messages;
     }
 
     private void checkMethodForFinalLocalVariables(MyMethodNode myMethodNode) {
@@ -40,9 +41,13 @@ public class FinalLocalVariables implements Check {
         }
     }
 
-    private void printResults() {
+    private List<Message> createMessagesForMethod(String className, String methodName) {
+        List<Message> messages = new ArrayList<>();
         for (LocalVariableInfo localVariableInfo : localVariableManager.getHasBeenStoredOnce()) {
-            System.out.printf("%s can be final since the value is not changed.\n", localVariableInfo.getName());
+            String messageText = String.format("Method: %s; %s can be final since its value is not changed.\n", methodName, localVariableInfo.getName());
+            Message message = new Message(CheckType.FINAL_LOCAL_VARIABLES, messageText, className);
+            messages.add(message);
         }
+        return messages;
     }
 }

@@ -1,5 +1,4 @@
 package domain;
-
 public class Message {
     private final CheckType checkType;
     private final String message;
@@ -10,21 +9,21 @@ public class Message {
         this.message = mess;
         this.classOfInterest = classNameOfInterest;
     }
-
-    public CheckType getCheckType() {
+    
+    public CheckType getCheckType(){
         return checkType;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMessage(){
+        return  message;
     }
 
-    public String getClassOfInterest() {
+    public String getClassesOfInterest(){
         return classOfInterest;
     }
 
-    public String toString() {
-        return "Class: " + classOfInterest + "\n  Check Type: " + checkType + "\n  Message: " + message;
+    public String toString(){
+        return "Classes: " + classOfInterest + "\n  Check Type: " + checkType + "\n  Message: " + message;
     }
 
 }

@@ -42,7 +42,7 @@ public class NamingConventionTest {
 
         for (int i = 0; i < messageList.size(); i++) {
             assertEquals(CheckType.NAMING_CONVENTION, messageList.get(i).getCheckType());
-            assertEquals(className, messageList.get(i).getClassOfInterest());
+            assertEquals(className, messageList.get(i).getClassesOfInterest());
             assertEquals(expectedMessages.get(i), messageList.get(i).getMessage());
 
         }
