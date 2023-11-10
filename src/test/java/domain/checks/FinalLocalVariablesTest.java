@@ -66,6 +66,19 @@ public class FinalLocalVariablesTest {
         }
     }
 
+    @Test
+    public void runFinalLocalVariablesNoFinalExpectNoVariablesCanBeFinal() {
+        String classPath = "FinalLocalVariablesMockTestClasses/NoFinal";
+        MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
+        FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
+
+        int expectedNumMessages = 0;
+
+        List<Message> actualMessages = finalLocalVariablesCheck.run(myClassNode);
+
+        Assertions.assertEquals(expectedNumMessages, actualMessages.size());
+    }
+
     private String createExpectedMessageText(String methodName, String variableName) {
         return String.format("Method: %s; %s can be final since its value is not changed.\n", methodName, variableName);
     }
