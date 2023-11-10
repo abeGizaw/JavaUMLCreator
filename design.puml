@@ -116,6 +116,26 @@ package domain {
             +getHasBeenStoredOnce(): boolean
         }
 
+        +class LocalVariableManager {
+            -{static}{final}STORE_OPCODES: Set<Integer>
+            -{static}{final}LOAD_OPCODES: Set<Integer>
+            -localVariables: Set<LocalVariableInfo>
+            -parameters: Set<LocalVariableInfo>
+            -createdVariables: Set<LocalVariableInfo>
+            -prevInsnIsLabel: boolean
+            -prevInsn: MyAbstractInsnNode
+
+            +LocalVariableManager(myMethodNode: MyMethodNode)
+            +updateVariableScopes(insn: MyAbstractInsnNode): void
+            -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
+            -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
+            +addCreatedVariable(myAbstractInsnNode: MyAbstractInsnNode): void
+            +isCreatedVariable(myAbstractInsnNode: MyAbstractInsnNode): boolean
+            +isParameter(myAbstractInsnNode: MyAbstractInsnNode): boolean
+            +getVariableAtIndex(index: int): LocalVariableInfo
+            +getHasBeenStoredOnce(): Set<LocalVariableInfo>
+        }
+
         +class ProgramToInterfaceNotImplementation {
             -myClassNodeCreator: MyClassNodeCreator
 
@@ -548,6 +568,14 @@ HiddenFields ..> MyClassNode
 HiddenFields ..> Message
 
 LocalVariableInfo -->"2" MyLabel
+
+LocalVariableManager -->"*" LocalVariableInfo
+LocalVariableManager ..> LocalVariableInfo
+LocalVariableManager --> MyAbstractInsnNode
+LocalVariableManager ..> MyLabel
+LocalVariableManager ..> MyLabelNode
+LocalVariableManager ..> MyLocalVariableNode
+LocalVariableManager ..> MyVarInsnNode
 
 ProgramToInterfaceNotImplementation ..> MyClassNode
 ProgramToInterfaceNotImplementation ..> MyFieldNode
