@@ -18,22 +18,22 @@ public class KianasMain {
     private static MyClassNodeCreator creator = new MyASMClassNodeCreator();
 
     public static void main(String[] args) throws IOException {
-        runFinalLocalVariables();
+//        runFinalLocalVariables();
 //        runAdapterPattern();
         runPLK();
     }
     
-    private static void runFinalLocalVariables() throws IOException {
-        String className = "domain/kianascode/FinalLocalVariablesTestClass";
-
-        MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
-
-        FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
-        List<Message> messages = finalLocalVariablesCheck.run(myClassNode);
-        for (Message message : messages) {
-            System.out.println(message.toString());
-        }
-    }
+//    private static void runFinalLocalVariables() throws IOException {
+//        String className = "domain/kianascode/FinalLocalVariablesTestClass";
+//
+//        MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
+//
+//        FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
+//        List<Message> messages = finalLocalVariablesCheck.run(myClassNode);
+//        for (Message message : messages) {
+//            System.out.println(message.toString());
+//        }
+//    }
     
 //    private static void runAdapterPattern() throws IOException {
 //        List<String> classNames = new ArrayList<>();
