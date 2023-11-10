@@ -158,16 +158,11 @@ package domain {
     }
 
     package transformations{
-        +class ClassNodeToFile {
-            - {final} outputPath: String
-            - {final} byteCodeExporter: Exporter
-            + ClassNodeToFile(outputPath: String)
-            + writeClassNodeToFile(classNode: ClassNode): void
-        }
         +class DeleteUnusedFields {
             - {final} modifiedClassNodes: List<ClassNode>
             - {final} outputPath: String
             - {final} fieldsToDelete: List<String>
+            - {final} byteCodeExporter: Exporter
 
             + DeleteUnusedFields(path: String, fieldsToDelete: List<String>)
             - deleteUnusedFields(classNode: ClassNode): ClassNode
@@ -416,35 +411,34 @@ package datasource {
 package org.objectweb.asm {
     +class AbstractInsnNode {
     }
-
     +class ClassNode {
     }
-
     +class ClassReader {
     }
-
     +class FieldNode {
     }
-
     +class Label {
     }
-
     +class LabelNode {
     }
-
     +class LocalVariableNode{
     }
-
     +class MethodInsnNode{
     }
-
     +class MethodNode {
     }
-
     +class VarInsnNode {
     }
     +class FieldInsnNode{
     }
+   +class MethodVisitor{
+   }
+   +class ClassVisitor{
+   }
+   +class MethodVisitor{
+   }
+   +class ClassWriter{
+   }
 }
 
 LinterMain ..> ANSIColors
@@ -454,8 +448,6 @@ LinterMain --> Linter
 LinterMain ..> Linter
 LinterMain ..> MyClassNodeCreator
 LinterMain --> Saver
-'LinterMain .down.> domain.MyClassNode
-'LinterMain .down.> domain.MyClassReader
 
 Linter -> "*"CheckType
 Linter --> "*"Check
@@ -467,8 +459,6 @@ Linter .up.> Message
 
 Message --> CheckType
 
-
-'MyASMAbstractInsnNode --up|>  MyAbstractInsnNode
 MyASMClassNode ..up|> MyClassNode
 MyASMClassReader .up|> MyClassReader
 MyASMFieldNode -up|> MyFieldNode
@@ -501,6 +491,7 @@ Check <|.. TemplateMethodPattern
 Check <|.. StrategyPattern
 Check <|.. NamingConvention
 Check <|.. CompositionOverInheritance
+Check <|.. DetectUnusedFields
 
 
 MyClassNodeCreator ..> MyClassNode
@@ -551,9 +542,7 @@ InterfaceOverImplementation ..> MyClassNode
 
 LocalVariableInfo -->"2" MyLabel
 
-
-DetectUnusedFields .up.|> Check
-DetectUnusedFields -> MyClassNode
+DetectUnusedFields ---> MyClassNode
 DetectUnusedFields -> MyFieldNode
 DetectUnusedFields -> MyMethodNode
 DetectUnusedFields -> MyAbstractInsnNode
@@ -561,28 +550,24 @@ DetectUnusedFields -> MyFieldInsnNode
 
 DeleteUnusedFields .up.|> Transformation
 DeleteUnusedFields .> org.objectweb.asm.ClassNode
-DeleteUnusedFields -> org.objectweb.asm.ClassNode
-DeleteUnusedFields ..> FieldsRemover
-DeleteUnusedFields .> ClassNodeToFile
-
-ClassNodeToFile --> datasource.Exporter
-ClassNodeToFile --> datasource.ByteCodeExporter
-ClassNodeToFile ..> org.objectweb.asm.ClassWriter
+DeleteUnusedFields -> "*"org.objectweb.asm.ClassNode
+DeleteUnusedFields .> FieldsRemover
+DeleteUnusedFields -> Exporter
+DeleteUnusedFields .> ByteCodeExporter
+DeleteUnusedFields .> org.objectweb.asm.ClassWriter
 
 CustomMethodVisitor -|> org.objectweb.asm.MethodVisitor
-FieldsRemover -> CustomMethodVisitor
-FieldsRemover ..> CustomMethodVisitor
+CustomMethodVisitor .> org.objectweb.asm.MethodVisitor
 FieldsRemover -|> org.objectweb.asm.ClassVisitor
+FieldsRemover .> org.objectweb.asm.ClassVisitor
+FieldsRemover -> CustomMethodVisitor
+FieldsRemover .> CustomMethodVisitor
 FieldsRemover ..> org.objectweb.asm.FieldVisitor
-FieldsRemover ..> org.objectweb.asm.MethodVisitor
+FieldsRemover .> org.objectweb.asm.MethodVisitor
 
 
 Linter -down->"*" Transformation
 Linter ->"*" TransformType
-
-
-'MyASMAbstractInsnNode --> org.objectweb.asm.AbstractInsnNode
-'MyASMAbstractInsnNode ..> org.objectweb.asm.AbstractInsnNode
 
 MyASMClassNode --> org.objectweb.asm.ClassNode
 MyASMClassNode ..> org.objectweb.asm.ClassNode

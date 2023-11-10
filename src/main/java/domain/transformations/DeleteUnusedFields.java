@@ -2,6 +2,7 @@ package domain.transformations;
 
 import datasource.ByteCodeExporter;
 import datasource.Exporter;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
@@ -14,10 +15,13 @@ public class DeleteUnusedFields implements Transformation {
     private final String outputPath;
     private final List<String> fieldsToDelete;
 
+    private final Exporter byteCodeExporter;
+
     public DeleteUnusedFields(String path, List<String> fieldsToDelete) {
         this.modifiedClassNodes = new ArrayList<>();
         this.outputPath = path;
         this.fieldsToDelete = fieldsToDelete;
+        this.byteCodeExporter = new ByteCodeExporter();
     }
 
     public void run(List<ClassNode> classNodes) {
@@ -37,8 +41,13 @@ public class DeleteUnusedFields implements Transformation {
 
     private void exportModifiedClassNodes() {
         for (ClassNode classNode : modifiedClassNodes) {
-            ClassNodeToFile nodeToFile = new ClassNodeToFile(outputPath);
-            nodeToFile.writeClassNodeToFile(classNode);
+            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            classNode.accept(classWriter);
+
+            byte[] bytecode = classWriter.toByteArray();
+            String[] classNameArray = classNode.name.split("/");
+            String className = classNameArray[classNameArray.length - 1];
+            byteCodeExporter.save(outputPath, className, bytecode);
         }
     }
 }
