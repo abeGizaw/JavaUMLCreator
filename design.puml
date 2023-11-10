@@ -12,8 +12,8 @@ package presentation {
         -lint(): void
         -promptUserForDirectory(): String
         -promptUserForOutputFileName(): String
-        -promptUserForChecks(): List<CheckType>
-        -validateUserSelectedChecks(checks: String): List<CheckType>
+        -promptUserForChecks(): List<LintType>
+        -validateUserSelectedChecks(checks: String): List<LintType>
         -prettyPrint(Messages: List<Message>): void
         -saveToFile(message: String): void
     }
@@ -159,15 +159,16 @@ package domain {
 
     package transformations{
         +class DeleteUnusedFields {
-            - {final} modifiedClassNodes: List<ClassNode>
-            - {final} outputPath: String
-            - {final} fieldsToDelete: List<String>
-            - {final} byteCodeExporter: Exporter
+                - {final} modifiedClassNodes: List<ClassNode>
+                - {final} outputPath: String
+                - {final} fieldsToDelete: List<String>
+                - {final} byteCodeExporter: Exporter
 
-            + DeleteUnusedFields(path: String, fieldsToDelete: List<String>)
-            - deleteUnusedFields(classNode: ClassNode): ClassNode
-            - exportModifiedClassNodes(): void
-        }
+                + DeleteUnusedFields(path: String, fieldsToDelete: List<String>)
+                + run(classNodes: List<ClassNode>): List<Message>
+                - deleteUnusedFields(classNode: ClassNode): ClassNode
+                - exportModifiedClassNodes(): List<Message>
+            }
 
         +class FieldsRemover {
              - {final}fieldsToRemove: List<String>
@@ -183,7 +184,7 @@ package domain {
        }
 
        +interface Transformation{
-            +{abstract} run(classNodes: List<ClassNode>): void
+            +{abstract} run(classNodes: List<ClassNode>): List<Message>
        }
     }
 
@@ -255,19 +256,19 @@ package domain {
     }
 
     +class Linter {
-        -checkTypeToCheck: Map<CheckType, Check>
-        -transformTypeToTransformation: Map<TransformType, Transformation>
+        -checkTypeToCheck: Map<LintType, Check>
+        -transformTypeToTransformation: Map<LintType, Transformation>
         -myClassNodeCreator: MyClassNodeCreator
         -myClassNodes: List<MyClassNode>
 
         +Linter(classPaths: List<String>, myClassNodeCreator: MyClassNodeCreator)
-        +runSelectedChecks(checks: List<CheckType>): List<Message>
-        +runSelectedTransformation(transforms: List<TransformType>)
+        +runSelectedChecks(checks: List<LintType>): List<Message>
+        +runSelectedTransformation(transforms: List<LintType>)
         -createClassNodes(classPaths: List<String>): List<MyClassNode>
-        -createSelectedChecks(List<CheckType>): List<Check>
+        -createSelectedChecks(List<LintType>): List<Check>
     }
 
-    +enum CheckType {
+    +enum LintType {
         HIDDEN_FIELDS,
         NAMING_CONVENTIONS,
         MAGIC_NUMBERS,
@@ -276,19 +277,16 @@ package domain {
         PLK,
         TEMPLATE,
         STRATEGY,
-        ADAPTER
-    }
-
-    +enum TransformType{
-        REMOVE_UNUSED_FIELDS
+        ADAPTER,
+        UNUSED_FIELD
     }
 
     +class Message {
-        -checkType: CheckType
+        -checkType: LintType
         -message: String
         -classOfInterest: String
-        +Message(checkType: CheckType, classOfInterest: String, message: String)
-        +getCheckType(): CheckType
+        +Message(checkType: LintType, classOfInterest: String, message: String)
+        +getLintType(): LintType
         +getMessage(): String
         +getClassOfInterest(): String
     }
@@ -443,22 +441,22 @@ package org.objectweb.asm {
 }
 
 LinterMain ..> ANSIColors
-LinterMain ..> CheckType
+LinterMain ..> LintType
 LinterMain ..> Message
 LinterMain --> Linter
 LinterMain ..> Linter
 LinterMain ..> MyClassNodeCreator
 LinterMain --> Saver
 
-Linter -> "*"CheckType
+Linter -> "*"LintType
 Linter --> "*"Check
 Linter ..> Check
 Linter --> MyClassNodeCreator
 Linter -> "*" MyClassNode
-Linter ..> CheckType
+Linter ..> LintType
 Linter .up.> Message
 
-Message --> CheckType
+Message --> LintType
 
 MyASMClassNode ..up|> MyClassNode
 MyASMClassReader .up|> MyClassReader
@@ -556,6 +554,7 @@ DeleteUnusedFields .> FieldsRemover
 DeleteUnusedFields -> Exporter
 DeleteUnusedFields .> ByteCodeExporter
 DeleteUnusedFields .> org.objectweb.asm.ClassWriter
+Transformation ..> Message
 
 CustomMethodVisitor -|> org.objectweb.asm.MethodVisitor
 CustomMethodVisitor .> org.objectweb.asm.MethodVisitor
@@ -568,7 +567,6 @@ FieldsRemover .> org.objectweb.asm.MethodVisitor
 
 
 Linter -down->"*" Transformation
-Linter ->"*" TransformType
 
 MyASMClassNode --> org.objectweb.asm.ClassNode
 MyASMClassNode ..> org.objectweb.asm.ClassNode
