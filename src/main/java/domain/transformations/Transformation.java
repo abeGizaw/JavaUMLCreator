@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface Transformation {
 
-    public abstract void run(List<ClassNode> classNodes, List<String> fieldsToDelete);
+    public abstract void run(List<ClassNode> classNodes);
 
 }

@@ -33,12 +33,12 @@ public class DeleteUnusedFieldTests {
             nodes.add(classNode);
         }
 
-        Transformation removeUnusedField = new DeleteUnusedFields(outputPath);
         List<String> fieldsToRemove = new ArrayList<>();
         fieldsToRemove.add("unusedAndNeverSet");
         fieldsToRemove.add("unusedFieldSetInCons");
         fieldsToRemove.add("unusedSupportLocal");
-        removeUnusedField.run(nodes, fieldsToRemove);
+        Transformation removeUnusedField = new DeleteUnusedFields(outputPath, fieldsToRemove);
+        removeUnusedField.run(nodes);
 
         List<String> paths= new ArrayList<>();
         paths.add("src/test/java/domain/transformations/UnusedFieldMockTestClasses/UnusedFieldSupport.class");

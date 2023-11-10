@@ -183,19 +183,53 @@ package domain {
     }
 
 
-    +class DetectUnusedFields{
+    class DetectUnusedFields {
+       - {final} classNodes: List<MyClassNode>
+       - {final} fieldUsageMap: Map<MyFieldNode, Boolean>
+       - {final} fieldToClass: Map<MyFieldNode, MyClassNode>
+       - {final} nameToFieldNode: Map<String, MyFieldNode>
 
-
-    }
+       + DetectUnusedFields(classNodes: List<MyClassNode>)
+       + run(classNode: MyClassNode): List<Message>
+       - detectAllUnusedFields(classNodes: List<MyClassNode>): void
+       - populateFieldMaps(): void
+       - getNamesToDelete(): List<String>
+       - generateUnusedMessages(): List<Message>
+       }
 
     +interface Transformation{
-
+        +{abstract} run(classNodes: List<ClassNode>): void
     }
 
-    +class RemoveUnusedFields {
+    +class DeleteUnusedFields {
+        - {final} modifiedClassNodes: List<ClassNode>
+        - {final} outputPath: String
+        - {final} fieldsToDelete: List<String>
 
+        + DeleteUnusedFields(path: String, fieldsToDelete: List<String>)
+        - deleteUnusedFields(classNode: ClassNode): ClassNode
+        - exportModifiedClassNodes(): void
     }
 
+    +class ClassNodeToFile {
+        - {final} outputPath: String
+        - {final} byteCodeExporter: Exporter
+        + ClassNodeToFile(outputPath: String)
+        + writeClassNodeToFile(classNode: ClassNode): void
+    }
+
+     +class FieldsRemover {
+         - {final}fieldsToRemove: List<String>
+         + FieldsRemover(api: int, cv: ClassVisitor, fieldsToRemove: List<String>)
+         + visitField(access: int, name: String, descriptor: String, signature: String, value: Object): FieldVisitor
+         + visitMethod(access: int, name: String, descriptor: String, signature: String, exceptions: String[]): MethodVisitor
+     }
+
+     class FieldsRemover$CustomMethodVisitor {
+         - fieldsToRemove: List<String>
+         + CustomMethodVisitor(api: int, mv: MethodVisitor, fieldsToRemove: List<String>)
+         + visitFieldInsn(opcode: int, owner: String, name: String, descriptor: String): void
+     }
 
 
     +abstract class MyAbstractInsnNode {
@@ -511,7 +545,25 @@ LocalVariableInfo -->"2" MyLabel
 
 
 DetectUnusedFields .up.|> Check
-RemoveUnusedFields .up.|> Transformation
+DetectUnusedFields --> MyClassNode
+DetectUnusedFields --> MyFieldNode
+DetectUnusedFields --> MyMethodNode
+DetectUnusedFields --> MyAbstractInsnNode
+DetectUnusedFields --> MyFieldInsnNode
+DetectUnusedFields --> Message
+
+DeleteUnusedFields .up.|> Transformation
+DeleteUnusedFields ..> org.objectweb.asm.ClassNode
+DeleteUnusedFields --> org.objectweb.asm.ClassNode
+DeleteUnusedFields ..> FieldsRemover
+DeleteUnusedFields ..> ClassNodeToFile
+
+ClassNodeToFile --> datasource.Exporter
+ClassNodeToFile --> datasource.ByteCodeExporter
+ClassNodeToFile ..> org.objectweb.asm.ClassWriter
+
+
+
 Linter -down->"*" Transformation
 Linter ->"*" TransformType
 

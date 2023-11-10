@@ -52,44 +52,6 @@ public class DetectUnusedFieldTest {
     private String makeExpectedMessage (String fieldName, String className){
        return String.format("%s is a field in %s that was not used and was remove.",fieldName , className);
     }
-//    private static void printMessages(List<Message> messageList) {
-//        for (Message message : messageList) {
-//            System.out.println(message.toString());
-//        }
-//        System.out.println("Total Messages: " + messageList.size());
-//    }
-//
-//
-//    private void printAllFields(ClassNode classNode) {
-//        System.out.println("Class: " + classNode.name);
-//        for (FieldNode fieldNode : classNode.fields) {
-//            System.out.println("    " + fieldNode.name);
-//        }
-//
-//        for (MethodNode method : classNode.methods) {
-//            for (AbstractInsnNode instruction : method.instructions) {
-//                if (instruction.getOpcode() == Opcodes.PUTFIELD || instruction.getOpcode() == Opcodes.PUTSTATIC) {
-//                    FieldInsnNode node = (FieldInsnNode) instruction;
-//                    System.out.println("    Assigning: " + node.name);
-//                }
-//            }
-//        }
-//    }
-//
-//
-////    Node1 = creator.createMyClassNodeFromName(className1);
-////        MyClassNode classNode2 = creator.createMyClassNodeFromName(className2);
-////        try {
-////            ClassReader reader1 = new ClassReader(className1);
-////            ClassReader reader2 = new ClassReader(className2);
-////            reader1.accept(classNode1, ClassReader.EXPAND_FRAMES);
-////            reader2.accept(classNode2, ClassReader.EXPAND_FRAMES);
-////        } catch (IOException e) {
-////            throw new RuntimeException("This is not a valid class name:" + e.toString());
-////        }
-////
-////        String outputPath = "src/main/java/domain/arisCode";
-////        QD_UnusedFields qd_unused
 }
 
 

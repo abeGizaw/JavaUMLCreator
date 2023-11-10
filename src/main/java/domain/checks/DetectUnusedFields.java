@@ -26,7 +26,6 @@ public class DetectUnusedFields implements Check {
     public List<Message> run(MyClassNode classNode) {
         populateFieldMaps();
         detectAllUnusedFields(classNodes);
-
         return generateUnusedMessages();
     }
 
