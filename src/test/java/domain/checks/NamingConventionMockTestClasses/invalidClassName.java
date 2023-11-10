@@ -1,12 +1,12 @@
-package NamingConventionMockTestClasses;
+package domain.checks.NamingConventionMockTestClasses;
 
-public class ValidNaming {
+public class invalidClassName {
 
     private String name;
 
     public int number;
 
-    ValidNaming(String n, int num){
+    invalidClassName(String n, int num){
         name = n;
         number = num;
     }

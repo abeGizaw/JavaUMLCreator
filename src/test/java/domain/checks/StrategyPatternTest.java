@@ -27,9 +27,8 @@ public class StrategyPatternTest {
 
     private void testValidStrategyPattern(String className, String strategyClassName, String fieldName, String setterName) {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
-        StrategyPattern strategyPattern = new StrategyPattern(creator);
+        Check strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
 
         String expectedMessage = String.format("STRATEGY PATTERN: %s stores an instance of L%s; in the field %s. The setter is %s.\n", className, strategyClassName, fieldName, setterName);
 
@@ -71,7 +70,6 @@ public class StrategyPatternTest {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
         assertEquals(0, messageList.size());
     }
 
@@ -81,7 +79,6 @@ public class StrategyPatternTest {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
         assertEquals(0, messageList.size());
     }
 
@@ -91,14 +88,7 @@ public class StrategyPatternTest {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
         assertEquals(0, messageList.size());
-    }
-
-    private static void printMessages(List<Message> messageList) {
-        for (Message message : messageList) {
-            System.out.println(message.toString());
-        }
     }
 
 }
