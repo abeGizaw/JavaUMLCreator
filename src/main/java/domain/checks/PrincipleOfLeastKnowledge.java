@@ -26,6 +26,9 @@ public class PrincipleOfLeastKnowledge implements Check {
 
     private List<String> checkMethod(MyMethodNode myMethodNode) {
         List<String> messageTexts = new ArrayList<>();
+        if ((myMethodNode.access & MyOpcodes.ACC_ABSTRACT) != 0 || myMethodNode.name.equals("<clinit>")) { // if it is not abstract and not a constructor for a constant
+            return new ArrayList<>();
+        }
         LocalVariableManager localVariableManager = new LocalVariableManager(myMethodNode);
         for (MyAbstractInsnNode myAbstractInsnNode : myMethodNode.instructions) {
             localVariableManager.updateVariableScopes(myAbstractInsnNode);
@@ -81,7 +84,14 @@ public class PrincipleOfLeastKnowledge implements Check {
         }
 
         if (receiverNodeName.equals("")) {
-            receiverNodeName = localVariableManager.getVariableAtIndex(((MyVarInsnNode) receiverNode).var).getName();
+            if (receiverNode.getType() != MyAbstractInsnNode.VAR_INSN) {
+                return ""; // not a receiver
+            }
+            LocalVariableInfo receiver = localVariableManager.getVariableAtIndex(((MyVarInsnNode) receiverNode).var);
+            if (receiver == null) {
+                return ""; // the receiver is not a variable declared by the programmer (could be declared by something from Java)
+            }
+            receiverNodeName = receiver.getName();
         }
 
         // is created?

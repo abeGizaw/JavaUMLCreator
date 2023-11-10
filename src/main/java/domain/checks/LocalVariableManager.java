@@ -25,7 +25,7 @@ public class LocalVariableManager {
             localVariables.add(newLocalVariable);
             if (myLocalVariableNode.index == 0) {
                 newLocalVariable.setIsInScope(true);
-            } else if (myLocalVariableNode.index != 0 && myLocalVariableNode.start.getLabel().equals(startLabel)) {
+            } else if ((myLocalVariableNode.index != 0 && myLocalVariableNode.start.getLabel().equals(startLabel))) {
                 parameters.add(newLocalVariable);
                 newLocalVariable.setIsInScope(true);
                 newLocalVariable.setHasBeenStored(true);
