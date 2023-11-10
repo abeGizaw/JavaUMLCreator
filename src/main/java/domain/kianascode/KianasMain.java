@@ -1,5 +1,6 @@
 package domain.kianascode;
 
+import domain.CheckType;
 import domain.Message;
 import domain.myasm.MyASMClassNodeCreator;
 import domain.MyClassNodeCreator;
@@ -18,12 +19,13 @@ public class KianasMain {
 
     public static void main(String[] args) throws IOException {
         runFinalLocalVariables();
-        runAdapterPattern();
+//        runAdapterPattern();
         runPLK();
     }
     
     private static void runFinalLocalVariables() throws IOException {
-        String className = "domain/kianascode/FinalLocalVariablesTestClass";
+//        String className = "domain/kianascode/FinalLocalVariablesTestClass";
+        String className = "domain/kianascode/OneScope";
 
         MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
 
@@ -34,28 +36,28 @@ public class KianasMain {
         }
     }
     
-    private static void runAdapterPattern() throws IOException {
-        List<String> classNames = new ArrayList<>();
-        classNames.add("domain/kianascode/Adaptee");
-        classNames.add("domain/kianascode/Adapter");
-        classNames.add("domain/kianascode/Adapter2");
-        classNames.add("domain/kianascode/AdapterPatternConcreteClass1");
-        classNames.add("domain/kianascode/Client");
-        classNames.add("domain/kianascode/Target");
-        classNames.add("domain/kianascode/Target2");
-
-        List<MyClassNode> myClassNodes = new ArrayList<>();
-        for (String className : classNames) {
-            MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
-            myClassNodes.add(myClassNode);
-        }
-
-        AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
-        List<Message> messages = adapterPatternCheck.run(myClassNodes.get(0));
-        for (Message message : messages) {
-            System.out.println(message.toString());
-        }
-    }
+//    private static void runAdapterPattern() throws IOException {
+//        List<String> classNames = new ArrayList<>();
+//        classNames.add("domain/kianascode/Adaptee");
+//        classNames.add("domain/kianascode/Adapter");
+//        classNames.add("domain/kianascode/Adapter2");
+//        classNames.add("domain/kianascode/AdapterPatternConcreteClass1");
+//        classNames.add("domain/kianascode/Client");
+//        classNames.add("domain/kianascode/Target");
+//        classNames.add("domain/kianascode/Target2");
+//
+//        List<MyClassNode> myClassNodes = new ArrayList<>();
+//        for (String className : classNames) {
+//            MyClassNode myClassNode = creator.createMyClassNodeFromName(className);
+//            myClassNodes.add(myClassNode);
+//        }
+//
+//        AdapterPattern adapterPatternCheck = new AdapterPattern(myClassNodes);
+//        List<Message> messages = adapterPatternCheck.run(myClassNodes.get(0));
+//        for (Message message : messages) {
+//            System.out.println(message.toString());
+//        }
+//    }
 
     private static void runPLK() throws IOException {
         List<String> classNames = new ArrayList<>();
