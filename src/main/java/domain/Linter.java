@@ -99,13 +99,15 @@ public class Linter {
 
     private void createSelectedTransformation(Set<TransformationType> transformations, String outputPath) {
         for(TransformationType type: transformations){
+            System.out.println("TYPE");
+            System.out.println(type);
             switch (type){
                 case REMOVE_UNUSED_FIELDS:
                     DetectUnusedFields detectUnusedFields = new DetectUnusedFields(myClassNodes);
                     detectUnusedFields.run(null);
                     transformationTypeToTransformation.put(TransformationType.REMOVE_UNUSED_FIELDS, new DeleteUnusedFields(outputPath, detectUnusedFields.getNamesToDelete()));
                 default:
-                    throw new RuntimeException("Invalid Transformation");
+                    break;
             }
         }
     }
