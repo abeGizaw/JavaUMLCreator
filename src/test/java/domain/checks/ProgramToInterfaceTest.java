@@ -27,7 +27,16 @@ public class ProgramToInterfaceTest {
                 "Where you need to Programming to interface instead of implementation: badInterfaceUse",
                 "Where you need to Programming to interface instead of implementation: badAbstractUse"
         )));
+    }
 
+    @Test
+    public void validateProgramToInterface_withClassThatDoesNotViolate_expectEmptyMessage(){
+        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses\\GoodInterfaceUse.class");
+        Path packagePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses");
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        ProgramInterfaceNotImplementation programInterfaceNotImplementation = new ProgramInterfaceNotImplementation(classNodeCreator, packagePath);
+        List<Message> badImplementations = programInterfaceNotImplementation.run(classNode);
+        assertEquals(0, badImplementations.size());
     }
 
     private void validate(Path classPath, List<String> expectedMessages){
