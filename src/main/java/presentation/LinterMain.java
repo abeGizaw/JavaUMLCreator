@@ -36,7 +36,7 @@ public class LinterMain {
         }
         List<Message> messages = lint(checks);
         prettyPrint(messages);
-        saveToFile(messages, outputPath);
+//        saveToFile(messages, outputPath);
 
     }
 

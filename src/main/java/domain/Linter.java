@@ -45,7 +45,7 @@ public class Linter {
             } else if (checkType == CheckType.NAMING_CONVENTION) {
                 checkTypeToCheck.put(CheckType.NAMING_CONVENTION, new NamingConventionCheck());
             } else if (checkType == CheckType.COMPOSITION_OVER_INHERITANCE) {
-                checkTypeToCheck.put(CheckType.COMPOSITION_OVER_INHERITANCE, new FavorCompOverInheritance());
+                checkTypeToCheck.put(CheckType.COMPOSITION_OVER_INHERITANCE, new CompositionOverInheritance());
             } else if (checkType == CheckType.INTERFACE_OVER_IMPLEMENTATION) {
                 checkTypeToCheck.put(CheckType.INTERFACE_OVER_IMPLEMENTATION, new InterfaceOverImplementation());
             } else if (checkType == CheckType.PLK) {
