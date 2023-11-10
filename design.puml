@@ -29,13 +29,14 @@ package domain {
             -interfaceNames: Set<String>
             +AdapterPattern(classNodes: List<MyClassNode>)
             -findAdapterPatterns(): List<AdapterPatternClasses>
-            -getImplementedInterfaces(classNode: MyClassNode): List<String>
-            -getNotJavaClassFieldTypes(classNode: MyClassNode): List<String>
+            -getImplementedInterfaces(myClassNode: MyClassNode): List<String>
+            -getNotJavaClassFieldTypes(myClassNode: MyClassNode): List<String>
             -fieldTypeIsClass(fieldType: String): boolean
             -findAdapterPatternClients(possibleAdapterPatterns: List<AdapterPatternClasses>): List<AdapterPatternClasses>
             -findImplementedInterfaces(className: String): List<String>
             -getAdapterPatternClassesForInterface(interfaceName: String,
-            possibleAdapterPatterns: List<AdapterPatternClasses>, classNode: MyClassNode): List<AdapterPatternClasses>
+            possibleAdapterPatterns: List<AdapterPatternClasses>, myClassNode: MyClassNode): List<AdapterPatternClasses>
+            -createMessages(adapterPatterns: List<AdapterPatternClasses>): List<Message>
         }
 
          +class AdapterPatternClasses {
@@ -528,11 +529,10 @@ NamingConvention ..> MyFieldNode
 NamingConvention ..> MyMethodNode
 NamingConvention ..> MyOpcodes
 
-
 AdapterPattern ..> AdapterPatternClasses
+AdapterPattern ..> LintType
 AdapterPattern -->"*" MyClassNode
 AdapterPattern ..> MyFieldNode
-
 
 FinalLocalVariables -->"*" LocalVariableInfo
 FinalLocalVariables ..> LocalVariableInfo
