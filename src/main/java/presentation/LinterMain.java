@@ -204,8 +204,6 @@ public class LinterMain {
                     System.out.println("Invalid Input. Please Enter Abbreviations. ");
                     promptUserForStyle();
             }
-
-
         }
         return styleChecks;
     }
