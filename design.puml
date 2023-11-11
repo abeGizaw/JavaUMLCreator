@@ -396,6 +396,7 @@ package domain {
     +abstract class MyFieldInsnNode{
         +desc: String
         +name: String
+        +owner: String
     }
 
     +class MyDefaultInsnNode{
@@ -408,33 +409,34 @@ package domain {
     }
 
     +interface MyOpcodes {
-        ACC_ABSTRACT : int
-        ACC_FINAL : int
-        ACC_INTERFACE : int
-        ACC_STATIC : int
-        GETFIELD : int
-        GETSTATIC : int
-        PUTFIELD : int
-        PUTSTATIC : int
-        H_INVOKEINTERFACE : int
-        H_INVOKESPECIAL : int
-        H_INVOKESTATIC : int
-        H_INVOKEVIRTUAL : int
-        INVOKEDYNAMIC : int
-        INVOKEINTERFACE : int
-        INVOKESPECIAL : int
-        INVOKEVIRTUAL : int
-        ALOAD : int
-        DLOAD : int
-        FLOAD : int
-        ILOAD : int
-        LLOAD : int
-        ASTORE : int
-        DSTORE : int
-        FSTORE : int
-        ISTORE : int
-        LSTORE : int
-        ASM8 : int
+        ACC_ABSTRACT: int
+        ACC_ENUM: int
+        ACC_FINAL: int
+        ACC_INTERFACE: int
+        ACC_STATIC: int
+        GETFIELD: int
+        GETSTATIC: int
+        PUTFIELD: int
+        PUTSTATIC: int
+        H_INVOKEINTERFACE: int
+        H_INVOKESPECIAL: int
+        H_INVOKESTATIC: int
+        H_INVOKEVIRTUAL: int
+        INVOKEDYNAMIC: int
+        INVOKEINTERFACE: int
+        INVOKESPECIAL: int
+        INVOKEVIRTUAL: int
+        ALOAD: int
+        DLOAD: int
+        FLOAD: int
+        ILOAD: int
+        LLOAD: int
+        ASTORE: int
+        DSTORE: int
+        FSTORE: int
+        ISTORE: int
+        LSTORE: int
+        ASM8: int
     }
 }
 
