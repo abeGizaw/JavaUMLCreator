@@ -27,6 +27,15 @@ public class DeleteUnusedFields implements Transformation {
         this.byteCodeExporter = new ByteCodeExporter();
     }
 
+    /**
+     * Creates an instance of DetectUnusedFields to reuse the logic for detecting the unused fields.
+     * This is not stored as the abstract type Check because we need access to the 1 method to get the names of the unused fields.
+     * This is the best design so only raw data (Strings) are passed back.
+     * This eliminates the check from knowing about FieldNodes.
+     *
+     * @param classNodes
+     * @return
+     */
     public List<Message> run(List<MyClassNode> classNodes) {
         DetectUnusedFields detectUnusedFields = new DetectUnusedFields(classNodes);
         detectUnusedFields.run(null);

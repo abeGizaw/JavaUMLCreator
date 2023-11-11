@@ -2,9 +2,12 @@ package domain.checks;
 
 import domain.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class HiddenFields implements Check{
+public class HiddenFields implements Check {
 
     public List<Message> run(MyClassNode myClassNode) {
         return checkFieldHiding(myClassNode);

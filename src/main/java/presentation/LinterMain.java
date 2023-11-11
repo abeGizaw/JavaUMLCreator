@@ -2,7 +2,10 @@ package presentation;
 
 import datasource.MessageSaver;
 import datasource.Saver;
-import domain.*;
+import domain.LintType;
+import domain.Linter;
+import domain.Message;
+import domain.MyClassNodeCreator;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.nio.file.Files;
@@ -21,7 +24,7 @@ public class LinterMain {
         List<String> files = parseDirectory(directoryPath);
         String outputPath = promptUserForOutputFileName();
         Set<LintType> checks = promptUserForChecks();
-        Set<LintType> transformations =  promptUserForTransformations();
+        Set<LintType> transformations = promptUserForTransformations();
 
         for (String p : files) {
             System.out.println(p);
@@ -38,10 +41,9 @@ public class LinterMain {
     }
 
 
-
     private static List<String> parseDirectory(Path directoryPath) {
         List<String> files = new ArrayList<>();
-        try (Stream<Path> stream = Files.walk(directoryPath)){
+        try (Stream<Path> stream = Files.walk(directoryPath)) {
             stream.filter(p -> p.toString().endsWith(".class"))
                     .forEach(file -> files.add(file.toString()));
         } catch (Exception e) {
@@ -65,7 +67,7 @@ public class LinterMain {
 
     private static Path promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
-        if(!isValidPath(userInput)){
+        if (!isValidPath(userInput)) {
             System.err.println("Invalid package");
             return promptUserForDirectory();
         } else {
@@ -73,7 +75,7 @@ public class LinterMain {
         }
     }
 
-    public static boolean isValidPath(String inputPath) {
+    private static boolean isValidPath(String inputPath) {
         if (inputPath == null || inputPath.isEmpty()) {
             return false;
         }
@@ -97,7 +99,7 @@ public class LinterMain {
 
         Set<LintType> allChecks = new HashSet<>();
         allChecks.addAll(promptUserForStyle());
-        allChecks.addAll(promptUserForPatters());
+        allChecks.addAll(promptUserForPatterns());
         allChecks.addAll(promptUserForPrinciples());
 
         return allChecks;
@@ -105,28 +107,27 @@ public class LinterMain {
     }
 
 
-
     private static Set<LintType> promptUserForPrinciples() {
         String userInput = promptUser("Enter Principle Checks to run separated by comma: \n Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL, NONE");
 
-        Set<LintType> styleChecks = new HashSet<>();
+        Set<LintType> principles = new HashSet<>();
         String[] inputArray = userInput.split(",");
 
         for (String s : inputArray) {
             switch (s.toUpperCase()) {
                 case "FCOI":
-                    styleChecks.add(LintType.COMPOSITION_OVER_INHERITANCE);
+                    principles.add(LintType.COMPOSITION_OVER_INHERITANCE);
                     break;
                 case "PLK":
-                    styleChecks.add(LintType.PLK);
+                    principles.add(LintType.PLK);
                     break;
                 case "PINI":
-                    styleChecks.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
+                    principles.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
                     break;
                 case "ALL":
-                    styleChecks.add(LintType.COMPOSITION_OVER_INHERITANCE);
-                    styleChecks.add(LintType.PLK);
-                    styleChecks.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
+                    principles.add(LintType.COMPOSITION_OVER_INHERITANCE);
+                    principles.add(LintType.PLK);
+                    principles.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
                     break;
                 case "NONE":
                     break;
@@ -137,39 +138,39 @@ public class LinterMain {
 
 
         }
-        return styleChecks;
+        return principles;
     }
 
-    private static Set<LintType> promptUserForPatters() {
+    private static Set<LintType> promptUserForPatterns() {
         String userInput = promptUser("Enter Pattern Checks to run separated by comma: \n Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL, NONE");
 
-        Set<LintType> styleChecks = new HashSet<>();
+        Set<LintType> patterns = new HashSet<>();
         String[] inputArray = userInput.split(",");
 
         for (String s : inputArray) {
             switch (s.toUpperCase()) {
                 case "SP":
-                    styleChecks.add(LintType.STRATEGY_PATTERN);
+                    patterns.add(LintType.STRATEGY_PATTERN);
                     break;
                 case "AP":
-                    styleChecks.add(LintType.ADAPTER_PATTERN);
+                    patterns.add(LintType.ADAPTER_PATTERN);
                     break;
                 case "TMP":
-                    styleChecks.add(LintType.TEMPLATE_METHOD_PATTERN);
+                    patterns.add(LintType.TEMPLATE_METHOD_PATTERN);
                     break;
                 case "ALL":
-                    styleChecks.add(LintType.STRATEGY_PATTERN);
-                    styleChecks.add(LintType.ADAPTER_PATTERN);
-                    styleChecks.add(LintType.TEMPLATE_METHOD_PATTERN);
+                    patterns.add(LintType.STRATEGY_PATTERN);
+                    patterns.add(LintType.ADAPTER_PATTERN);
+                    patterns.add(LintType.TEMPLATE_METHOD_PATTERN);
                     break;
                 case "NONE":
                     break;
                 default:
                     System.out.println("Invalid Input. Please Enter Abbreviations. ");
-                    promptUserForPatters();
+                    promptUserForPatterns();
             }
         }
-        return styleChecks;
+        return patterns;
     }
 
     private static Set<LintType> promptUserForStyle() {
@@ -193,6 +194,7 @@ public class LinterMain {
                     styleChecks.add(LintType.NAMING_CONVENTION);
                     styleChecks.add(LintType.FINAL_LOCAL_VARIABLES);
                     styleChecks.add(LintType.HIDDEN_FIELDS);
+                    styleChecks.add(LintType.UNUSED_FIELD);
                     break;
                 case "UF":
                     styleChecks.add(LintType.UNUSED_FIELD);
@@ -203,8 +205,6 @@ public class LinterMain {
                     System.out.println("Invalid Input. Please Enter Abbreviations. ");
                     promptUserForStyle();
             }
-
-
         }
         return styleChecks;
     }

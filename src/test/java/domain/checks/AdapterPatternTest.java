@@ -17,7 +17,7 @@ public class AdapterPatternTest {
 
     @Test
     public void runAdapterPatternAbstractTargetExpectOneAdapterPattern() {
-        String directoryPath = "AdapterPatternMockTestClasses/ValidAbstractTarget/";
+        String directoryPath = "domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/";
         String adapteePath = String.format("%sAdaptee", directoryPath);
         String adapterPath = String.format("%sAdapter", directoryPath);
         String clientPath = String.format("%sClient", directoryPath);
@@ -38,16 +38,12 @@ public class AdapterPatternTest {
 
         int expectedNumMessages = 1;
         LintType expectedCheckType = LintType.ADAPTER_PATTERN;
-        String expectedAdapteePath = String.format("domain/checks/%s", adapteePath);
-        String expectedAdapterPath = String.format("domain/checks/%s", adapterPath);
-        String expectedClientPath = String.format("domain/checks/%s", clientPath);
-        String expectedTargetPath = String.format("domain/checks/%s", targetPath);
         String expectedMessage = String.format("There is a possible use of the Adapter Pattern with\n" +
                 "\tadapter: %s\n" +
                 "\ttarget: %s\n" +
                 "\tadaptee: %s\n" +
-                "\tclient: %s.\n", expectedAdapterPath, expectedTargetPath, expectedAdapteePath, expectedClientPath);
-        String expectedClasses = String.format("%s, %s, %s, %s", expectedAdapterPath, expectedTargetPath, expectedAdapteePath, expectedClientPath);
+                "\tclient: %s.\n", adapterPath, targetPath, adapteePath, clientPath);
+        String expectedClasses = String.format("%s, %s, %s, %s", adapterPath, targetPath, adapteePath, clientPath);
 
         List<Message> actualMessages = adapterPatternCheck.run(myClassNodes.get(0));
 
@@ -59,19 +55,19 @@ public class AdapterPatternTest {
 
     @Test
     public void runAdapterPatternInterfaceTargetExpectTwoAdapterPatterns() {
-        String directoryPath = "AdapterPatternMockTestClasses/ValidInterfaceTarget/";
+        String directoryPath = "domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/";
         String adapteePath = String.format("%sAdaptee", directoryPath);
         String adapterPath = String.format("%sAdapter", directoryPath);
         String clientPath = String.format("%sClient", directoryPath);
         String targetPath = String.format("%sTarget", directoryPath);
-        String otherClass = String.format("%sAdapterPatternConcreteClass", directoryPath);
+        String otherClassPath = String.format("%sAdapterPatternConcreteClass", directoryPath);
 
         List<String> paths = new ArrayList<>();
         paths.add(adapteePath);
         paths.add(adapterPath);
         paths.add(clientPath);
         paths.add(targetPath);
-        paths.add(otherClass);
+        paths.add(otherClassPath);
 
         List<MyClassNode> myClassNodes = new ArrayList<>();
         for (String path : paths) {
@@ -82,17 +78,12 @@ public class AdapterPatternTest {
 
         int expectedNumMessages = 2;
         LintType expectedCheckType = LintType.ADAPTER_PATTERN;
-        String expectedAdapteePath = createExpectedPath(adapteePath);
-        String expectedAdapterPath = createExpectedPath(adapterPath);
-        String expectedClientPath = createExpectedPath(clientPath);
-        String expectedTargetPath = createExpectedPath(targetPath);
-        String expectedOtherClassPath = createExpectedPath(otherClass);
 
-        String expectedMessage0 = createExpectedMessageText(expectedAdapterPath, expectedTargetPath, expectedAdapteePath, expectedClientPath);
-        String expectedMessage1 = createExpectedMessageText(expectedAdapterPath, expectedTargetPath, expectedOtherClassPath, expectedClientPath);
+        String expectedMessage0 = createExpectedMessageText(adapterPath, targetPath, adapteePath, clientPath);
+        String expectedMessage1 = createExpectedMessageText(adapterPath, targetPath, otherClassPath, clientPath);
 
-        String expectedClasses0 = createExpectedClassesText(expectedAdapterPath, expectedTargetPath, expectedAdapteePath, expectedClientPath);
-        String expectedClasses1 = createExpectedClassesText(expectedAdapterPath, expectedTargetPath, expectedOtherClassPath, expectedClientPath);
+        String expectedClasses0 = createExpectedClassesText(adapterPath, targetPath, adapteePath, clientPath);
+        String expectedClasses1 = createExpectedClassesText(adapterPath, targetPath, otherClassPath, clientPath);
 
         List<Message> actualMessages = adapterPatternCheck.run(myClassNodes.get(0));
 
@@ -109,7 +100,7 @@ public class AdapterPatternTest {
 
     @Test
     public void runAdapterPatternNoPatternsExpectNoAdapterPatterns() {
-        String directoryPath = "AdapterPatternMockTestClasses/NoAdapterPattern/";
+        String directoryPath = "domain/checks/AdapterPatternMockTestClasses/NoAdapterPattern/";
         String otherClassPath = String.format("%sOtherClass", directoryPath);
         String adapterPath = String.format("%sAdapter", directoryPath);
         String clientPath = String.format("%sClient", directoryPath);
@@ -133,10 +124,6 @@ public class AdapterPatternTest {
         List<Message> actualMessages = adapterPatternCheck.run(myClassNodes.get(0));
 
         Assertions.assertEquals(expectedNumMessages, actualMessages.size());
-    }
-
-    private String createExpectedPath(String path) {
-        return String.format("domain/checks/%s", path);
     }
 
     private String createExpectedMessageText(String adapterPath, String targetPath, String adapteePath, String clientPath) {

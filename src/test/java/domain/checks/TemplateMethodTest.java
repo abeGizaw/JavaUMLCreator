@@ -14,13 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TemplateMethodTest {
     MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator(
-            Path.of("G:\\My Drive")
+            Path.of("").toAbsolutePath()
     );
 
     @Test
     public void validateTemplateMethodCheck_WithClassThatFollows_expectTrueMessage(){
-        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\TemplateMethodMockTestClasses\\CorrectTemplateMethodMock.class");
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        String className = "domain/checks/TemplateMethodMockTestClasses/CorrectTemplateMethodMock";
+
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
         List<Message> followsPattern = templateMethodPattern.run(classNode);
 
@@ -33,8 +34,8 @@ public class TemplateMethodTest {
 
     @Test
     public void validateTemplateMethodCheck_WithClassThatHasNoFinal_expectNoMessage(){
-        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\TemplateMethodMockTestClasses\\NoFinalTemplateMethodMock.class");
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        String className = "domain/checks/TemplateMethodMockTestClasses/NoAbstractTemplateMock";
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
         List<Message> followsPattern = templateMethodPattern.run(classNode);
 
@@ -43,8 +44,8 @@ public class TemplateMethodTest {
 
     @Test
     public void validateTemplateMethodCheck_WithClassThatHasNoAbstract_expectNoMessage(){
-        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\TemplateMethodMockTestClasses\\NoAbstractTemplateMock.class");
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        String className = "domain/checks/TemplateMethodMockTestClasses/NoFinalTemplateMethodMock";
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
         List<Message> followsPattern = templateMethodPattern.run(classNode);
 
