@@ -19,6 +19,10 @@ public class LocalVariableManager {
         localVariables = new HashSet<>();
         parameters = new HashSet<>();
 
+        if (myMethodNode.localVariables.size() < 1) {
+            return; // nothing to check if there are no local variables
+        }
+
         MyLabel startLabel = myMethodNode.localVariables.get(0).start.getLabel();
         for (MyLocalVariableNode myLocalVariableNode : myMethodNode.localVariables) {
             LocalVariableInfo newLocalVariable = new LocalVariableInfo(myLocalVariableNode.name, myLocalVariableNode.start.getLabel(), myLocalVariableNode.end.getLabel(), myLocalVariableNode.index);
