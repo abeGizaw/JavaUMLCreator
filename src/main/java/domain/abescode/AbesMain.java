@@ -8,6 +8,7 @@ import domain.checks.HiddenFields;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 
 public class AbesMain {
     private static final MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of(""));
+    private static StringBuilder umlBuilder = new StringBuilder();
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
@@ -23,12 +25,22 @@ public class AbesMain {
         String packagePath = keyboard.nextLine();
         Path startPath = Paths.get(packagePath);
 
+        umlBuilder.append("@startuml\n");
+
         try(Stream<Path> stream = Files.walk(startPath)){
             stream.filter(p -> p.toString().endsWith(".class"))
                     .forEach(AbesMain::processClassFile);
         } catch (IOException e) {
             System.err.println("Error walking the directory: " + e.getMessage());
         }
+
+        umlBuilder.append("@enduml");
+        try (FileWriter fileWriter = new FileWriter("output.puml")) {
+            fileWriter.write(umlBuilder.toString());
+        } catch (IOException e) {
+            System.err.println("Error writing UML to output file");
+        }
+
 
     }
 
@@ -41,7 +53,7 @@ public class AbesMain {
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
         ConvertASMToUML ASMConverter = new ConvertASMToUML();
-        ASMConverter.run(myClassNode);
+        ASMConverter.run(myClassNode, umlBuilder);
         System.out.println("\n");
     }
 }

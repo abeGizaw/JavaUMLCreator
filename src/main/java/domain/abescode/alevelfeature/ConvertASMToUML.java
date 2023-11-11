@@ -3,8 +3,6 @@ import domain.MyClassNode;
 import domain.MyFieldNode;
 import domain.MyMethodNode;
 import domain.MyOpcodes;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -15,14 +13,14 @@ import java.util.stream.Collectors;
 import static presentation.ANSIColors.*;
 
 public class ConvertASMToUML {
-    public void run(MyClassNode classNode) {
-        generateUmlDiagram(classNode);
+    public void run(MyClassNode classNode, StringBuilder pumlContent) {
+        generateUmlDiagram(classNode, pumlContent);
     }
 
-    private void generateUmlDiagram(MyClassNode myClassNode) {
-        StringBuilder pumlContent = new StringBuilder();
-        pumlContent.append("@startuml\n");
+    private void generateUmlDiagram(MyClassNode myClassNode, StringBuilder pumlContent) {
         pumlContent.append(convertClassInfo(myClassNode));
+        pumlContent.append("{\n");
+
 
 //        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
 //        String[] nameProperties = myClassNode.name.split("/");
@@ -32,15 +30,6 @@ public class ConvertASMToUML {
 
 
         pumlContent.append("}\n");
-
-
-        pumlContent.append("@enduml");
-
-        try (FileWriter fileWriter = new FileWriter("output.puml")) {
-            fileWriter.write(pumlContent.toString());
-        } catch (IOException e) {
-            System.err.println("Error writing UML to output file");
-        }
     }
 
     private String convertClassInfo(MyClassNode myClassNode){
@@ -48,8 +37,13 @@ public class ConvertASMToUML {
 
         String classType = getClassType(myClassNode.access);
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-        String classModifier = getAccessModifier(myClassNode.access);
-        classString.append(classModifier).append(classType).append(" ").append(className);
+
+        if (classType.equals("enum")) {
+            classString.append(classType).append(" ").append(className);
+        } else {
+            String classModifier = getAccessModifier(myClassNode.access);
+            classString.append(classModifier).append(classType).append(" ").append(className);
+        }
 
         return classString.toString();
     }
@@ -170,10 +164,10 @@ public class ConvertASMToUML {
         }
 
         if ((access & MyOpcodes.ACC_STATIC) != 0) {
-            modifiers.append("static ");
+            modifiers.append("{static}");
         }
         if ((access & MyOpcodes.ACC_FINAL) != 0) {
-            modifiers.append("final ");
+            modifiers.append("{final}");
         }
         return modifiers.toString();
     }

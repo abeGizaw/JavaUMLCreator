@@ -1,6 +1,24 @@
 @startuml
-class FieldMock{
--someValue:List<String>
-+someMethod(someParam:String, another:String):void
++class AccessModifierVariety{
+}
++class ReturnTypeVariety{
+}
++class ParameterTypeVariety{
+}
+enum MockEnum{
+}
++interface MockInterface{
+}
++class ImplementingClass{
+}
++class CollectionFieldsConverter{
+}
++abstract class MockAbstract{
+}
++class ArrayFieldsConverter{
+}
++class ObjectFieldsConverter{
+}
++class PrimitiveFieldsConverter{
 }
 @enduml
