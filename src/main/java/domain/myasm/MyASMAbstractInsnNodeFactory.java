@@ -1,11 +1,11 @@
 package domain.myasm;
 
-import domain.MyDefaultInsnNode;
 import domain.MyAbstractInsnNode;
+import domain.MyDefaultInsnNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 public class MyASMAbstractInsnNodeFactory {
-    public MyAbstractInsnNode constructTypedInsnNode(AbstractInsnNode node){
+    public MyAbstractInsnNode constructTypedInsnNode(AbstractInsnNode node) {
         if (node == null) {
             return null;
         }

@@ -3,12 +3,15 @@ package domain.checks;
 import domain.*;
 import domain.myasm.MyASMType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
 public class PrincipleOfLeastKnowledge implements Check {
     private static final Set<Integer> METHOD_OPCODES = Set.of(MyOpcodes.H_INVOKEVIRTUAL, MyOpcodes.H_INVOKESTATIC, MyOpcodes.H_INVOKESPECIAL, MyOpcodes.H_INVOKEINTERFACE);
 
-    private Stack<MyAbstractInsnNode> instructionStack;
+    private final Stack<MyAbstractInsnNode> instructionStack;
 
     public PrincipleOfLeastKnowledge() {
         instructionStack = new Stack<>();
@@ -49,7 +52,7 @@ public class PrincipleOfLeastKnowledge implements Check {
     }
 
     private boolean isConstructor(MyAbstractInsnNode myAbstractInsnNode) {
-        if (myAbstractInsnNode.getOpcode() != MyOpcodes.INVOKESPECIAL)  {
+        if (myAbstractInsnNode.getOpcode() != MyOpcodes.INVOKESPECIAL) {
             return false;
         }
         return (((MyMethodInsnNode) myAbstractInsnNode).name).equals("<init>");

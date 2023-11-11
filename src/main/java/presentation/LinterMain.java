@@ -2,7 +2,10 @@ package presentation;
 
 import datasource.MessageSaver;
 import datasource.Saver;
-import domain.*;
+import domain.LintType;
+import domain.Linter;
+import domain.Message;
+import domain.MyClassNodeCreator;
 import domain.myasm.MyASMClassNodeCreator;
 
 import java.nio.file.Files;
@@ -21,7 +24,7 @@ public class LinterMain {
         List<String> files = parseDirectory(directoryPath);
         String outputPath = promptUserForOutputFileName();
         Set<LintType> checks = promptUserForChecks();
-        Set<LintType> transformations =  promptUserForTransformations();
+        Set<LintType> transformations = promptUserForTransformations();
 
         for (String p : files) {
             System.out.println(p);
@@ -38,10 +41,9 @@ public class LinterMain {
     }
 
 
-
     private static List<String> parseDirectory(Path directoryPath) {
         List<String> files = new ArrayList<>();
-        try (Stream<Path> stream = Files.walk(directoryPath)){
+        try (Stream<Path> stream = Files.walk(directoryPath)) {
             stream.filter(p -> p.toString().endsWith(".class"))
                     .forEach(file -> files.add(file.toString()));
         } catch (Exception e) {
@@ -65,7 +67,7 @@ public class LinterMain {
 
     private static Path promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
-        if(!isValidPath(userInput)){
+        if (!isValidPath(userInput)) {
             System.err.println("Invalid package");
             return promptUserForDirectory();
         } else {
@@ -73,7 +75,7 @@ public class LinterMain {
         }
     }
 
-    public static boolean isValidPath(String inputPath) {
+    private static boolean isValidPath(String inputPath) {
         if (inputPath == null || inputPath.isEmpty()) {
             return false;
         }
@@ -103,7 +105,6 @@ public class LinterMain {
         return allChecks;
 
     }
-
 
 
     private static Set<LintType> promptUserForPrinciples() {

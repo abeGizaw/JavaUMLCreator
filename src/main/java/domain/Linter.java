@@ -7,8 +7,6 @@ import domain.transformations.Transformation;
 import java.nio.file.Path;
 import java.util.*;
 
-import static presentation.ANSIColors.*;
-
 public class Linter {
     private final MyClassNodeCreator creator;
     private final List<MyClassNode> myClassNodes;

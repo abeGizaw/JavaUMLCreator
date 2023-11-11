@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 
 public class ByteCodeExporter implements Exporter {
 
-    public void save(String outputPath, String className, byte[] bytecode){
-        outputPath = outputPath + File.separator+ "output";
+    public void save(String outputPath, String className, byte[] bytecode) {
+        outputPath = outputPath + File.separator + "output";
         createDirectory(outputPath);
         File classFile = new File(outputPath + File.separator + className + ".class");
         try (FileOutputStream fos = new FileOutputStream(classFile)) {
@@ -19,7 +19,7 @@ public class ByteCodeExporter implements Exporter {
         }
     }
 
-    private void createDirectory(String path){
+    private void createDirectory(String path) {
         try {
             Files.createDirectories(Paths.get(path));
         } catch (IOException e) {

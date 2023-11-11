@@ -58,6 +58,7 @@ public class DetectUnusedFields implements Check {
 
     /**
      * This class is only used in the DeleteUnusedField transformations and should not be included in the interface.
+     *
      * @return
      */
     public List<String> getNamesToDelete() {

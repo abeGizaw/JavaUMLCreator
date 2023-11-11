@@ -43,9 +43,10 @@ public class MyASMClassNode extends MyClassNode {
      * NOTE: This getter is only used for transformations.
      * This is done so that I do not need to create adapters for all visitors.
      * Transformations will rely on ASM classNodes.
+     *
      * @return
      */
-    public ClassNode getClassNode(){
+    public ClassNode getClassNode() {
         return classNode;
     }
 }

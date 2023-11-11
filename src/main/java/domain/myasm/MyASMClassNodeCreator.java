@@ -13,6 +13,7 @@ import java.nio.file.Path;
 public class MyASMClassNodeCreator implements MyClassNodeCreator {
     private final Path directoryPath;
     private final int PACKAGE_NOT_FOUND = -1;
+
     public MyASMClassNodeCreator(Path directoryPath) {
         this.directoryPath = directoryPath;
     }
@@ -57,7 +58,7 @@ public class MyASMClassNodeCreator implements MyClassNodeCreator {
         String filePackage = directoryPath.toString().substring(directoryPath.toString().lastIndexOf(File.separatorChar) + 1);
         String pathToFind = desc.replace('/', File.separatorChar);
         int separator = pathToFind.lastIndexOf(filePackage);
-        if(separator == PACKAGE_NOT_FOUND){
+        if (separator == PACKAGE_NOT_FOUND) {
             return File.separatorChar + desc;
         }
         return pathToFind.substring(separator + filePackage.length());
