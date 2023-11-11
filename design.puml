@@ -441,22 +441,23 @@ package domain {
 }
 
 package datasource {
-
     +interface Saver {
         +{abstract} saveMessage(message: String): void
     }
     +class MessageSaver implements Saver {
-        +MessageSaver(path:String)
+        -logStream: PrintStream
+        +MessageSaver(path: String)
         +saveMessage(message: String): void
-        - createDirectory(path: String): void
+        -createDirectory(path: String): void
     }
 
     +interface Exporter{
-        +save(outputPath: String, className: String, bytecode:  byte[]): void
+        +{abstract}save(outputPath: String, className: String, bytecode:  byte[]): void
     }
 
     +class ByteCodeExporter{
-        - createDirectory(path: String): void
+        +save(outputPath: String, className: String, byteCode: byte[]): void
+        -createDirectory(path: String): void
     }
     note left of ByteCodeExporter
         ByteCodeExporter depends on File
