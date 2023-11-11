@@ -5,8 +5,8 @@ public enum MockEnum {
     BLUE("Blue Value", 2),
     GREEN("Green Value", 3);
 
-    private String description;
-    private int code;
+    private final String description;
+    private final int code;
 
     MockEnum(String description, int code) {
         this.description = description;

@@ -29,4 +29,5 @@ public interface MyOpcodes {
     public static final int GETSTATIC = 178;
     public static final int ASM8 = 524288;
     public static final int ACC_ENUM = 16384;
+    public static final int ACC_SYNTHETIC = 4096;
 }
