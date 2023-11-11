@@ -14,7 +14,6 @@ public class PrincipleOfLeastKnowledge implements Check {
         instructionStack = new Stack<>();
     }
 
-
     public List<Message> run(MyClassNode myClassNode) {
         List<Message> messages = new ArrayList<>();
         for (MyMethodNode myMethodNode : myClassNode.methods) {
@@ -26,6 +25,9 @@ public class PrincipleOfLeastKnowledge implements Check {
 
     private List<String> checkMethod(MyMethodNode myMethodNode) {
         List<String> messageTexts = new ArrayList<>();
+        if ((myMethodNode.access & MyOpcodes.ACC_ABSTRACT) != 0 || myMethodNode.name.equals("<clinit>")) { // if it is not abstract and not a constructor for a constant
+            return new ArrayList<>();
+        }
         LocalVariableManager localVariableManager = new LocalVariableManager(myMethodNode);
         for (MyAbstractInsnNode myAbstractInsnNode : myMethodNode.instructions) {
             localVariableManager.updateVariableScopes(myAbstractInsnNode);
@@ -53,10 +55,10 @@ public class PrincipleOfLeastKnowledge implements Check {
         return (((MyMethodInsnNode) myAbstractInsnNode).name).equals("<init>");
     }
 
-    private String getInvalidReceiverNode(MyAbstractInsnNode abstractInsnNode, LocalVariableManager localVariableManager) {
+    private String getInvalidReceiverNode(MyAbstractInsnNode myAbstractInsnNode, LocalVariableManager localVariableManager) {
         // remove arguments
         MyType myType = new MyASMType();
-        MyType methodType = myType.getType(((MyMethodInsnNode) abstractInsnNode).desc);
+        MyType methodType = myType.getType(((MyMethodInsnNode) myAbstractInsnNode).desc);
         int numArguments = methodType.getArgumentTypes().length;
         for (int i = 0; i < numArguments; i++) {
             removeMethodArgument();
@@ -81,7 +83,14 @@ public class PrincipleOfLeastKnowledge implements Check {
         }
 
         if (receiverNodeName.equals("")) {
-            receiverNodeName = localVariableManager.getVariableAtIndex(((MyVarInsnNode) receiverNode).var).getName();
+            if (receiverNode.getType() != MyAbstractInsnNode.VAR_INSN) {
+                return ""; // not a receiver
+            }
+            LocalVariableInfo receiver = localVariableManager.getVariableAtIndex(((MyVarInsnNode) receiverNode).var);
+            if (receiver == null) {
+                return ""; // the receiver is not a variable declared by the programmer (could be declared by something from Java)
+            }
+            receiverNodeName = receiver.getName();
         }
 
         // is created?
