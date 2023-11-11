@@ -19,10 +19,8 @@ public class HiddenFieldsTest {
     );
     @Test
     public void validateHiddenFieldsCheck_withHiddenFieldsOfDiffTypes_Expect4Hidden(){
-        Path basePath= Path.of(
-                "target/test-classes/domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes.class"
-        ).toAbsolutePath();
-        validate(basePath, new ArrayList<>(Arrays.asList(
+        String className = "domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes";
+        validate(className, new ArrayList<>(Arrays.asList(
                 "Field similarName is hidden by method doNothing",
                 "Field anotherSimilar is hidden by method doMoreNothing",
                 "Field similarName is hidden by method doMoreNothing",
@@ -31,10 +29,8 @@ public class HiddenFieldsTest {
 
     @Test
     public void validateHiddenFieldsCheck_withHiddenFieldsOfSameTypes_Expect4Hidden(){
-        Path basePath= Path.of(
-                "target/test-classes/domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes.class"
-        ).toAbsolutePath();
-        validate(basePath, new ArrayList<>(Arrays.asList(
+        String className = "domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes";
+        validate(className, new ArrayList<>(Arrays.asList(
                 "Field similarName is hidden by method doNothing",
                 "Field anotherSimilar is hidden by method doMoreNothing",
                 "Field similarName is hidden by method doMoreNothing",
@@ -43,17 +39,15 @@ public class HiddenFieldsTest {
 
     @Test
     public void validateHiddenFieldsCheck_withNoHiddenFields_ExpectNoMessages(){
-        Path basePath= Path.of(
-                "target/test-classes/domain/checks/FieldHidingMockClasses/NoHiddenFields.class"
-        ).toAbsolutePath();
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(basePath.toFile());
+        String className = "domain/checks/FieldHidingMockClasses/NoHiddenFields";
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         HiddenFields hiddenFieldsCheck = new HiddenFields();
         List<Message> hiddenFields = hiddenFieldsCheck.run(classNode);
         assertEquals(0, hiddenFields.size());
     }
 
-    private void validate(Path basePath, List<String> expectedMessages){
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(basePath.toFile());
+    private void validate(String basePath, List<String> expectedMessages){
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(basePath);
         HiddenFields hiddenFieldsCheck = new HiddenFields();
         List<Message> hiddenFields = hiddenFieldsCheck.run(classNode);
         for(int i = 0; i < hiddenFields.size(); i ++){
