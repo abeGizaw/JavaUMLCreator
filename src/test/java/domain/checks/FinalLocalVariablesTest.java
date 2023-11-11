@@ -19,7 +19,7 @@ public class FinalLocalVariablesTest {
 
     @Test
     public void runFinalLocalVariablesOneScopeTwoMethodsExpectMethod1XMethod2X() {
-        String classPath = "FinalLocalVariablesMockTestClasses/OneScope";
+        String classPath = "domain/checks/FinalLocalVariablesMockTestClasses/OneScope";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
 
@@ -28,7 +28,6 @@ public class FinalLocalVariablesTest {
         List<String> expectedMessages = new ArrayList<>();
         expectedMessages.add(createExpectedMessageText("method1", "x"));
         expectedMessages.add(createExpectedMessageText("method2", "x"));
-        String expectedClass = "domain/checks/FinalLocalVariablesMockTestClasses/OneScope";
 
         List<Message> actualMessages = finalLocalVariablesCheck.run(myClassNode);
 
@@ -37,13 +36,13 @@ public class FinalLocalVariablesTest {
             Message actualMessage = actualMessages.get(i);
             Assertions.assertEquals(expectedCheckType, actualMessage.getCheckType());
             Assertions.assertEquals(expectedMessages.get(i), actualMessage.getMessage());
-            Assertions.assertEquals(expectedClass, actualMessage.getClassesOfInterest());
+            Assertions.assertEquals(classPath, actualMessage.getClassesOfInterest());
         }
     }
 
     @Test
     public void runFinalLocalVariablesMultipleScopesExpectMethod1ZWBD() {
-        String classPath = "FinalLocalVariablesMockTestClasses/MultipleScopes";
+        String classPath = "domain/checks/FinalLocalVariablesMockTestClasses/MultipleScopes";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
 
@@ -54,7 +53,6 @@ public class FinalLocalVariablesTest {
         expectedMessages.add(createExpectedMessageText("method1", "w"));
         expectedMessages.add(createExpectedMessageText("method1", "b"));
         expectedMessages.add(createExpectedMessageText("method1", "d"));
-        String expectedClass = "domain/checks/FinalLocalVariablesMockTestClasses/MultipleScopes";
 
         List<Message> actualMessages = finalLocalVariablesCheck.run(myClassNode);
 
@@ -63,13 +61,13 @@ public class FinalLocalVariablesTest {
             Message actualMessage = actualMessages.get(i);
             Assertions.assertEquals(expectedCheckType, actualMessage.getCheckType());
             Assertions.assertTrue(expectedMessages.contains(actualMessage.getMessage()));
-            Assertions.assertEquals(expectedClass, actualMessage.getClassesOfInterest());
+            Assertions.assertEquals(classPath, actualMessage.getClassesOfInterest());
         }
     }
 
     @Test
     public void runFinalLocalVariablesNoFinalExpectNoVariablesCanBeFinal() {
-        String classPath = "FinalLocalVariablesMockTestClasses/NoFinal";
+        String classPath = "domain/checks/FinalLocalVariablesMockTestClasses/NoFinal";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         FinalLocalVariables finalLocalVariablesCheck = new FinalLocalVariables();
 

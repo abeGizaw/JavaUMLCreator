@@ -1,12 +1,10 @@
 package domain.checks;
 
-
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyFieldNode;
 
 import domain.*;
-
 
 import java.util.ArrayList;
 import java.util.HashSet;

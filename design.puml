@@ -24,30 +24,33 @@ package domain {
 
    package checks{
         +class AdapterPattern {
-            -classNodes: List<MyClassNode>
+            -myClassNodes: List<MyClassNode>
             -classNames: List<String>
             -interfaceNames: Set<String>
 
             +AdapterPattern(classNodes: List<MyClassNode>)
+            +run(myClassNode: MyClassNode): List<Message>
             -findAdapterPatterns(): List<AdapterPatternClasses>
-            -getImplementedInterfaces(classNode: MyClassNode): List<String>
-            -getNotJavaClassFieldTypes(classNode: MyClassNode): List<String>
+            -getImplementedInterfaces(myClassNode: MyClassNode): List<String>
+            -getNotJavaClassFieldTypes(myClassNode: MyClassNode): List<String>
             -fieldTypeIsClass(fieldType: String): boolean
             -findAdapterPatternClients(possibleAdapterPatterns: List<AdapterPatternClasses>): List<AdapterPatternClasses>
             -findImplementedInterfaces(className: String): List<String>
             -getAdapterPatternClassesForInterface(interfaceName: String,
-            possibleAdapterPatterns: List<AdapterPatternClasses>, classNode: MyClassNode): List<AdapterPatternClasses>
+            possibleAdapterPatterns: List<AdapterPatternClasses>, myClassNode: MyClassNode): List<AdapterPatternClasses>
+            -createMessages(adapterPatterns: List<AdapterPatternClasses>): List<Message>
         }
 
          +class AdapterPatternClasses {
                 -adapter: String
-                -concreteAdapter: String
+                -target: String
                 -adaptee: String
                 -client: String
-                +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String, client: String)
-                +AdapterPatternClasses(concreteAdapter: String, adapter: String, adaptee: String)
+
+                +AdapterPatternClasses(adapter: String, target: String, adaptee: String, client: String)
+                +AdapterPatternClasses(adapter: String, taret: String, adaptee: String)
                 +getAdapter(): String
-                +getConcreteAdapter(): String
+                +getTarget(): String
                 +getAdaptee(): String
                 +getClient(): String
         }
@@ -76,24 +79,81 @@ package domain {
        }
 
         +class FinalLocalVariables {
-            -{static}{final} STORE_OPCODES
-            -localVariables: List<LocalVariableInfo>
-            -prevInsnIsLabel: boolean
-            -prevInsn: MyAbstractInsnNode
+            -{static}{final}STORE_OPCODES: Set<Integer>
+            -localVariableManager: LocalVariableManager
 
             +FinalLocalVariables()
-            +run(classNode: MyClassNode): List<Message>
-            -checkMethodForFinalLocalVariables(methodNode: MyMethodNode): void
-            -addLocalVariable(methodNode: MyMethodNode): void
-            -updateVariableScopes(insn: MyAbstractInsnNode): void
-            -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
-            -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: List<MyLocalVariableNode>): void
+            +run(myClassNode: MyClassNode): List<Message>
+            -checkMethodForFinalLocalVariables(myMethodNode: MyMethodNode): void
             -handleValueStored(localVariableInfo: LocalVariableInfo): void
+            -createMessagesForMethod(className: String, methodName: String): List<Message>
         }
 
         +class HiddenFields {
             +run(classNode: MyClassNode): List<Message>
             -checkFieldHiding(classNode: MyClassNode): List<Message>
+        }
+
+        +class LocalVariableInfo {
+            -{final}name: String
+            -{final}firstLabel: MyLabel
+            -{final}lastLabel: MyLabel
+            -{final}index: int
+            -isInScope: boolean
+            -hasBeenStored: boolean
+            -hasBeenStoredOnce: boolean
+
+            +LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
+            +setIsInScope(isInScope: boolean): void
+            +setHasBeenStored(hasBeenStored: boolean): void
+            +setHasBeenStoredOnce(hasBeenStoredOnce: boolean): void
+            +getName(): String
+            +getFirstLabel(): MyLabel
+            +getLastLabel(): MyLabel
+            +getIndex(): int
+            +getIsInScope(): boolean
+            +getHasBeenStored(): boolean
+            +getHasBeenStoredOnce(): boolean
+        }
+
+        +class LocalVariableManager {
+            -{static}{final}STORE_OPCODES: Set<Integer>
+            -{static}{final}LOAD_OPCODES: Set<Integer>
+            -localVariables: Set<LocalVariableInfo>
+            -parameters: Set<LocalVariableInfo>
+            -createdVariables: Set<LocalVariableInfo>
+            -prevInsnIsLabel: boolean
+            -prevInsn: MyAbstractInsnNode
+
+            +LocalVariableManager(myMethodNode: MyMethodNode)
+            +updateVariableScopes(insn: MyAbstractInsnNode): void
+            -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
+            -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
+            +addCreatedVariable(myAbstractInsnNode: MyAbstractInsnNode): void
+            +isCreatedVariable(myAbstractInsnNode: MyAbstractInsnNode): boolean
+            +isParameter(myAbstractInsnNode: MyAbstractInsnNode): boolean
+            +getVariableAtIndex(index: int): LocalVariableInfo
+            +getHasBeenStoredOnce(): Set<LocalVariableInfo>
+        }
+
+         +class NamingConvention {
+            +run(classNode: MyClassNode): List<Message>
+            -checkClassName(): void
+            -checkFieldNames(): void
+            -checkMethodName(): void
+            -invalidCamelCase(name: String): boolean
+            -invalidPascalCase(name: String): boolean
+        }
+
+        +class PrincipleOfLeastKnowledge {
+            -{static}{final}METHOD_OPCODES: Set<Integer>
+            -instructionStack: Stack<MyAbstractInsnNode>
+            +run(myClassNode: MyClassNode): List<Message>
+            -checkMethod(myMethodNode: MyMethodNode): List<String>
+            -isConstructor(myAbstractInsnNode: MyAbstractInsnNode): boolean
+            -getInvalidReceiverNode(myAbstractInsnNode: MyAbstractInsnNode, localVariableManager: LocalVariableManager): String
+            -removeMethodArgument(): void
+            -createMessagesForMethod(messageTexts: List<String>, className: String): List<Message>
         }
 
         +class ProgramToInterfaceNotImplementation {
@@ -110,37 +170,6 @@ package domain {
             -readJavaDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
             -readUserDefinedClass(classNode: MyClassNode, classNamePath:String , field:MyFieldNode, invalidUses:List<Message>)
 
-        }
-
-        +class LocalVariableInfo {
-            -{final}name: String
-            -{final}firstLabel: MyLabel
-            -{final}lastLabel: MyLabel
-            -{final}index: int
-            -isInScope: boolean
-            -hasBeenStored: boolean
-            -hasBeenStoredOnce: boolean
-
-            +LocalVariableInfo(name: String, firstLabel: MyLabel, lastLabel: MyLabel, index: int)
-            +setIsInScope(isInScope: boolean): void
-            +setHasBeenStored(hasBeenStored: boolean): void
-            +setHasBeenStoredOnce(hasBeenStoredOnce: boolean): void
-            +getIsInScope(): boolean
-            +getHasBeenStored(): boolean
-            +getHasBeenStoredOnce(): boolean
-        }
-
-         +class NamingConvention {
-            +run(classNode: MyClassNode): List<Message>
-            -checkClassName(): void
-            -checkFieldNames(): void
-            -checkMethodName(): void
-            -invalidCamelCase(name: String): boolean
-            -invalidPascalCase(name: String): boolean
-        }
-
-        +class PrincipleOfLeastKnowledge {
-            +run(classNode: MyClassNode): List<Message>
         }
 
         +class StrategyPattern {
@@ -278,15 +307,15 @@ package domain {
 
     +enum LintType {
         HIDDEN_FIELDS,
-        NAMING_CONVENTIONS,
-        MAGIC_NUMBERS,
+        NAMING_CONVENTION,
+        FINAL_LOCAL_VARIABLES,
+        UNUSED_FIELD,
         INTERFACE_OVER_IMPLEMENTATION,
         COMPOSITION_OVER_INHERITANCE,
         PLK,
-        TEMPLATE,
-        STRATEGY,
-        ADAPTER,
-        UNUSED_FIELD
+        TEMPLATE_METHOD_PATTERN,
+        STRATEGY_PATTERN,
+        ADAPTER_PATTERN
     }
 
     +class Message {
@@ -304,41 +333,44 @@ package domain {
     }
 
     +abstract class MyAbstractInsnNode {
-        +{static}{final} LABEL: int
-        +getNext(): MyAbstractInsnNode
-        +getOpcode(): int
+        +{static}{final}FIELD_INSN: int
+        +{static}{final}LABEL: int
+        +{static}{final}METHOD_INSN: int
+        +{static}{final}VAR_INSN: int
+        +{abstract}getNext(): MyAbstractInsnNode
+        +{abstract}getOpcode(): int
         +{abstract}getType(): int
 
     }
 
     +abstract class MyClassNode {
         +access: int
+        +fields: List<MyFieldNode>
+        +interfaces: List<String>
+        +methods: List<MyMethodNode>
         +name: String
         +superName: String
-        +interfaces: List<String>
-        +fields: List<MyFieldNode>
-        +methods: List<MyMethodNode>
     }
 
     +interface MyClassReader {
     }
 
     +abstract class MyFieldNode {
+        +access: int
         +desc: String
         +name: String
-        +access: int
     }
 
     +interface MyLabel {
+        +{abstract}equals(label: MyLabel): boolean
     }
 
     +abstract class MyMethodNode {
-        -insnFactory: MyASMAbstractInsnNodeFactory
         +access: int
-        +name: String
         +desc: String
         +instructions: List<MyAbstractInsnNode>
         +localVariables: List<MyLocalVariableNode>
+        +name: String
     }
 
     +abstract class MyLocalVariableNode {
@@ -349,12 +381,12 @@ package domain {
     }
 
     +abstract class MyLabelNode{
-        +getLabel(): MyLabel
+        +{abstract}getLabel(): MyLabel
     }
 
     +abstract class MyMethodInsnNode{
-        +name: String
         +desc: String
+        +name: String
     }
 
     +abstract class MyVarInsnNode {
@@ -362,30 +394,49 @@ package domain {
        }
 
     +abstract class MyFieldInsnNode{
-        +name: String
         +desc: String
+        +name: String
+        +owner: String
     }
 
     +class MyDefaultInsnNode{
 
     }
 
+    +abstract class MyType {
+        +{abstract}getArgumentTypes(): MyType[]
+        +{abstract}getType(typeDescriptor: String): MyType
+    }
+
     +interface MyOpcodes {
-        + {static}{final} ISTORE: int
-        + {static}{final} LSTORE: int
-        + {static}{final} FSTORE: int
-        + {static}{final} DSTORE: int
-        + {static}{final} ASTORE: int
-        + {static}{final} INVOKEVIRTUAL: int
-        + {static}{final} INVOKEINTERFACE: int
-        + {static}{final} INVOKEDYNAMIC: int
-        + {static}{final} INVOKESPECIAL: int
-        + {static}{final} ACC_ABSTRACT: int
-        + {static}{final} ACC_INTERFACE: int
-        + {static}{final} ACC_STATIC: int
-        + {static}{final} ACC_FINAL: int
-        + {static}{final} PUTFIELD: int
-        + {static}{final} PUTSTATIC: int
+        ACC_ABSTRACT: int
+        ACC_ENUM: int
+        ACC_FINAL: int
+        ACC_INTERFACE: int
+        ACC_STATIC: int
+        GETFIELD: int
+        GETSTATIC: int
+        PUTFIELD: int
+        PUTSTATIC: int
+        H_INVOKEINTERFACE: int
+        H_INVOKESPECIAL: int
+        H_INVOKESTATIC: int
+        H_INVOKEVIRTUAL: int
+        INVOKEDYNAMIC: int
+        INVOKEINTERFACE: int
+        INVOKESPECIAL: int
+        INVOKEVIRTUAL: int
+        ALOAD: int
+        DLOAD: int
+        FLOAD: int
+        ILOAD: int
+        LLOAD: int
+        ASTORE: int
+        DSTORE: int
+        FSTORE: int
+        ISTORE: int
+        LSTORE: int
+        ASM8: int
     }
 }
 
@@ -397,6 +448,7 @@ package datasource {
     +class MessageSaver implements Saver {
         +MessageSaver(path:String)
         +saveMessage(message: String): void
+        - createDirectory(path: String): void
     }
 
     +interface Exporter{
@@ -404,7 +456,7 @@ package datasource {
     }
 
     +class ByteCodeExporter{
-
+        - createDirectory(path: String): void
     }
     note left of ByteCodeExporter
         ByteCodeExporter depends on File
@@ -487,8 +539,6 @@ MyFieldInsnNode -up-|> MyAbstractInsnNode
 MyDefaultInsnNode -up-|> MyAbstractInsnNode
 
 MyASMAbstractInsnNodeFactory ..> MyAbstractInsnNode
-MyMethodNode ..> MyASMAbstractInsnNodeFactory
-MyMethodNode --> MyASMAbstractInsnNodeFactory
 
 Check .up> Message
 Check --> domain.MyClassNode
@@ -529,33 +579,47 @@ NamingConvention ..> MyFieldNode
 NamingConvention ..> MyMethodNode
 NamingConvention ..> MyOpcodes
 
-
 AdapterPattern ..> AdapterPatternClasses
+AdapterPattern ..> LintType
 AdapterPattern -->"*" MyClassNode
 AdapterPattern ..> MyFieldNode
 
-
-FinalLocalVariables -->"*" LocalVariableInfo
+FinalLocalVariables ..> LintType
 FinalLocalVariables ..> LocalVariableInfo
-FinalLocalVariables --> MyAbstractInsnNode
-FinalLocalVariables --> MyClassNode
-FinalLocalVariables ..> MyLabel
-FinalLocalVariables ..> MyLabelNode
-FinalLocalVariables .....> MyLocalVariableNode
+FinalLocalVariables --> LocalVariableManager
+FinalLocalVariables ..> LocalVariableManager
+FinalLocalVariables ..> MyAbstractInsnNode
 FinalLocalVariables ..> MyMethodNode
-FinalLocalVariables -->"*" MyOpcodes
-FinalLocalVariables ..> MyVarInsnNode
+FinalLocalVariables ..> MyOpcodes
 
 HiddenFields ..> MyClassNode
 HiddenFields ..> Message
+
+LocalVariableInfo -->"2" MyLabel
+
+LocalVariableManager -->"*" LocalVariableInfo
+LocalVariableManager ..> LocalVariableInfo
+LocalVariableManager --> MyAbstractInsnNode
+LocalVariableManager ..> MyLabel
+LocalVariableManager ..> MyLabelNode
+LocalVariableManager ..> MyLocalVariableNode
+LocalVariableManager ..> MyOpcodes
+LocalVariableManager ..> MyVarInsnNode
+
+PrincipleOfLeastKnowledge ..> LintType
+PrincipleOfLeastKnowledge ..> LocalVariableManager
+PrincipleOfLeastKnowledge -->"*" MyAbstractInsnNode
+PrincipleOfLeastKnowledge ..> MyFieldInsnNode
+PrincipleOfLeastKnowledge ..> MyMethodNode
+PrincipleOfLeastKnowledge ..> MyMethodInsnNode
+PrincipleOfLeastKnowledge ..> MyOpcodes
+PrincipleOfLeastKnowledge ..> MyType
+PrincipleOfLeastKnowledge ..> MyVarInsnNode
 
 ProgramToInterfaceNotImplementation ..> MyClassNode
 ProgramToInterfaceNotImplementation ..> MyFieldNode
 ProgramToInterfaceNotImplementation --> MyClassNodeCreator
 ProgramToInterfaceNotImplementation ..> Message
-
-
-LocalVariableInfo -->"2" MyLabel
 
 DetectUnusedFields ---> MyClassNode
 DetectUnusedFields -> MyFieldNode
@@ -582,7 +646,6 @@ FieldsRemover -> CustomMethodVisitor
 FieldsRemover .> CustomMethodVisitor
 FieldsRemover ..> org.objectweb.asm.FieldVisitor
 FieldsRemover .> org.objectweb.asm.MethodVisitor
-
 
 MyASMClassNode --> org.objectweb.asm.ClassNode
 MyASMClassNode ..> org.objectweb.asm.ClassNode
@@ -618,9 +681,6 @@ MyLabelNode ..> MyLabel
 
 MyLocalVariableNode -->"2" MyLabelNode
 
-MyMethodNode -->"*" MyLocalVariableNode
 MyMethodNode -->"*" MyAbstractInsnNode
-
-
-
+MyMethodNode -->"*" MyLocalVariableNode
 @enduml
