@@ -30,7 +30,6 @@ package domain {
             -myClassNodes: List<MyClassNode>
             -classNames: List<String>
             -interfaceNames: Set<String>
-
             +AdapterPattern(classNodes: List<MyClassNode>)
             +run(classNode: MyClassNode): List<Message>
             -findAdapterPatterns(): List<AdapterPatternClasses>
@@ -38,8 +37,7 @@ package domain {
             -getNotJavaClassFieldTypes(myClassNode: MyClassNode): List<String>
             -fieldTypeIsClass(fieldType: String): boolean
             -findAdapterPatternClients(possibleAdapterPatterns: List<AdapterPatternClasses>): List<AdapterPatternClasses>
-            -findImplementedInterfaces(className: String): List<String>
-            -getAdapterPatternClassesForInterface(interfaceName: String,
+            -getAdapterPatternClassesForInterface(interfaceName: String
             possibleAdapterPatterns: List<AdapterPatternClasses>, myClassNode: MyClassNode): List<AdapterPatternClasses>
             -createMessages(adapterPatterns: List<AdapterPatternClasses>): List<Message>
         }
@@ -49,7 +47,6 @@ package domain {
                 -target: String
                 -adaptee: String
                 -client: String
-
                 +AdapterPatternClasses(adapter: String, target: String, adaptee: String, client: String)
                 +AdapterPatternClasses(adapter: String, taret: String, adaptee: String)
                 +getAdapter(): String
@@ -129,6 +126,7 @@ package domain {
             -prevInsn: MyAbstractInsnNode
 
             +LocalVariableManager(myMethodNode: MyMethodNode)
+            -loadLocalVariables(myMethodNode: MyMethodNode): void
             +updateVariableScopes(insn: MyAbstractInsnNode): void
             -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
             -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
