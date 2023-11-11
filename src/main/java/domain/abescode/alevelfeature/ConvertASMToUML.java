@@ -68,7 +68,13 @@ public class ConvertASMToUML {
     }
 
     private String getMethodInfo(String desc) {
-        String returnType = getFieldType(desc.substring(desc.lastIndexOf(")") + 1));
+        int startParams = desc.indexOf('(');
+        int endParams = desc.indexOf(')');
+
+        String params = desc.substring(startParams + 1, endParams);
+        String returnType = getFieldType(desc.substring(endParams+ 1));
+
+        System.out.println(params);
         return "():" + returnType;
     }
 
