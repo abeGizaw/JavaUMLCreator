@@ -14,7 +14,6 @@ public class PrincipleOfLeastKnowledge implements Check {
         instructionStack = new Stack<>();
     }
 
-
     public List<Message> run(MyClassNode myClassNode) {
         List<Message> messages = new ArrayList<>();
         for (MyMethodNode myMethodNode : myClassNode.methods) {
@@ -56,10 +55,10 @@ public class PrincipleOfLeastKnowledge implements Check {
         return (((MyMethodInsnNode) myAbstractInsnNode).name).equals("<init>");
     }
 
-    private String getInvalidReceiverNode(MyAbstractInsnNode abstractInsnNode, LocalVariableManager localVariableManager) {
+    private String getInvalidReceiverNode(MyAbstractInsnNode myAbstractInsnNode, LocalVariableManager localVariableManager) {
         // remove arguments
         MyType myType = new MyASMType();
-        MyType methodType = myType.getType(((MyMethodInsnNode) abstractInsnNode).desc);
+        MyType methodType = myType.getType(((MyMethodInsnNode) myAbstractInsnNode).desc);
         int numArguments = methodType.getArgumentTypes().length;
         for (int i = 0; i < numArguments; i++) {
             removeMethodArgument();
