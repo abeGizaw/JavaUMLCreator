@@ -1,12 +1,12 @@
 package domain.umlconverter;
 
 public class PrimitiveFieldsConverter {
-    public int anInt;
+    public final int anInt = 1;
     private byte aByte;
     protected boolean aBoolean;
-    char aChar;
+    static char aChar;
     long aLong;
-    protected short aShort;
+    protected static short aShort;
     public float aFloat;
     public double aDouble;
 }

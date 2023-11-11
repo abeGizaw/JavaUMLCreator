@@ -49,7 +49,6 @@ public class AbesMain {
         String[] fileProperties = file.toString().split("\\\\");
 
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
-        System.out.println("File is: " + file + " with path " + filePath);
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
         ConvertASMToUML ASMConverter = new ConvertASMToUML();

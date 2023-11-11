@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import static presentation.ANSIColors.*;
 
 public class ConvertASMToUML {
@@ -24,8 +23,7 @@ public class ConvertASMToUML {
 
 //        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
 //        String[] nameProperties = myClassNode.name.split("/");
-//        pumlContent.append("class ").append(nameProperties[nameProperties.length - 1]).append("{\n");
-//        pumlContent.append(convertClassFields(myClassNode.fields));
+        pumlContent.append(convertClassFields(myClassNode.fields));
 //        pumlContent.append(convertClassMethods(myClassNode.methods));
 
 
@@ -54,8 +52,8 @@ public class ConvertASMToUML {
         for(MyFieldNode field: fields){
             appendFieldInfo(fieldString, field);
         }
-        System.out.println(fieldString);
-        return "-someValue:List<String>\n";
+
+        return fieldString.toString();
     }
     private String convertClassMethods(List<MyMethodNode> methods, String className) {
         StringBuilder methodString = new StringBuilder();
@@ -89,11 +87,10 @@ public class ConvertASMToUML {
 
     private String getCollectionType(String desc) {
         Pattern pattern = Pattern.compile(".*?/(\\w+)<.*");
-        // <Ljava/lang/String;Ljava/util/List<Ljava/lang/String;>;>
-        System.out.println(BLUE + desc + RESET);
         Matcher matcher = pattern.matcher(desc);
         if(matcher.find()){
             String collectionType = matcher.group(1);
+            System.out.println(RED + desc + RESET);
             String[] collectionHoldTypes = desc.substring(desc.indexOf("<") + 1, desc.lastIndexOf(">")).split(";");
             System.out.println(Arrays.toString(collectionHoldTypes));
             String collectedTypes = Arrays.stream(collectionHoldTypes)
@@ -120,6 +117,7 @@ public class ConvertASMToUML {
             fieldString.append(field.name).append("\n");
             return;
         }
+
         String accessModifier = getAccessModifier(field.access);
         String descName = (field.signature != null) ? getFieldType(field.signature) : getFieldType(field.desc);
         fieldString.append(accessModifier).append(" ").append(field.name).append(": ").append(descName).append("\n");
@@ -152,7 +150,6 @@ public class ConvertASMToUML {
     private String getAccessModifier(int access) {
         StringBuilder modifiers = new StringBuilder();
 
-        // Access level modifiers
         if ((access & MyOpcodes.ACC_PUBLIC) != 0) {
             modifiers.append("+");
         } else if ((access & MyOpcodes.ACC_PROTECTED) != 0) {

@@ -1,24 +1,10 @@
 @startuml
-+class AccessModifierVariety{
-}
-+class ReturnTypeVariety{
-}
-+class ParameterTypeVariety{
-}
-enum MockEnum{
-}
-+interface MockInterface{
-}
-+class ImplementingClass{
-}
 +class CollectionFieldsConverter{
-}
-+abstract class MockAbstract{
-}
-+class ArrayFieldsConverter{
-}
-+class ObjectFieldsConverter{
-}
-+class PrimitiveFieldsConverter{
++ stringList: List<String>
++ doubleSet: Set<Double>
+- map: Map<String, Integer>
++ charQueue: Queue<Character>
++ booleanStack: Stack<Boolean>
++ advancedMap: Map<List<Set<String>>, List<String>>
 }
 @enduml
