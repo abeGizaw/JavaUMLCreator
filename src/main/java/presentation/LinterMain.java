@@ -54,6 +54,7 @@ public class LinterMain {
     private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files, Path directoryPath) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
         Linter linter = new Linter(files, creator, outputPath);
+
         List<Message> allMessages = new ArrayList<>();
         allMessages.addAll(linter.runSelectedTransformations(transformations));
         List<Message> messages = linter.runSelectedChecks(checks);
