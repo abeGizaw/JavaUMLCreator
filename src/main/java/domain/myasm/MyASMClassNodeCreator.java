@@ -42,7 +42,6 @@ public class MyASMClassNodeCreator implements MyClassNodeCreator {
     }
 
     public MyClassNode createUniqueMyClassNodeFromName(String className) {
-        System.out.println("CLASS NAME:" + className);
         String relativePath = findRelativePath(className);
         Path classFilePath = directoryPath.resolve(directoryPath + relativePath + ".class");
         try (FileInputStream fileInputStream = new FileInputStream(classFilePath.toFile())) {

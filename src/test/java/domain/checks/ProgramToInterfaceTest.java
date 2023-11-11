@@ -16,13 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProgramToInterfaceTest {
     MyClassNodeCreator classNodeCreator = new MyASMClassNodeCreator(
-            Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses")
+            Path.of(
+                    "src/test/resources"
+            ).toAbsolutePath()
     );
 
     @Test
     public void validateProgramToInterface_withClassThatViolates_expectViolations(){
-        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses\\BadInterfaceUse.class");
-        validate(filePath, new ArrayList<>(Arrays.asList(
+        String className = "domain/checks/ProgramToInterfaceNotImplementationTestClasses/BadInterfaceUse";
+        validate(className, new ArrayList<>(Arrays.asList(
                 "Where you need to Programming to interface instead of implementation: violatesPattern",
                 "Where you need to Programming to interface instead of implementation: violator",
                 "Where you need to Programming to interface instead of implementation: violatesDifferently",
@@ -33,17 +35,15 @@ public class ProgramToInterfaceTest {
 
     @Test
     public void validateProgramToInterface_withClassThatDoesNotViolate_expectEmptyMessage(){
-        Path filePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses\\GoodInterfaceUse.class");
-        Path packagePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses");
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        String className = "domain/checks/ProgramToInterfaceNotImplementationTestClasses/GoodInterfaceUse";
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         ProgramInterfaceNotImplementation programInterfaceNotImplementation = new ProgramInterfaceNotImplementation(classNodeCreator);
         List<Message> badImplementations = programInterfaceNotImplementation.run(classNode);
         assertEquals(0, badImplementations.size());
     }
 
-    private void validate(Path classPath, List<String> expectedMessages){
-        Path packagePath = Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses");
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(classPath.toFile());
+    private void validate(String classPath, List<String> expectedMessages){
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(classPath);
         ProgramInterfaceNotImplementation programInterfaceNotImplementation = new ProgramInterfaceNotImplementation(classNodeCreator);
         List<Message> badImplementations = programInterfaceNotImplementation.run(classNode);
         for(int i = 0; i < badImplementations.size(); i ++){
