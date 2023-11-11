@@ -2,6 +2,7 @@ package domain;
 
 public interface MyOpcodes {
     int ACC_ABSTRACT = 1024;
+    int ACC_ENUM = 16384;
     int ACC_FINAL = 16;
     int ACC_INTERFACE = 512;
     int ACC_STATIC = 8;

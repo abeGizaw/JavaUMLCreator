@@ -1,7 +1,6 @@
 package domain.checks;
 
 import domain.*;
-import org.objectweb.asm.Opcodes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,11 +19,11 @@ public class DetectUnusedFields implements Check {
         this.fieldToClass = new HashMap<>();
         this.fieldUsageMap = new HashMap<>();
         this.nameToFieldNode = new HashMap<>();
+        populateFieldMaps();
     }
 
     @Override
     public List<Message> run(MyClassNode classNode) {
-        populateFieldMaps();
         detectAllUnusedFields(classNodes);
         return generateUnusedMessages();
     }
@@ -33,9 +32,9 @@ public class DetectUnusedFields implements Check {
         for (MyClassNode classNode : classNodes) {
             for (MyMethodNode method : classNode.methods) {
                 for (MyAbstractInsnNode instruction : method.instructions) {
-                    if (instruction.getOpcode() == Opcodes.GETFIELD || instruction.getOpcode() == Opcodes.GETSTATIC) {
+                    if (instruction.getOpcode() == MyOpcodes.GETFIELD || instruction.getOpcode() == MyOpcodes.GETSTATIC) {
                         MyFieldInsnNode node = (MyFieldInsnNode) instruction;
-                        MyFieldNode fieldNode = nameToFieldNode.get(node.name);
+                        MyFieldNode fieldNode = nameToFieldNode.get(String.format("%s.%s", node.owner, node.name));
                         if (fieldNode != null) {
                             fieldUsageMap.put(fieldNode, true);
                         }
@@ -48,9 +47,11 @@ public class DetectUnusedFields implements Check {
     private void populateFieldMaps() {
         for (MyClassNode classNode : classNodes) {
             for (MyFieldNode fieldNode : classNode.fields) {
-                fieldUsageMap.put(fieldNode, false);
-                fieldToClass.put(fieldNode, classNode);
-                nameToFieldNode.put(fieldNode.name, fieldNode);
+                if ((classNode.access & MyOpcodes.ACC_ENUM) == 0) {
+                    fieldUsageMap.put(fieldNode, false);
+                    fieldToClass.put(fieldNode, classNode);
+                    nameToFieldNode.put(String.format("%s.%s", classNode.name, fieldNode.name), fieldNode);
+                }
             }
         }
     }
@@ -69,12 +70,10 @@ public class DetectUnusedFields implements Check {
         List<Message> messages = new ArrayList<>();
         for (MyFieldNode fieldNode : fieldUsageMap.keySet()) {
             if (!fieldUsageMap.get(fieldNode)) {
-                String messageValue = String.format("%s is a field in %s that was not used and was remove.", fieldNode.name, fieldToClass.get(fieldNode).name);
+                String messageValue = String.format("%s is an unused field in %s", fieldNode.name, fieldToClass.get(fieldNode).name);
                 messages.add(new Message(LintType.UNUSED_FIELD, messageValue, fieldToClass.get(fieldNode).name));
             }
         }
         return messages;
     }
-
-
 }
