@@ -19,11 +19,9 @@ public class TemplateMethodTest {
 
     @Test
     public void validateTemplateMethodCheck_WithClassThatFollows_expectTrueMessage(){
-        Path filePath = Path.of(
-                "target/test-classes/domain/checks/TemplateMethodMockTestClasses/CorrectTemplateMethodMock.class"
-        ).toAbsolutePath();
+        String className = "domain/checks/TemplateMethodMockTestClasses/CorrectTemplateMethodMock";
 
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
         List<Message> followsPattern = templateMethodPattern.run(classNode);
 
@@ -36,10 +34,8 @@ public class TemplateMethodTest {
 
     @Test
     public void validateTemplateMethodCheck_WithClassThatHasNoFinal_expectNoMessage(){
-        Path filePath = Path.of(
-                "target/test-classes/domain/checks/TemplateMethodMockTestClasses/NoFinalTemplateMethodMock.class"
-        ).toAbsolutePath();
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        String className = "domain/checks/TemplateMethodMockTestClasses/NoAbstractTemplateMock";
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
         List<Message> followsPattern = templateMethodPattern.run(classNode);
 
@@ -48,10 +44,8 @@ public class TemplateMethodTest {
 
     @Test
     public void validateTemplateMethodCheck_WithClassThatHasNoAbstract_expectNoMessage(){
-        Path filePath = Path.of(
-                "target/test-classes/domain/checks/TemplateMethodMockTestClasses/NoAbstractTemplateMock.class"
-        ).toAbsolutePath();
-        MyClassNode classNode = classNodeCreator.createMyClassNodeFromFile(filePath.toFile());
+        String className = "domain/checks/TemplateMethodMockTestClasses/NoFinalTemplateMethodMock";
+        MyClassNode classNode = classNodeCreator.createMyClassNodeFromName(className);
         TemplateMethodPattern templateMethodPattern = new TemplateMethodPattern();
         List<Message> followsPattern = templateMethodPattern.run(classNode);
 
