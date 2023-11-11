@@ -35,19 +35,27 @@ When running the Linter the user will be prompted through the command line for t
 After the user enters a response, the response will be process to ensure it is a valid input. If the input is invalid the user will be prompted again. 
 
 Example Input      
-> -> Please provide the absolute path(s) to the directory containing the .class files to process:     
-     &nbsp;  &nbsp; &nbsp; C:\Users\duvallar\OneDrive\1.RoseHulman\3.Junior\Fall\CSSE374\project-202410-team02-202410\target\classes\domain\ariscode\testclasses    
-> -> Choose the Style Checks to run [Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), ALL]    
+> -> Enter Directory/Package:         
+     &nbsp;  &nbsp; &nbsp; C:\Users\duvallar\OneDrive\1.RoseHulman\3.Junior\Fall\CSSE374\project-202410-team02-202410\target\classes\domain\ariscode\testclasses  
+> -> Please enter an output file path  
+     &nbsp;  &nbsp; &nbsp; C:\Users\duvallar\OneDrive\1.RoseHulman\3.Junior\Fall\CSSE374\project-202410-team02-202410  
+> -> Enter Style Checks to run separated by comma:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), Unused Fields (UF), ALL, NONE  
      &nbsp; &nbsp; &nbsp; NC,HF    
-> -> Choose the Principle Checks to run [Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL]    
+> -> Enter Pattern Checks to run separated by comma:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL, NONE  
      &nbsp; &nbsp; &nbsp; ALL   
-> -> Choose the Pattern Checks to run [Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL]    
-      &nbsp; &nbsp; &nbsp; TMP    
+> -> Enter Principle Checks to run separated by comma:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL, NONE  
+     &nbsp; &nbsp; &nbsp; TMP  
+> -> Enter Transformations to run:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Remove Unused Fields (RUF), NONE  
+     &nbsp; &nbsp; &nbsp; NONE   
 
   
 ### Output 
 Once the Linter completes the user selected checks, the resulting output will be displayed to both the console and a log file. 
-The log file, linter_log.txt,  can be found in the directory provided. 
+The log file, `linter_log.txt`,  can be found in the directory provided. 
 
 All output will be formatted as follows:      
 
@@ -55,4 +63,20 @@ All output will be formatted as follows:
     &nbsp; &nbsp; Class Names: ClassA       
     &nbsp; &nbsp; Message: "Check specific Message Here"        
 
-
+## How to Run Tests for All Checks
+> -> Enter Directory/Package:    
+     &nbsp;  &nbsp; &nbsp; absolutePathToTestAllChecks/testallchecks  
+> -> Please enter an output file path  
+     &nbsp;  &nbsp; &nbsp; absolutePathToTestAllChecks/testallchecks  
+> -> Enter Style Checks to run separated by comma:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Naming Convention (NC), Final Local Variables (FLV), Hidden Fields (HF), Unused Fields (UF), ALL, NONE  
+     &nbsp;  &nbsp; &nbsp; ALL  
+> -> Enter Pattern Checks to run separated by comma:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL, NONE  
+     &nbsp; &nbsp; &nbsp; ALL  
+> -> Enter Principle Checks to run separated by comma:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL, NONE  
+     &nbsp; &nbsp; &nbsp; ALL  
+> -> Enter Transformations to run:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; Remove Unused Fields (RUF), NONE  
+     &nbsp; &nbsp; &nbsp; RUF
