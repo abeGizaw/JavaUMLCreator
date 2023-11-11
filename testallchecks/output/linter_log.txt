@@ -1,0 +1,63 @@
+Class: Client
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: implementation
+Class: Algorithm1
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: Algorithm1
+Class: Algorithm2
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: Algorithm2
+Class: Client
+  Check Type: HIDDEN_FIELDS
+  Message: Field algorithm is hidden by method <init>
+Class: Client
+  Check Type: UNUSED_FIELD
+  Message: target is an unused field in Client
+Class: Adaptee
+  Check Type: UNUSED_FIELD
+  Message: aString is an unused field in Adaptee
+Class: Client
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; Adaptee can be final since its value is not changed.
+
+Class: Adapter, Target, Adaptee, Client
+  Check Type: ADAPTER_PATTERN
+  Message: There is a possible use of the Adapter Pattern with
+	adapter: Adapter
+	target: Target
+	adaptee: Adaptee
+	client: Client.
+
+Class: Adapter
+  Check Type: UNUSED_FIELD
+  Message: adaptee is an unused field in Adapter
+Class: Algorithm
+  Check Type: TEMPLATE_METHOD_PATTERN
+  Message: The Class Algorithm uses the templateMethod Pattern
+Class: Client
+  Check Type: UNUSED_FIELD
+  Message: implementation is an unused field in Client
+Class: Algorithm2
+  Check Type: COMPOSITION_OVER_INHERITANCE
+  Message: Consider composition instead of inheritance. Algorithm2 EXTENDS Algorithm
+Class: Client
+  Check Type: STRATEGY_PATTERN
+  Message: STRATEGY PATTERN: Client stores an instance of LAlgorithm; in the field algorithm. The setter is <init>.
+
+Class: Client
+  Check Type: STRATEGY_PATTERN
+  Message: STRATEGY PATTERN: Client stores an instance of LTarget; in the field target. The setter is <init>.
+
+Class: Algorithm1
+  Check Type: COMPOSITION_OVER_INHERITANCE
+  Message: Consider composition instead of inheritance. Algorithm1 EXTENDS Algorithm
+Class: Client
+  Check Type: PLK
+  Message: Method: method1; Adaptee is an invalid receiver for method
+Class: Client
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; algorithm can be final since its value is not changed.
+
+Class: Adapter
+  Check Type: COMPOSITION_OVER_INHERITANCE
+  Message: Consider composition instead of inheritance. Adapter EXTENDS Target
