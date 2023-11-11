@@ -1,5 +1,5 @@
 package domain;
 
-public abstract class MyLabel {
-    public abstract boolean equals(MyLabel label);
+public interface MyLabel {
+    boolean equals(MyLabel label);
 }

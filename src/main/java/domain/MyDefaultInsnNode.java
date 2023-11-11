@@ -1,7 +1,5 @@
 package domain;
 
-import org.objectweb.asm.tree.AbstractInsnNode;
-
 public class MyDefaultInsnNode extends MyAbstractInsnNode {
     @Override
     public MyAbstractInsnNode getNext() {

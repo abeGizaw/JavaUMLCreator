@@ -12,9 +12,11 @@ public class FinalLocalVariables implements Check {
     public List<Message> run(MyClassNode myClassNode) {
         List<Message> messages = new ArrayList<>();
         for (MyMethodNode myMethodNode : myClassNode.methods) {
-            localVariableManager = new LocalVariableManager(myMethodNode);
-            checkMethodForFinalLocalVariables(myMethodNode);
-            messages.addAll(createMessagesForMethod(myClassNode.name, myMethodNode.name));
+            if ((myMethodNode.access & MyOpcodes.ACC_ABSTRACT) == 0 && !myMethodNode.name.equals("<clinit>")) { // if it is not abstract and not a constructor for a constant
+                localVariableManager = new LocalVariableManager(myMethodNode);
+                checkMethodForFinalLocalVariables(myMethodNode);
+                messages.addAll(createMessagesForMethod(myClassNode.name, myMethodNode.name));
+            }
         }
         return messages;
     }
@@ -44,7 +46,7 @@ public class FinalLocalVariables implements Check {
         List<Message> messages = new ArrayList<>();
         for (LocalVariableInfo localVariableInfo : localVariableManager.getHasBeenStoredOnce()) {
             String messageText = String.format("Method: %s; %s can be final since its value is not changed.\n", methodName, localVariableInfo.getName());
-            Message message = new Message(CheckType.FINAL_LOCAL_VARIABLES, messageText, className);
+            Message message = new Message(LintType.FINAL_LOCAL_VARIABLES, messageText, className);
             messages.add(message);
         }
         return messages;

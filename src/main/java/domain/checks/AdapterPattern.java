@@ -1,6 +1,9 @@
 package domain.checks;
 
-import domain.*;
+import domain.LintType;
+import domain.Message;
+import domain.MyClassNode;
+import domain.MyFieldNode;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,9 +59,11 @@ public class AdapterPattern implements Check {
     private List<String> getNotJavaClassFieldTypes(MyClassNode myClassNode) {
         List<String> fieldTypes = new ArrayList<>();
         for (MyFieldNode myFieldNode : myClassNode.fields) {
-            String fieldType = myFieldNode.desc.substring(1,myFieldNode.desc.length() - 1);
-            if (this.fieldTypeIsClass(fieldType)) {
-                fieldTypes.add(fieldType);
+            if (myFieldNode.desc.length() > 1) { // if the type isn't something like I, which is an int
+                String fieldType = myFieldNode.desc.substring(1, myFieldNode.desc.length() - 1);
+                if (this.fieldTypeIsClass(fieldType)) {
+                    fieldTypes.add(fieldType);
+                }
             }
         }
         return fieldTypes;
@@ -77,9 +82,11 @@ public class AdapterPattern implements Check {
         List<AdapterPatternClasses> adapterPatterns = new ArrayList<>();
         for (MyClassNode myClassNode : myClassNodes) {
             for (MyFieldNode myFieldNode : myClassNode.fields) {
-                String fieldType = myFieldNode.desc.substring(1,myFieldNode.desc.length() - 1);
-                for (String interfaceName : this.findImplementedInterfaces(fieldType)) {
-                    adapterPatterns.addAll(getAdapterPatternClassesForInterface(interfaceName, possibleAdapterPatterns, myClassNode));
+                if (myFieldNode.desc.length() > 1) { // if the type isn't something like I, which is an int
+                    String fieldType = myFieldNode.desc.substring(1, myFieldNode.desc.length() - 1);
+                    for (String interfaceName : this.findImplementedInterfaces(fieldType)) {
+                        adapterPatterns.addAll(getAdapterPatternClassesForInterface(interfaceName, possibleAdapterPatterns, myClassNode));
+                    }
                 }
             }
         }
@@ -114,8 +121,8 @@ public class AdapterPattern implements Check {
                     "\ttarget: %s\n" +
                     "\tadaptee: %s\n" +
                     "\tclient: %s.\n", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
-            String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdaptee(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
-            Message message = new Message(CheckType.ADAPTER_PATTERN, messageText, classes);
+            String classes = String.format("%s, %s, %s, %s", adapterPattern.getAdapter(), adapterPattern.getTarget(), adapterPattern.getAdaptee(), adapterPattern.getClient());
+            Message message = new Message(LintType.ADAPTER_PATTERN, messageText, classes);
             messages.add(message);
         }
         return messages;

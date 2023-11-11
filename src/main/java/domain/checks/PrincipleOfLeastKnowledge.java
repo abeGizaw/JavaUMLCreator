@@ -3,12 +3,15 @@ package domain.checks;
 import domain.*;
 import domain.myasm.MyASMType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
 public class PrincipleOfLeastKnowledge implements Check {
     private static final Set<Integer> METHOD_OPCODES = Set.of(MyOpcodes.H_INVOKEVIRTUAL, MyOpcodes.H_INVOKESTATIC, MyOpcodes.H_INVOKESPECIAL, MyOpcodes.H_INVOKEINTERFACE);
 
-    private Stack<MyAbstractInsnNode> instructionStack;
+    private final Stack<MyAbstractInsnNode> instructionStack;
 
     public PrincipleOfLeastKnowledge() {
         instructionStack = new Stack<>();
@@ -25,6 +28,9 @@ public class PrincipleOfLeastKnowledge implements Check {
 
     private List<String> checkMethod(MyMethodNode myMethodNode) {
         List<String> messageTexts = new ArrayList<>();
+        if ((myMethodNode.access & MyOpcodes.ACC_ABSTRACT) != 0 || myMethodNode.name.equals("<clinit>")) { // if it is not abstract and not a constructor for a constant
+            return new ArrayList<>();
+        }
         LocalVariableManager localVariableManager = new LocalVariableManager(myMethodNode);
         for (MyAbstractInsnNode myAbstractInsnNode : myMethodNode.instructions) {
             localVariableManager.updateVariableScopes(myAbstractInsnNode);
@@ -46,16 +52,16 @@ public class PrincipleOfLeastKnowledge implements Check {
     }
 
     private boolean isConstructor(MyAbstractInsnNode myAbstractInsnNode) {
-        if (myAbstractInsnNode.getOpcode() != MyOpcodes.INVOKESPECIAL)  {
+        if (myAbstractInsnNode.getOpcode() != MyOpcodes.INVOKESPECIAL) {
             return false;
         }
         return (((MyMethodInsnNode) myAbstractInsnNode).name).equals("<init>");
     }
 
-    private String getInvalidReceiverNode(MyAbstractInsnNode abstractInsnNode, LocalVariableManager localVariableManager) {
+    private String getInvalidReceiverNode(MyAbstractInsnNode myAbstractInsnNode, LocalVariableManager localVariableManager) {
         // remove arguments
         MyType myType = new MyASMType();
-        MyType methodType = myType.getType(((MyMethodInsnNode) abstractInsnNode).desc);
+        MyType methodType = myType.getType(((MyMethodInsnNode) myAbstractInsnNode).desc);
         int numArguments = methodType.getArgumentTypes().length;
         for (int i = 0; i < numArguments; i++) {
             removeMethodArgument();
@@ -80,7 +86,14 @@ public class PrincipleOfLeastKnowledge implements Check {
         }
 
         if (receiverNodeName.equals("")) {
-            receiverNodeName = localVariableManager.getVariableAtIndex(((MyVarInsnNode) receiverNode).var).getName();
+            if (receiverNode.getType() != MyAbstractInsnNode.VAR_INSN) {
+                return ""; // not a receiver
+            }
+            LocalVariableInfo receiver = localVariableManager.getVariableAtIndex(((MyVarInsnNode) receiverNode).var);
+            if (receiver == null) {
+                return ""; // the receiver is not a variable declared by the programmer (could be declared by something from Java)
+            }
+            receiverNodeName = receiver.getName();
         }
 
         // is created?
@@ -103,15 +116,16 @@ public class PrincipleOfLeastKnowledge implements Check {
     private void removeMethodArgument() {
         MyAbstractInsnNode abstractInsnNode = instructionStack.pop();
         int methodArgumentInsnOpcode = abstractInsnNode.getOpcode();
-        if (methodArgumentInsnOpcode == MyOpcodes.GETFIELD || methodArgumentInsnOpcode == MyOpcodes.GETSTATIC) {
-            instructionStack.pop();
+        while (methodArgumentInsnOpcode == MyOpcodes.GETFIELD || methodArgumentInsnOpcode == MyOpcodes.GETSTATIC) {
+            abstractInsnNode = instructionStack.pop();
+            methodArgumentInsnOpcode = abstractInsnNode.getOpcode();
         }
     }
 
     private List<Message> createMessagesForMethod(List<String> messageTexts, String className) {
         List<Message> messages = new ArrayList<>();
         for (String messageText : messageTexts) {
-            Message message = new Message(CheckType.PLK, messageText, className);
+            Message message = new Message(LintType.PLK, messageText, className);
             messages.add(message);
         }
         return messages;

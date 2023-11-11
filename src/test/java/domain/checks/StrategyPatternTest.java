@@ -1,6 +1,6 @@
 package domain.checks;
 
-import domain.CheckType;
+import domain.LintType;
 import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
@@ -8,6 +8,7 @@ import domain.myasm.MyASMClassNodeCreator;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,18 +24,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 
 public class StrategyPatternTest {
-    private final MyClassNodeCreator creator = new MyASMClassNodeCreator();
+    private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
+            Path.of("")
+    );
 
     private void testValidStrategyPattern(String className, String strategyClassName, String fieldName, String setterName) {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
-        StrategyPattern strategyPattern = new StrategyPattern(creator);
+        Check strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
 
         String expectedMessage = String.format("STRATEGY PATTERN: %s stores an instance of L%s; in the field %s. The setter is %s.\n", className, strategyClassName, fieldName, setterName);
 
         assertEquals(className, messageList.get(0).getClassesOfInterest());
-        assertEquals(CheckType.STRATEGY_PATTERN, messageList.get(0).getCheckType());
+        assertEquals(LintType.STRATEGY_PATTERN, messageList.get(0).getCheckType());
         assertEquals(expectedMessage, messageList.get(0).getMessage());
     }
 
@@ -71,7 +73,6 @@ public class StrategyPatternTest {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
         assertEquals(0, messageList.size());
     }
 
@@ -81,7 +82,6 @@ public class StrategyPatternTest {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
         assertEquals(0, messageList.size());
     }
 
@@ -91,14 +91,7 @@ public class StrategyPatternTest {
         MyClassNode classNode = creator.createMyClassNodeFromName(className);
         StrategyPattern strategyPattern = new StrategyPattern(creator);
         List<Message> messageList = strategyPattern.run(classNode);
-        printMessages(messageList);
         assertEquals(0, messageList.size());
-    }
-
-    private static void printMessages(List<Message> messageList) {
-        for (Message message : messageList) {
-            System.out.println(message.toString());
-        }
     }
 
 }

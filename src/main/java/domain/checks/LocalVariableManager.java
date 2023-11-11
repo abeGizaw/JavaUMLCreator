@@ -28,6 +28,8 @@ public class LocalVariableManager {
             } else if (myLocalVariableNode.index != 0 && myLocalVariableNode.start.getLabel().equals(startLabel)) {
                 parameters.add(newLocalVariable);
                 newLocalVariable.setIsInScope(true);
+                newLocalVariable.setHasBeenStored(true);
+                newLocalVariable.setHasBeenStoredOnce(true);
             }
         }
 
@@ -84,11 +86,11 @@ public class LocalVariableManager {
         }
     }
 
-    public boolean isCreatedVariable(MyAbstractInsnNode abstractInsnNode) {
-        if (!LOAD_OPCODES.contains(abstractInsnNode.getOpcode())) {
+    public boolean isCreatedVariable(MyAbstractInsnNode myAbstractInsnNode) {
+        if (!LOAD_OPCODES.contains(myAbstractInsnNode.getOpcode())) {
             return false;
         }
-        int index = ((MyVarInsnNode) abstractInsnNode).var;
+        int index = ((MyVarInsnNode) myAbstractInsnNode).var;
         for (LocalVariableInfo localVariableInfo : createdVariables) {
             if (localVariableInfo.getIndex() == index && localVariableInfo.getIsInScope()) {
                 return true;
@@ -97,11 +99,11 @@ public class LocalVariableManager {
         return false;
     }
 
-    public boolean isParameter(MyAbstractInsnNode abstractInsnNode) {
-        if (!LOAD_OPCODES.contains(abstractInsnNode.getOpcode())) {
+    public boolean isParameter(MyAbstractInsnNode myAbstractInsnNode) {
+        if (!LOAD_OPCODES.contains(myAbstractInsnNode.getOpcode())) {
             return false;
         }
-        int index = ((MyVarInsnNode) abstractInsnNode).var;
+        int index = ((MyVarInsnNode) myAbstractInsnNode).var;
         for (LocalVariableInfo localVariableInfo : parameters) {
             if (localVariableInfo.getIndex() == index) {
                 return true;
