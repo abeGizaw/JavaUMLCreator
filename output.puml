@@ -1,4 +1,36 @@
 @startuml
++class AccessModifierVariety{
++AccessModifierVariety():
++publicMethod():
+#protectedMethod():
+-privateMethod():
+~defaultMethod():
++{static}publicStaticMethod():
+-{static}privateStaticMethod():
+#{static}protectedStaticMethod():
+}
++class ArrayFieldsConverter{
++ intArray: int[]
+- string2DArray: String[][]
+# charArray: char[]
++ double3DArray: double[][][]
+- enumArray: MockEnum[][]
++ arrayListList: List<String>[][][][]
++ArrayFieldsConverter():
+}
+enum MockEnum{
+RED
+BLUE
+GREEN
+-{final} description: String
+-{final} code: int
++{static}values():
++{static}valueOf():
+-MockEnum():
++getDescription():
++getCode():
+~{static}<clinit>():
+}
 +class CollectionFieldsConverter{
 + stringList: List<String>
 + doubleSet: Set<Double>
@@ -6,5 +38,68 @@
 + charQueue: Queue<Character>
 + booleanStack: Stack<Boolean>
 + advancedMap: Map<List<Set<String>>, List<String>>
++CollectionFieldsConverter():
+}
++class ImplementingClass{
++ImplementingClass():
++calculate():
++transform():
+}
++interface MockInterface{
++{abstract}calculate():
++{abstract}transform():
++show():
++{static}helper():
+}
++abstract class MockAbstract{
+- model: String
+- year: int
++MockAbstract():
++{abstract}startEngine():
++{abstract}stopEngine():
++honk():
++getModel():
++setModel():
+}
++class ObjectFieldsConverter{
++ date: Date
++ stringBuilder: StringBuilder
+- stringBuffer: StringBuffer
+# genericObject: Object
+- string: String
+- aBoolean: Boolean
++ObjectFieldsConverter():
+}
++class ParameterTypeVariety{
++ParameterTypeVariety():
++singlePrimitive():
++multiplePrimitives():
++singleObject():
++multipleObjects():
++mixPrimitiveAndObject():
+-withCollections():
+#withArrayAndList():
+~complexParameters():
+}
++class PrimitiveFieldsConverter{
++{final} anInt: int
+- aByte: byte
+# aBoolean: boolean
+~{static} aChar: char
+~ aLong: long
+#{static} aShort: short
++ aFloat: float
++ aDouble: double
++PrimitiveFieldsConverter():
+}
++class ReturnTypeVariety{
++ReturnTypeVariety():
++returnInt():
++returnString():
+-returnList():
+#returnSet():
+~returnCharacter():
++returnArray():
++returnMap():
 }
 @enduml

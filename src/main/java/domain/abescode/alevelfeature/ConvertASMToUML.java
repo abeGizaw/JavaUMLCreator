@@ -20,12 +20,9 @@ public class ConvertASMToUML {
         pumlContent.append(convertClassInfo(myClassNode));
         pumlContent.append("{\n");
 
-
-//        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-//        String[] nameProperties = myClassNode.name.split("/");
+        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
         pumlContent.append(convertClassFields(myClassNode.fields));
-//        pumlContent.append(convertClassMethods(myClassNode.methods));
-
+        pumlContent.append(convertClassMethods(myClassNode.methods, className));
 
         pumlContent.append("}\n");
     }
@@ -59,12 +56,15 @@ public class ConvertASMToUML {
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
             String accessModifier = getAccessModifier(method.access);
+            methodString.append(accessModifier);
+            if ((method.access & MyOpcodes.ACC_ABSTRACT) != 0) {
+                methodString.append("{abstract}");
+            }
             String methodName = method.name.equals("<init>") ? className : method.name;
             String descName = getMethodInfo(method.desc);
-            methodString.append(accessModifier).append(methodName).append("():").append(descName).append("\n");
+            methodString.append(methodName).append("():").append(descName).append("\n");
         }
         return methodString.toString();
-        //return "+someMethod(someParam:String, another:String):void\n";
     }
 
     private String getMethodInfo(String desc) {
@@ -90,9 +90,7 @@ public class ConvertASMToUML {
         Matcher matcher = pattern.matcher(desc);
         if(matcher.find()){
             String collectionType = matcher.group(1);
-            System.out.println(RED + desc + RESET);
             String[] collectionHoldTypes = desc.substring(desc.indexOf("<") + 1, desc.lastIndexOf(">")).split(";");
-            System.out.println(Arrays.toString(collectionHoldTypes));
             String collectedTypes = Arrays.stream(collectionHoldTypes)
                     .map(typeDesc -> getFieldType(typeDesc + (typeDesc.contains("<") ? ";>;" : ";"))) // Add semicolon back if needed
                     .filter(Objects::nonNull) // Ignore null values
@@ -107,7 +105,6 @@ public class ConvertASMToUML {
         return (access & MyOpcodes.ACC_SYNTHETIC) != 0;
     }
 
-    // Method to append field info
     private void appendFieldInfo(StringBuilder fieldString, MyFieldNode field) {
         if (isSynthetic(field.access)) {
             return;
