@@ -1,16 +1,12 @@
 package domain.abescode.alevelfeature;
 
 import domain.MyClassNode;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConvertASMToUML {
     public void run(MyClassNode classNode) {
@@ -20,6 +16,7 @@ public class ConvertASMToUML {
     private void generateUmlDiagram(MyClassNode myClassNode) {
         StringBuilder pumlContent = new StringBuilder();
         pumlContent.append("@startuml\n");
+        pumlContent.append(convertClassName(myClassNode));
 
         
 //        String[] nameProperties = myClassNode.name.split("/");
@@ -40,7 +37,7 @@ public class ConvertASMToUML {
         }
     }
 
-    private String convertClassName(){
+    private String convertClassName(MyClassNode myClassNode){
         return "";
     }
 
@@ -49,6 +46,28 @@ public class ConvertASMToUML {
     }
     private String convertClassMethods(List<MethodNode> methods) {
         return "+someMethod(someParam:String, another:String):void\n";
+    }
+
+    private String getFieldType(String desc) {
+        if (desc.startsWith("[")) {
+            return getFieldType(desc.substring(1)) + "[]";
+        } else if (desc.startsWith("L") && desc.endsWith(";")) {
+            if (desc.contains("<")) {
+                return getGenericFieldType(desc);
+            } else {
+                return desc.substring(desc.lastIndexOf('/') + 1, desc.length() - 1);
+            }
+        } else {
+            return getPrimitiveFieldType(desc);
+        }
+    }
+
+    private String getPrimitiveFieldType(String desc) {
+        return "";
+    }
+
+    private String getGenericFieldType(String desc) {
+        return "";
     }
 
 }
