@@ -18,7 +18,14 @@ public class LocalVariableManager {
     public LocalVariableManager(MyMethodNode myMethodNode) {
         localVariables = new HashSet<>();
         parameters = new HashSet<>();
+        createdVariables = new HashSet<>();
+        prevInsnIsLabel = false;
+        prevInsn = null;
 
+        loadLocalVariables(myMethodNode);
+    }
+
+    private void loadLocalVariables(MyMethodNode myMethodNode) {
         if (myMethodNode.localVariables.size() < 1) {
             return; // nothing to check if there are no local variables
         }
@@ -36,11 +43,6 @@ public class LocalVariableManager {
                 newLocalVariable.setHasBeenStoredOnce(true);
             }
         }
-
-        createdVariables = new HashSet<>();
-
-        prevInsnIsLabel = false;
-        prevInsn = null;
     }
 
     public void updateVariableScopes(MyAbstractInsnNode insn) {
