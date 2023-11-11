@@ -75,7 +75,7 @@ public class AdapterPattern implements Check {
                 return true;
             }
         }
-        return false;
+        return !fieldType.startsWith("java/");
     }
 
     private List<AdapterPatternClasses> findAdapterPatternClients(List<AdapterPatternClasses> possibleAdapterPatterns) {
@@ -84,23 +84,13 @@ public class AdapterPattern implements Check {
             for (MyFieldNode myFieldNode : myClassNode.fields) {
                 if (myFieldNode.desc.length() > 1) { // if the type isn't something like I, which is an int
                     String fieldType = myFieldNode.desc.substring(1, myFieldNode.desc.length() - 1);
-                    for (String interfaceName : this.findImplementedInterfaces(fieldType)) {
-                        adapterPatterns.addAll(getAdapterPatternClassesForInterface(interfaceName, possibleAdapterPatterns, myClassNode));
+                    if (interfaceNames.contains(fieldType)) {
+                        adapterPatterns.addAll(getAdapterPatternClassesForInterface(fieldType, possibleAdapterPatterns, myClassNode));
                     }
                 }
             }
         }
         return adapterPatterns;
-    }
-
-    private List<String> findImplementedInterfaces(String className) {
-        List<String> implementedInterfaces = new ArrayList<>();
-        for (String interfaceName : interfaceNames) {
-            if (interfaceName.equals(className)) {
-                implementedInterfaces.add(interfaceName);
-            }
-        }
-        return implementedInterfaces;
     }
 
     private List<AdapterPatternClasses> getAdapterPatternClassesForInterface(String interfaceName, List<AdapterPatternClasses> possibleAdapterPatterns, MyClassNode myClassNode) {
