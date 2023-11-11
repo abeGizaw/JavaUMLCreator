@@ -1,0 +1,435 @@
+Class: domain/checks/UnusedFieldMockTestClasses/UnusedField
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Field Name: Must be in camelCase:   USED_FIELD
+Class: domain/checks/PLKMockTestClasses/IsParameterAndHasArguments
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; testClass4 can be final since its value is not changed.
+
+Class: domain/checks/ProgramToInterfaceNotImplementationTestClasses/abstractmock/Dog
+  Check Type: COMPOSITION_OVER_INHERITANCE
+  Message: Consider composition instead of inheritance. domain/checks/ProgramToInterfaceNotImplementationTestClasses/abstractmock/Dog EXTENDS domain/checks/ProgramToInterfaceNotImplementationTestClasses/abstractmock/Pet
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; slightlySimilar can be final since its value is not changed.
+
+Class: domain/checks/ProgramToInterfaceNotImplementationTestClasses/GoodInterfaceUse
+  Check Type: STRATEGY_PATTERN
+  Message: STRATEGY PATTERN: domain/checks/ProgramToInterfaceNotImplementationTestClasses/GoodInterfaceUse stores an instance of Ldomain/checks/ProgramToInterfaceNotImplementationTestClasses/abstractmock/Pet; in the field goodAbstractUse. The setter is <init>.
+
+Class: domain/checks/FavorCompositionMockTestClasses/ValidComp
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; v can be final since its value is not changed.
+
+Class: domain/checks/PLKMockTestClasses/PLKTestClass3
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: PLKTestClass3
+Class: domain/checks/ProgramToInterfaceNotImplementationTestClasses/BadInterfaceUse
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: violatesPattern
+Class: domain/checks/NamingConventionMockTestClasses/FinalStaticFieldName
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Field Name: Static Final Fields must be in all caps:   invalidName
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; similarName can be final since its value is not changed.
+
+Class: domain/checks/FavorCompositionMockTestClasses/IsSubClass
+  Check Type: COMPOSITION_OVER_INHERITANCE
+  Message: Consider composition instead of inheritance. domain/checks/FavorCompositionMockTestClasses/IsSubClass EXTENDS domain/checks/FavorCompositionMockTestClasses/SuperClass
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field similarName is hidden by method doNothing
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternInterfaceWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; value can be final since its value is not changed.
+
+Class: domain/checks/UnusedFieldMockTestClasses/UnusedField
+  Check Type: PLK
+  Message: Method: printUsed; out is an invalid receiver for println
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/NoHiddenFields
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doNothing; different can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: setStrategyField; s can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWNoSetterNoConstructor
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: InvalidStrategyPatternWNoSetterNoConstructor
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doNothing; sligtlySimilar can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field anotherSimilar is hidden by method doMoreNothing
+Class: domain/checks/FinalLocalVariablesMockTestClasses/OneScope
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; x can be final since its value is not changed.
+
+Class: domain/checks/PLKMockTestClasses/PLKTestClass4
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: PLKTestClass4
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWNoSetterNoConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; value can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; value can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWConstructor
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: strategy
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field similarName is hidden by method doNothing
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; anotherSimilar can be final since its value is not changed.
+
+Class: domain/checks/FinalLocalVariablesMockTestClasses/MultipleScopes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; d can be final since its value is not changed.
+
+Class: domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Adapter, domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Target, domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Adaptee, domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Client
+  Check Type: ADAPTER_PATTERN
+  Message: There is a possible use of the Adapter Pattern with
+	adapter: domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Adapter
+	target: domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Target
+	adaptee: domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Adaptee
+	client: domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Client.
+
+Class: domain/checks/NamingConventionMockTestClasses/invalidClassName
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; anotherSimilar can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWConstructor
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: ValidStrategyPatternAbstractClassWConstructor
+Class: domain/checks/PLKMockTestClasses/IsFieldOfNotThis
+  Check Type: PLK
+  Message: Method: method1; testClass1.testClass2 is an invalid receiver for checkNotField
+Class: domain/checks/NamingConventionMockTestClasses/MethodNaming
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; num can be final since its value is not changed.
+
+Class: domain/checks/PLKMockTestClasses/PLKTestClass4
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: checkParameterWithArguments; testClass2 can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field similarName is hidden by method doMoreNothing
+Class: domain/checks/FinalLocalVariablesMockTestClasses/MultipleScopes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; w can be final since its value is not changed.
+
+Class: domain/checks/PLKMockTestClasses/IsReturned
+  Check Type: PLK
+  Message: Method: method1; testClass1 is an invalid receiver for checkReturned
+Class: domain/checks/StrategyPatternMockTestClasses/ConcreteStrategy
+  Check Type: COMPOSITION_OVER_INHERITANCE
+  Message: Consider composition instead of inheritance. domain/checks/StrategyPatternMockTestClasses/ConcreteStrategy EXTENDS domain/checks/StrategyPatternMockTestClasses/StrategyAbstractClass
+Class: domain/checks/FavorCompositionMockTestClasses/ValidComp
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/FavorCompositionMockTestClasses/IsSubClass
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/UnusedFieldMockTestClasses/UnusedField
+  Check Type: PLK
+  Message: Method: printMe; out is an invalid receiver for println
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWSetter
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: ValidStrategyPatternAbstractClassWSetter
+Class: domain/checks/NamingConventionMockTestClasses/FieldNaming
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; num can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field anotherSimilar is hidden by method doMoreNothing
+Class: domain/checks/NamingConventionMockTestClasses/MethodNaming
+  Check Type: NAMING_CONVENTION
+  Message: Invalid method name: Must be in camelCase:  INVALID_METHOD
+Class: domain/checks/FinalLocalVariablesMockTestClasses/MultipleScopes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; b can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/NoHiddenFields
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; myOwnDeque can be final since its value is not changed.
+
+Class: domain/checks/ProgramToInterfaceNotImplementationTestClasses/BadInterfaceUse
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: violator
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternInterfaceWSetter
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: ValidStrategyPatternInterfaceWSetter
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field slightlySimilar is hidden by method doMoreNothing
+Class: domain/checks/TemplateMethodMockTestClasses/CorrectTemplateMethodMock
+  Check Type: TEMPLATE_METHOD_PATTERN
+  Message: The Class domain/checks/TemplateMethodMockTestClasses/CorrectTemplateMethodMock uses the templateMethod Pattern
+Class: domain/checks/NamingConventionMockTestClasses/FieldNaming
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Field Name: Must be in camelCase:   INVALID_FIELD
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field similarName is hidden by method doMoreNothing
+Class: domain/checks/PLKMockTestClasses/PLKTestClass4
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: checkParameterWithArguments; x can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; value can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/NoHiddenFields
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; neverSeenBefore can be final since its value is not changed.
+
+Class: domain/checks/PLKMockTestClasses/IsReturned
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; testClass3 can be final since its value is not changed.
+
+Class: domain/checks/UnusedFieldMockTestClasses/UnusedField
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: printMe; message can be final since its value is not changed.
+
+Class: domain/checks/TemplateMethodMockTestClasses/NoFinalTemplateMethodMock
+  Check Type: PLK
+  Message: Method: doMoreNothing; out is an invalid receiver for println
+Class: domain/checks/TemplateMethodMockTestClasses/NoAbstractTemplateMock
+  Check Type: PLK
+  Message: Method: doConcrete; out is an invalid receiver for println
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWSetter
+  Check Type: STRATEGY_PATTERN
+  Message: STRATEGY PATTERN: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWSetter stores an instance of Ldomain/checks/StrategyPatternMockTestClasses/StrategyAbstractClass; in the field strategy. The setter is setStrategy.
+
+Class: domain/checks/FavorCompositionMockTestClasses/IsSubClass
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; v can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ConcreteStrategy
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: setConcreteVal; val can be final since its value is not changed.
+
+Class: domain/checks/UnusedFieldMockTestClasses/UnusedField
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; b can be final since its value is not changed.
+
+Class: domain/checks/TemplateMethodMockTestClasses/CorrectTemplateMethodMock
+  Check Type: PLK
+  Message: Method: doConcreteThing; out is an invalid receiver for println
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWNoSetterNoConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Adapter, domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Target, domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/AdapterPatternConcreteClass, domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Client
+  Check Type: ADAPTER_PATTERN
+  Message: There is a possible use of the Adapter Pattern with
+	adapter: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Adapter
+	target: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Target
+	adaptee: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/AdapterPatternConcreteClass
+	client: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Client.
+
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsVaryTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doNothing; similarName can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/NoHiddenFields
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doNothing; unique can be final since its value is not changed.
+
+Class: domain/checks/PLKMockTestClasses/IsReturned
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; testClass1 can be final since its value is not changed.
+
+Class: domain/checks/NamingConventionMockTestClasses/FinalStaticFieldName
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Field Name: Static Final Fields must be in all caps:   InvalidName2
+Class: domain/checks/FinalLocalVariablesMockTestClasses/MultipleScopes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method1; z can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; value can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: HIDDEN_FIELDS
+  Message: Field slightlySimilar is hidden by method doMoreNothing
+Class: domain/checks/ProgramToInterfaceNotImplementationTestClasses/BadInterfaceUse
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: badAbstractUse
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doNothing; sligtlySimilar can be final since its value is not changed.
+
+Class: domain/checks/NamingConventionMockTestClasses/invalidClassName
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; num can be final since its value is not changed.
+
+Class: domain/checks/NamingConventionMockTestClasses/FinalStaticFieldName
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; num can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/NoHiddenFields
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; notSimilar can be final since its value is not changed.
+
+Class: domain/checks/NamingConventionMockTestClasses/invalidClassName
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: invalidClassName
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternInterfaceWSetter
+  Check Type: STRATEGY_PATTERN
+  Message: STRATEGY PATTERN: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternInterfaceWSetter stores an instance of Ldomain/checks/StrategyPatternMockTestClasses/StrategyInterface; in the field strategyField. The setter is setStrategyField.
+
+Class: domain/checks/TemplateMethodMockTestClasses/NoAbstractTemplateMock
+  Check Type: PLK
+  Message: Method: doAnotherConcrete; out is an invalid receiver for println
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; s can be final since its value is not changed.
+
+Class: domain/checks/UnusedFieldMockTestClasses/UnusedField
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: setUsedNum; a can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWConstructor
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: InvalidStrategyPatternWConstructor
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; similarName can be final since its value is not changed.
+
+Class: domain/checks/UnusedFieldMockTestClasses/UnusedField
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; a can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; value can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: setStrategy; s can be final since its value is not changed.
+
+Class: domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Adapter
+  Check Type: COMPOSITION_OVER_INHERITANCE
+  Message: Consider composition instead of inheritance. domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Adapter EXTENDS domain/checks/AdapterPatternMockTestClasses/ValidAbstractTarget/Target
+Class: domain/checks/NamingConventionMockTestClasses/FinalStaticFieldName
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/FavorCompositionMockTestClasses/ValidComp
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; s can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternInterfaceWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/PLKMockTestClasses/PLKTestClass1
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: PLKTestClass1
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doMoreNothing; slightlySimilar can be final since its value is not changed.
+
+Class: domain/checks/NamingConventionMockTestClasses/FieldNaming
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/FieldHidingMockClasses/HiddenFieldsSameTypes
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: doNothing; similarName can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWConstructor
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; s can be final since its value is not changed.
+
+Class: domain/checks/NamingConventionMockTestClasses/MethodNaming
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/NamingConventionMockTestClasses/ValidNaming
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; num can be final since its value is not changed.
+
+Class: domain/checks/FavorCompositionMockTestClasses/ValidComp
+  Check Type: STRATEGY_PATTERN
+  Message: STRATEGY PATTERN: domain/checks/FavorCompositionMockTestClasses/ValidComp stores an instance of Ldomain/checks/FavorCompositionMockTestClasses/SuperClass; in the field compSuper. The setter is <init>.
+
+Class: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Adapter, domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Target, domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Adaptee, domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Client
+  Check Type: ADAPTER_PATTERN
+  Message: There is a possible use of the Adapter Pattern with
+	adapter: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Adapter
+	target: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Target
+	adaptee: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Adaptee
+	client: domain/checks/AdapterPatternMockTestClasses/ValidInterfaceTarget/Client.
+
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternInterfaceWSetter
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: setStrategyField; s can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWNoSetterNoConstructor
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: strategyField
+Class: domain/checks/ProgramToInterfaceNotImplementationTestClasses/BadInterfaceUse
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: violatesDifferently
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWSetter
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: strategyField
+Class: domain/checks/PLKMockTestClasses/PLKTestClass2
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: PLKTestClass2
+Class: domain/checks/FinalLocalVariablesMockTestClasses/OneScope
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: method2; x can be final since its value is not changed.
+
+Class: domain/checks/ProgramToInterfaceNotImplementationTestClasses/BadInterfaceUse
+  Check Type: INTERFACE_OVER_IMPLEMENTATION
+  Message: Where you need to Programming to interface instead of implementation: badInterfaceUse
+Class: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWConstructor
+  Check Type: STRATEGY_PATTERN
+  Message: STRATEGY PATTERN: domain/checks/StrategyPatternMockTestClasses/ValidStrategyPatternAbstractClassWConstructor stores an instance of Ldomain/checks/StrategyPatternMockTestClasses/StrategyAbstractClass; in the field strategy. The setter is <init>.
+
+Class: domain/checks/NamingConventionMockTestClasses/ValidNaming
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: <init>; n can be final since its value is not changed.
+
+Class: domain/checks/StrategyPatternMockTestClasses/InvalidStrategyPatternWSetter
+  Check Type: NAMING_CONVENTION
+  Message: Invalid Class Name: Must be in PascalCase: InvalidStrategyPatternWSetter
+Class: domain/checks/PLKMockTestClasses/PLKTestClass4
+  Check Type: FINAL_LOCAL_VARIABLES
+  Message: Method: checkParameterWithArguments; testClass1 can be final since its value is not changed.
+

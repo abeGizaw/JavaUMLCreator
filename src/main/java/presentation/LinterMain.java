@@ -33,7 +33,7 @@ public class LinterMain {
         }
         List<Message> messages = lint(checks, transformations, outputPath, files, directoryPath);
         prettyPrint(messages);
-//        saveToFile(messages, outputPath);
+        saveToFile(messages, outputPath);
 
     }
 
