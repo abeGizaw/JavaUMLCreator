@@ -60,7 +60,7 @@ public class NamingConventionCheck implements Check {
     private List<Message> checkMethodName(MyClassNode classNode) {
         List<Message> invalidMethodMessages = new ArrayList<>();
         for (MyMethodNode method : classNode.methods) {
-            if (invalidCamelCase(method.name) && !method.name.equals("<init>")) {
+            if (invalidCamelCase(method.name) && method.name.charAt(0) != '<') {
                 invalidMethodMessages.add(new Message(LintType.NAMING_CONVENTION, "Invalid method name: Must be in camelCase:  " + method.name, classNode.name));
             }
         }

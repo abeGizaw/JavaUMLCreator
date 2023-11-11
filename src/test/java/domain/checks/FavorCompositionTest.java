@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FavorCompositionTest {
 
     private final MyClassNodeCreator creator = new MyASMClassNodeCreator(
-            Path.of("src/test/java/domain/checks/FavorCompositionMockTestClasses")
+            Path.of("")
     );
     private final Check compOverInheritance = new CompositionOverInheritance();
 
