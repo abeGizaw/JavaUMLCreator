@@ -43,7 +43,6 @@ public class ConvertASMToUML {
         return classString.toString();
     }
 
-
     private String convertClassFields(List<MyFieldNode> fields) {
         StringBuilder fieldString = new StringBuilder();
         for(MyFieldNode field: fields){
@@ -52,6 +51,7 @@ public class ConvertASMToUML {
 
         return fieldString.toString();
     }
+
     private String convertClassMethods(List<MyMethodNode> methods, String className) {
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
@@ -61,14 +61,15 @@ public class ConvertASMToUML {
                 methodString.append("{abstract}");
             }
             String methodName = method.name.equals("<init>") ? className : method.name;
-            String descName = getMethodInfo(method.desc);
-            methodString.append(methodName).append("():").append(descName).append("\n");
+            String methodInfo = method.signature == null ? getMethodInfo(method.desc) : getMethodInfo(method.signature);
+            methodString.append(methodName).append(methodInfo).append("\n");
         }
         return methodString.toString();
     }
 
     private String getMethodInfo(String desc) {
-        return "";
+        String returnType = getFieldType(desc.substring(desc.lastIndexOf(")") + 1));
+        return "():" + returnType;
     }
 
     private String getFieldType(String desc) {
@@ -101,10 +102,6 @@ public class ConvertASMToUML {
         return desc;
     }
 
-    private boolean isSynthetic(int access) {
-        return (access & MyOpcodes.ACC_SYNTHETIC) != 0;
-    }
-
     private void appendFieldInfo(StringBuilder fieldString, MyFieldNode field) {
         if (isSynthetic(field.access)) {
             return;
@@ -120,6 +117,9 @@ public class ConvertASMToUML {
         fieldString.append(accessModifier).append(" ").append(field.name).append(": ").append(descName).append("\n");
     }
 
+    private boolean isSynthetic(int access) {
+        return (access & MyOpcodes.ACC_SYNTHETIC) != 0;
+    }
     private String getPrimitiveFieldType(String desc) {
         switch(desc){
             case "B":
