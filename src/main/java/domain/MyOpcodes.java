@@ -1,15 +1,15 @@
 package domain;
 
 public interface MyOpcodes {
-    public static final int ACC_FINAL = 16;
-    public static final int INVOKEVIRTUAL = 182;
-    public static final int INVOKESPECIAL = 183;
-    public static final int INVOKEINTERFACE = 185;
-    public static final int INVOKEDYNAMIC = 186;
+    public static final int ACC_PUBLIC = 1;
+    public static final int ACC_PRIVATE = 2;
+    public static final int ACC_PROTECTED = 4;
     public static final int H_INVOKEVIRTUAL = 5;
     public static final int H_INVOKESTATIC = 6;
     public static final int H_INVOKESPECIAL = 7;
+    public static final int ACC_STATIC = 8;
     public static final int H_INVOKEINTERFACE = 9;
+    public static final int ACC_FINAL = 16;
     public static final int ILOAD = 21;
     public static final int LLOAD = 22;
     public static final int FLOAD = 23;
@@ -20,14 +20,17 @@ public interface MyOpcodes {
     public static final int FSTORE = 56;
     public static final int DSTORE = 57;
     public static final int ASTORE = 58;
-    public static final int ACC_ABSTRACT = 1024;
-    public static final int ACC_INTERFACE = 512;
-    public static final int PUTFIELD = 181;
-    public static final int PUTSTATIC = 179;
-    public static final int ACC_STATIC = 8;
-    public static final int GETFIELD = 180;
     public static final int GETSTATIC = 178;
-    public static final int ASM8 = 524288;
-    public static final int ACC_ENUM = 16384;
+    public static final int PUTSTATIC = 179;
+    public static final int GETFIELD = 180;
+    public static final int PUTFIELD = 181;
+    public static final int INVOKEVIRTUAL = 182;
+    public static final int INVOKESPECIAL = 183;
+    public static final int INVOKEINTERFACE = 185;
+    public static final int INVOKEDYNAMIC = 186;
+    public static final int ACC_INTERFACE = 512;
+    public static final int ACC_ABSTRACT = 1024;
     public static final int ACC_SYNTHETIC = 4096;
+    public static final int ACC_ENUM = 16384;
+    public static final int ASM8 = 524288;
 }

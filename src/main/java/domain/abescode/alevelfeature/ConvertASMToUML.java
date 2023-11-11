@@ -1,10 +1,8 @@
 package domain.abescode.alevelfeature;
-
 import domain.MyClassNode;
 import domain.MyFieldNode;
 import domain.MyMethodNode;
 import domain.MyOpcodes;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,7 +24,7 @@ public class ConvertASMToUML {
         pumlContent.append("@startuml\n");
         pumlContent.append(convertClassInfo(myClassNode));
 
-        
+//        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
 //        String[] nameProperties = myClassNode.name.split("/");
 //        pumlContent.append("class ").append(nameProperties[nameProperties.length - 1]).append("{\n");
 //        pumlContent.append(convertClassFields(myClassNode.fields));
@@ -58,17 +56,20 @@ public class ConvertASMToUML {
 
 
     private String convertClassFields(List<MyFieldNode> fields) {
+        StringBuilder fieldString = new StringBuilder();
         for(MyFieldNode field: fields){
-//            appendFieldInfo(fieldString, field);
+            appendFieldInfo(fieldString, field);
         }
+        System.out.println(fieldString);
         return "-someValue:List<String>\n";
     }
-    private String convertClassMethods(List<MyMethodNode> methods) {
+    private String convertClassMethods(List<MyMethodNode> methods, String className) {
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
             String accessModifier = getAccessModifier(method.access);
+            String methodName = method.name.equals("<init>") ? className : method.name;
             String descName = getMethodInfo(method.desc);
-            methodString.append(accessModifier).append(method.name).append("():").append(descName).append("\n");
+            methodString.append(accessModifier).append(methodName).append("():").append(descName).append("\n");
         }
         return methodString.toString();
         //return "+someMethod(someParam:String, another:String):void\n";
@@ -155,7 +156,26 @@ public class ConvertASMToUML {
         }
     }
     private String getAccessModifier(int access) {
-        return "";
+        StringBuilder modifiers = new StringBuilder();
+
+        // Access level modifiers
+        if ((access & MyOpcodes.ACC_PUBLIC) != 0) {
+            modifiers.append("+");
+        } else if ((access & MyOpcodes.ACC_PROTECTED) != 0) {
+            modifiers.append("#");
+        } else if ((access & MyOpcodes.ACC_PRIVATE) != 0) {
+            modifiers.append("-");
+        } else{
+            modifiers.append("~");
+        }
+
+        if ((access & MyOpcodes.ACC_STATIC) != 0) {
+            modifiers.append("static ");
+        }
+        if ((access & MyOpcodes.ACC_FINAL) != 0) {
+            modifiers.append("final ");
+        }
+        return modifiers.toString();
     }
 
     private String getClassType(int access) {
@@ -169,5 +189,4 @@ public class ConvertASMToUML {
             return "class";
         }
     }
-
 }
