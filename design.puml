@@ -129,6 +129,7 @@ package domain {
             -prevInsn: MyAbstractInsnNode
 
             +LocalVariableManager(myMethodNode: MyMethodNode)
+            -loadLocalVariables(myMethodNode: MyMethodNode): void
             +updateVariableScopes(insn: MyAbstractInsnNode): void
             -setInScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
             -setOutOfScopeVariables(insn: MyAbstractInsnNode, localVariables: Set<LocalVariableInfo>): void
