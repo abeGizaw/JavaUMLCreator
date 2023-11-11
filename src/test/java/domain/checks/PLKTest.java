@@ -13,7 +13,7 @@ public class PLKTest {
 
     @Test
     public void runPLKIsFieldOfThisExpectNoMessage() {
-        String classPath = "PLKMockTestClasses/IsFieldOfThis";
+        String classPath = "domain/checks/PLKMockTestClasses/IsFieldOfThis";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
@@ -26,26 +26,25 @@ public class PLKTest {
 
     @Test
     public void runPLKIsFieldOfNotThisExpectOneMessage() {
-        String classPath = "PLKMockTestClasses/IsFieldOfNotThis";
+        String classPath = "domain/checks/PLKMockTestClasses/IsFieldOfNotThis";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
         int expectedNumMessages = 1;
         LintType expectedCheck = LintType.PLK;
         String expectedMessage = createExpectedMessageText("method1", "testClass1.testClass2", "checkNotField");
-        String expectedClasses = "domain/checks/PLKMockTestClasses/IsFieldOfNotThis";
 
         List<Message> actualMessages = plkCheck.run(myClassNode);
 
         Assertions.assertEquals(expectedNumMessages, actualMessages.size());
         Assertions.assertEquals(expectedCheck, LintType.PLK);
         Assertions.assertEquals(expectedMessage, actualMessages.get(0).getMessage());
-        Assertions.assertEquals(expectedClasses, actualMessages.get(0).getClassesOfInterest());
+        Assertions.assertEquals(classPath, actualMessages.get(0).getClassesOfInterest());
     }
 
     @Test
     public void runPLKIsCreatedAndReturnsExpectNoMessage() {
-        String classPath = "PLKMockTestClasses/IsCreatedAndReturns";
+        String classPath = "domain/checks/PLKMockTestClasses/IsCreatedAndReturns";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
@@ -58,7 +57,7 @@ public class PLKTest {
 
     @Test
     public void runPLKIsParameterAndHasArgumentsExpectNoMessage() {
-        String classPath = "PLKMockTestClasses/IsParameterAndHasArguments";
+        String classPath = "domain/checks/PLKMockTestClasses/IsParameterAndHasArguments";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
@@ -71,26 +70,25 @@ public class PLKTest {
 
     @Test
     public void runPLKIsReturnedExpectOneMessage() {
-        String classPath = "PLKMockTestClasses/IsReturned";
+        String classPath = "domain/checks/PLKMockTestClasses/IsReturned";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
         int expectedNumMessages = 1;
         LintType expectedCheck = LintType.PLK;
         String expectedMessage = createExpectedMessageText("method1", "testClass1", "checkReturned");
-        String expectedClasses = "domain/checks/PLKMockTestClasses/IsReturned";
 
         List<Message> actualMessages = plkCheck.run(myClassNode);
 
         Assertions.assertEquals(expectedNumMessages, actualMessages.size());
         Assertions.assertEquals(expectedCheck, LintType.PLK);
         Assertions.assertEquals(expectedMessage, actualMessages.get(0).getMessage());
-        Assertions.assertEquals(expectedClasses, actualMessages.get(0).getClassesOfInterest());
+        Assertions.assertEquals(classPath, actualMessages.get(0).getClassesOfInterest());
     }
 
     @Test
     public void runPLKIsThisExpectNoMessage() {
-        String classPath = "PLKMockTestClasses/IsThis";
+        String classPath = "domain/checks/PLKMockTestClasses/IsThis";
         MyClassNode myClassNode = creator.createMyClassNodeFromName(classPath);
         PrincipleOfLeastKnowledge plkCheck = new PrincipleOfLeastKnowledge();
 
