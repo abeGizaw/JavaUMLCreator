@@ -12,9 +12,10 @@ import java.nio.file.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class AbesMain {
-    private static MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of("G:\\My Drive\\classes\\374SoftwareDesign\\Project\\project-202410-team02-202410\\target\\test-classes\\domain\\checks\\ProgramToInterfaceNotImplementationTestClasses"));
+    private static final MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of(""));
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
@@ -22,44 +23,25 @@ public class AbesMain {
         String packagePath = keyboard.nextLine();
         Path startPath = Paths.get(packagePath);
 
-        try {
-            Files.walk(startPath)
-                    .filter(p -> p.toString().endsWith(".class"))
-                    .forEach(filePath -> processClassFile(filePath, startPath));
+        try(Stream<Path> stream = Files.walk(startPath)){
+            stream.filter(p -> p.toString().endsWith(".class"))
+                    .forEach(AbesMain::processClassFile);
         } catch (IOException e) {
             System.err.println("Error walking the directory: " + e.getMessage());
         }
 
-        ConvertASMToUML aLevel = new ConvertASMToUML();
-        aLevel.run();
     }
 
-    private static void processClassFile(Path filePath, Path startPath) {
+    private static void processClassFile(Path filePath) {
         File file = filePath.toFile();
         String[] fileProperties = file.toString().split("\\\\");
 
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
-
         System.out.println("File is: " + file + " with path " + filePath);
+
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-        HiddenFields fieldHider = new HiddenFields();
-        List<Message> hiddenFields = fieldHider.run(myClassNode);
-        for(Message message: hiddenFields){
-            System.out.println(message.toString());
-        }
-
-//        ProgramInterfaceNotImplementation designPrinciple = new ProgramInterfaceNotImplementation(creator, startPath);
-//        List<Message> badImplementation = designPrinciple.run(myClassNode);
-//        for(Message message: badImplementation){
-//            System.out.println(message.toString());
-//        }
-//
-//        TemplateMethodPattern designPattern = new TemplateMethodPattern();
-//        List<Message> usesPattern = designPattern.run(myClassNode);
-//        for(Message message : usesPattern){
-//            System.out.println(message.toString());
-//        }
-
+        ConvertASMToUML ASMConverter = new ConvertASMToUML();
+        ASMConverter.run(myClassNode);
         System.out.println("\n");
     }
 }
