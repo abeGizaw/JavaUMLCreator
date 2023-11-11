@@ -13,6 +13,7 @@ public class MyASMMethodInsnNode extends MyMethodInsnNode {
         this.methodInsnNode = (MethodInsnNode) methodInsnNode;
         super.desc = this.methodInsnNode.desc;
         super.name = this.methodInsnNode.name;
+        super.owner = this.methodInsnNode.owner;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class LinterMain {
         }
         List<Message> messages = lint(checks, transformations, outputPath, files, directoryPath);
         prettyPrint(messages);
-//        saveToFile(messages, outputPath);
+        saveToFile(messages, outputPath);
 
     }
 
@@ -54,9 +54,11 @@ public class LinterMain {
     private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files, Path directoryPath) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
         Linter linter = new Linter(files, creator, outputPath);
+
         List<Message> allMessages = new ArrayList<>();
         allMessages.addAll(linter.runSelectedTransformations(transformations));
-        allMessages.addAll(linter.runSelectedChecks(checks));
+        List<Message> messages = linter.runSelectedChecks(checks);
+        allMessages.addAll(messages);
         return allMessages;
     }
 
