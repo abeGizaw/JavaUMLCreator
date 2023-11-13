@@ -1,8 +1,6 @@
 package domain.abescode.alevelfeature;
-import domain.MyClassNode;
-import domain.MyFieldNode;
-import domain.MyMethodNode;
-import domain.MyOpcodes;
+import domain.*;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -31,26 +29,43 @@ public class ConvertASMToUML {
         StringBuilder classString = new StringBuilder();
 
         String classType = getClassType(myClassNode.access);
-        System.out.println(RED + myClassNode.name + RESET);
 
         if(myClassNode.name.contains("$")){
-            String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
-            
-        }
-        //Check for if it is an inner class
-        String className = myClassNode.name.contains("$") ?
-                myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1) :
-                myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-
-        if (classType.equals("enum")) {
-            classString.append(classType).append(" ").append(className);
+            convertInnerClassInfo(myClassNode, classString, classType);
         } else {
-            System.out.println(myClassNode.access);
-            String classModifier = getAccessModifier(myClassNode.access);
-            classString.append(classModifier).append(classType).append(" ").append(className);
+            convertOuterClassInfo(myClassNode, classString, classType);
         }
 
         return classString.toString();
+    }
+
+    private void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
+        if (classType.equals("enum")) {
+            classString.append(classType).append(" ").append(className);
+        } else {
+            String classModifier = getAccessModifier(myClassNode.access);
+            classString.append(classModifier).append(classType).append(" ").append(className);
+        }
+    }
+
+
+    private void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
+        MyInnerClassNode innerClassNode = findInnerClassNode(myClassNode, myClassNode.name);
+        if(innerClassNode != null){
+            String classModifier = getAccessModifier(innerClassNode.access);
+            classString.append(classModifier).append(classType).append(" ").append(className);
+        }
+    }
+
+    private MyInnerClassNode findInnerClassNode(MyClassNode myClassNode, String name) {
+        for (MyInnerClassNode icn : myClassNode.innerClasses) {
+            if (icn.name.equals(name)) {
+                return icn;
+            }
+        }
+        return null;
     }
 
     private String convertClassFields(List<MyFieldNode> fields) {
@@ -189,13 +204,6 @@ public class ConvertASMToUML {
         } else{
             modifiers.append("~");
         }
-
-//        if ((access & MyOpcodes.ACC_STATIC) != 0) {
-//            modifiers.append("{static}");
-//        }
-//        if ((access & MyOpcodes.ACC_FINAL) != 0) {
-//            modifiers.append("{final}");
-//        }
         return modifiers.toString();
     }
 

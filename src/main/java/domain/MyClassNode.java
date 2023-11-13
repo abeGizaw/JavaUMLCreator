@@ -9,5 +9,6 @@ public abstract class MyClassNode {
     public List<MyMethodNode> methods;
     public String name;
     public String superName;
+    public List<MyInnerClassNode> innerClasses;
 
 }

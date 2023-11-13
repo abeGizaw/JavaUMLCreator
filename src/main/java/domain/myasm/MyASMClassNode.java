@@ -2,9 +2,11 @@ package domain.myasm;
 
 import domain.MyClassNode;
 import domain.MyFieldNode;
+import domain.MyInnerClassNode;
 import domain.MyMethodNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InnerClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
@@ -21,6 +23,15 @@ public class MyASMClassNode extends MyClassNode {
         super.interfaces = classNode.interfaces;
         super.fields = convertFields();
         super.methods = convertMethods();
+        super.innerClasses = convertInnerClasses();
+    }
+
+    private List<MyInnerClassNode> convertInnerClasses() {
+        List<MyInnerClassNode> innerClassNodes = new ArrayList<>();
+        for(InnerClassNode icn : classNode.innerClasses){
+            innerClassNodes.add(new MyASMInnerClassNode(icn));
+        }
+        return innerClassNodes;
     }
 
     private List<MyFieldNode> convertFields() {
