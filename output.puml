@@ -1,14 +1,22 @@
 @startuml
-+class ParameterTypeVariety{
-	+ParameterTypeVariety():void
-	+singlePrimitive(int:this):void
-	+multiplePrimitives(int:this, double:a, char:b):void
-	+singleObject(String:this):void
-	+multipleObjects(String:this, Integer:s, Double:num):void
-	+mixPrimitiveAndObject(int:this, String:a, double:b):void
-	-withCollections(List<String>:this, Set<Character>:list, Map<String, Double>:set):void
-	#withArrayAndList(int[]:this, List<Double>:nums):void
-	~complexParameters(int:this, String:a, List<List<Integer>>:b, double[]:nums, Map<String, Set<Character>>:arr):void
++class LinterMain{
+	+LinterMain():void
+	+{static}main(args:String[]):void
+	-{static}parseDirectory(stream:Path):List<String>
+	-{static}lint(lintType:Set<LintType>, fileOutput:Set<LintType>, stringBuilder:Map<LintType, String>, checks:String, transformations:List<String>, diagrams:Path):List<Message>
+	-{static}writeDiagramFiles(fileOutput:String, lintType:LintType, stringBuilder:StringBuilder):void
+	-{static}promptUserForDirectory():Path
+	-{static}isValidPath(path:String):boolean
+	-{static}promptUserForOutputFileName(destinationMessage:String):String
+	-{static}promptUserForChecks():Set<LintType>
+	-{static}promptUserForPrinciples():Set<LintType>
+	-{static}promptUserForPatterns():Set<LintType>
+	-{static}promptUserForStyle():Set<LintType>
+	-{static}promptUserForTransformations():Set<LintType>
+	-{static}promptUserForDiagrams():Map<LintType, String>
+	-{static}promptUser(prompt:String):String
+	-{static}prettyPrint(message:List<Message>):void
+	-{static}saveToFile(message:List<Message>, messages:String):void
 	}
 
 @enduml

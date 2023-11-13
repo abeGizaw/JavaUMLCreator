@@ -9,10 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static presentation.ANSIColors.*;
-
 public class ConvertASMToUML implements Diagram{
-    StringBuilder classUmlContent;
+    private final StringBuilder classUmlContent;
     public ConvertASMToUML(StringBuilder classUmlContent){
         this.classUmlContent = classUmlContent;
 
@@ -78,8 +76,8 @@ public class ConvertASMToUML implements Diagram{
                 String methodName = method.name.equals("<init>") ? className : method.name;
 
                 String methodInfo = method.signature == null ?
-                        getMethodInfo(method.desc, method.localVariables) :
-                        getMethodInfo(method.signature, method.localVariables);
+                        getMethodInfo(method.desc, method) :
+                        getMethodInfo(method.signature, method);
 
                 methodString.append(methodName).append(methodInfo).append("\n\t");
             }
@@ -158,17 +156,38 @@ public class ConvertASMToUML implements Diagram{
         fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
     }
 
-    private String getMethodInfo(String desc,List<MyLocalVariableNode> localVariableNodes) {
+    private String getMethodInfo(String desc, MyMethodNode methodNode) {
         int startParams = desc.indexOf('(');
         int endParams = desc.indexOf(')');
 
         List<String> params = new ArrayList<>();
         generateListOfParams(desc.substring(startParams + 1, endParams), params);
+        List<String> paramNames = getParameterNames(methodNode, params);
 
-        String parsedParams = analyzeForParams(params, localVariableNodes);
+        String parsedParams = analyzeForParams(params, paramNames);
         String returnType = getFieldType(desc.substring(endParams+ 1));
 
         return "(" + parsedParams + "):" + returnType;
+    }
+
+    private List<String> getParameterNames(MyMethodNode methodNode, List<String> paramInfo) {
+        List<String> paramNames = new ArrayList<>();
+
+
+        int startLocalIndex = (methodNode.access & MyOpcodes.ACC_STATIC) != 0 && methodNode.localVariables != null? 0 : 1;
+
+        if (methodNode.localVariables != null) {
+            for (int i = 0; i < paramInfo.size(); i++) {
+                MyLocalVariableNode lvNode = methodNode.localVariables.get(i + startLocalIndex);
+                paramNames.add(lvNode.name);
+            }
+        } else {
+            for (int i = 0; i < paramInfo.size(); i++) {
+                paramNames.add("param" + (i + 1));
+            }
+        }
+
+        return paramNames;
     }
 
     private void generateListOfParams(String desc, List<String> params) {
@@ -228,23 +247,18 @@ public class ConvertASMToUML implements Diagram{
         }
     }
 
-    private String analyzeForParams(List<String> paramInfo, List<MyLocalVariableNode> localVariableNodes) {
+    private String analyzeForParams(List<String> paramInfo, List<String> paramNames) {
         if (paramInfo.isEmpty()) {
             return "";
         }
         StringBuilder paramsBuilder = new StringBuilder();
 
-        int localVarIndex = 1;
         for (int i = 0; i < paramInfo.size(); i++) {
-            String parameterName = localVariableNodes == null ?
-                    "Param" + localVarIndex :
-                    localVariableNodes.get(i).name;
-
+            String parameterName = paramNames.get(i);
             appendParamInfo(paramsBuilder, paramInfo.get(i), parameterName);
             if (i < paramInfo.size() - 1) {
                 paramsBuilder.append(", ");
             }
-            localVarIndex++;
         }
 
         return paramsBuilder.toString();
@@ -252,7 +266,7 @@ public class ConvertASMToUML implements Diagram{
 
     private void appendParamInfo(StringBuilder paramsBuilder, String param, String parameterName) {
         String fieldType = getFieldType(param);
-        paramsBuilder.append(fieldType).append(":").append(parameterName);
+        paramsBuilder.append(parameterName).append(":").append(fieldType);
     }
 
     private String getFieldType(String desc) {

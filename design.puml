@@ -8,7 +8,7 @@ package presentation {
         +LinterMain()
         +{static}main(args: String[]): void
         -{static}parseDirectory(directoryPath: Path): List<String>
-        -{static}lint(checks: Set<LintType>, transformations: Set<LintType>, outputPath: String, files: List<String>, directoryPath: Path): List<Message>
+        -{static}lint(checks: Set<LintType>, transformations: Set<LintType>, diagrams:Map<LintType,String>, outputPath: String, files: List<String>, directoryPath: Path): List<Message>
         -{static}promptUserForDirectory(): Path
         -{static}isValidPath(inputPath: String): boolean
         -{static}promptUserForOutputFileName(): String
@@ -17,13 +17,24 @@ package presentation {
         -{static}promptUserForPatterns(): Set<LintType>
         -{static}promptUserForStyle(): Set<LintType>
         -{static}promptUserForTransformations(): Set<LintType>
+        -{static}promptUserForDiagrams:Map<LintType,String>
         -{static}promptUser(): String
         -{static}prettyPrint(): void
         -{static}saveToFile(messages: List<Message>, outputPath: String): void
+        -{static}writeDiagramFiles(fileOutput:String, lintType:LintType, stringBuilder:StringBuilder):void
     }
 }
 
 package domain {
+   package constants{
+        +class Constants{
+            +{static}{final}PUML_TYPE: String
+            +{static}{final}OUTPUT_FOR_LINT_CHECK: String
+            +{static}{final}OUTPUT_FOR_PUML_CLASSDIAGRAM: String
+            +{static}{final}ABBREVIATION_ERROR: String
+            +{static}{final}INVALID_PACKAGE: String
+        }
+   }
 
    package checks{
         +class AdapterPattern {
@@ -219,6 +230,44 @@ package domain {
        }
     }
 
+    package diagramconverter{
+        +interface Diagram{
+        	+generateDiagramByNode(myClassNode:MyClassNode, pumlContent:StringBuilder):void
+        	+generateDiagram(classNode:List<MyClassNode>):StringBuilder
+        }
+
+        +class ConvertASMToUML{
+        	-{final} classUmlContent: StringBuilder
+        	+ConvertASMToUML(classUmlContent:StringBuilder):void
+        	+generateDiagramByNode(myClassNode:MyClassNode, pumlContent:StringBuilder):void
+        	+generateDiagram(myClassNodeList:List<MyClassNode>):StringBuilder
+        	-convertClassInfo(myClassNode:MyClassNode):String
+        	-convertClassFields(fields:List<MyFieldNode>):String
+        	-convertClassMethods(methods:List<MyMethodNode>, className:String):String
+        	-convertOuterClassInfo(myClassNode:MyClassNode, classString:StringBuilder, classType:String):void
+        	-convertInnerClassInfo(myClassNode:MyClassNode, classString:StringBuilder, classType:String):void
+        	-getClassType(access:int):String
+        	-findInnerClassNode(myClassNode:MyClassNode, name:String):MyInnerClassNode
+        	-methodIsUserGenerated(method:MyMethodNode):boolean
+        	-appendFieldInfo(fieldString:StringBuilder, field:MyFieldNode):void
+        	-getMethodInfo(desc:String, methodNode:MyMethodNode):String
+        	-getParameterNames(methodNode:MyMethodNode, paramInfo:List<String>):List<String>
+        	-generateListOfParams(desc:String, params:List<String>):void
+        	-processObjectDescriptor(desc:String):String
+        	-processArrayDescriptor(desc:String):String
+        	-analyzeForParams(paramInfo:List<String>, paramNames:List<String>):String
+        	-appendParamInfo(paramsBuilder:StringBuilder, param:String, parameterName:String):void
+        	-getFieldType(desc:String):String
+        	-getCollectionType(desc:String):String
+        	-isSynthetic(access:int):boolean
+        	-isPrimitive(desc:String):boolean
+        	-getPrimitiveFieldType(desc:String):String
+        	-getAccessModifier(access:int):String
+        	-getNonAccessModifiers(access:int):String
+        }
+
+    }
+
     package myasm {
         +class MyASMAbstractInsnNodeFactory{
             +MyASMAbstractInsnNode(abstractInsnNode: AbstractInsnNode)
@@ -231,6 +280,7 @@ package domain {
             +getClassNode(): ClassNode
             -convertFields(): List<MyFieldNode>
             -convertMethods(): List<MyMethodNode>
+            -convertInnerClasses(): List<MyInnerClassNode>
         }
 
         +class MyASMClassNodeCreator {
@@ -319,6 +369,11 @@ package domain {
             +getOpcode(): int
             +getType(): int
         }
+
+        +class MyASMInnerClassNode{
+        	-{final} innerClassNode: InnerClassNode
+        	+MyASMInnerClassNode(icn:InnerClassNode):void
+        }
     }
 
      +class Linter {
@@ -326,11 +381,14 @@ package domain {
         -{final}myClassNodes: List<MyClassNode>
         -{final}checkTypeToCheck: Map<LintType, Check>
         -{final}transformationTypeToTransformation: Map<LintType, Transformation>
+        -{final}diagramTypeToDiagram: Map<LintType, Diagram>
         +Linter(classPaths: List<String>, myClassNodeCreator: MyClassNodeCreator, outputPath: String)
         +runSelectedChecks(lintTypes: Set<LintType>): List<Message>
         +runSelectedTransformations(transformations: Set<LintType>): List<Message>
+        +generateDiagrams(Set<LintType> diagrams):Map<StringBuilder,LintType>
         -populateTransformMap(outputPath: String): void
         -populateCheckMap(): void
+        -populateDiagramMap():void
         -createClassNodes(classPaths: List<String>): List<MyClassNode>
         -runCheckOnAllNodes(lintType: LintType): List<Message>
         }
@@ -345,7 +403,8 @@ package domain {
         PLK,
         TEMPLATE_METHOD_PATTERN,
         STRATEGY_PATTERN,
-        ADAPTER_PATTERN
+        ADAPTER_PATTERN,
+        UML_CONVERTER
     }
 
     +class Message {
@@ -379,6 +438,7 @@ package domain {
         +methods: List<MyMethodNode>
         +name: String
         +superName: String
+        +innerClasses: List<MyInnerClassNode>
     }
 
     +interface MyClassNodeCreator {
@@ -400,6 +460,7 @@ package domain {
         +access: int
         +desc: String
         +name: String
+        +signature: String
     }
 
     +interface MyLabel {
@@ -412,6 +473,7 @@ package domain {
         +instructions: List<MyAbstractInsnNode>
         +localVariables: List<MyLocalVariableNode>
         +name: String
+        +signature: String
     }
 
     +abstract class MyLocalVariableNode {
@@ -445,35 +507,45 @@ package domain {
         +{abstract}getType(typeDescriptor: String): MyType
     }
 
+    +abstract class MyInnerClassNode{
+        +access: int
+        +name: String
+    }
+
+
     +interface MyOpcodes {
-        ACC_ABSTRACT: int
-        ACC_ENUM: int
-        ACC_FINAL: int
-        ACC_INTERFACE: int
-        ACC_STATIC: int
-        GETFIELD: int
-        GETSTATIC: int
-        PUTFIELD: int
-        PUTSTATIC: int
-        H_INVOKEINTERFACE: int
-        H_INVOKESPECIAL: int
-        H_INVOKESTATIC: int
-        H_INVOKEVIRTUAL: int
-        INVOKEDYNAMIC: int
-        INVOKEINTERFACE: int
-        INVOKESPECIAL: int
-        INVOKEVIRTUAL: int
-        ALOAD: int
-        DLOAD: int
-        FLOAD: int
-        ILOAD: int
-        LLOAD: int
-        ASTORE: int
-        DSTORE: int
-        FSTORE: int
-        ISTORE: int
-        LSTORE: int
-        ASM8: int
+        {static}{final}ACC_PUBLIC: int
+        {static}{final}ACC_ABSTRACT: int
+        {static}{final}ACC_ENUM: int
+        {static}{final}ACC_FINAL: int
+        {static}{final}ACC_INTERFACE: int
+        {static}{final}ACC_STATIC: int
+        {static}{final}ACC_PRIVATE: int
+        {static}{final}ACC_PROTECTED: int
+        {static}{final}ACC_SYNTHETIC:int
+        {static}{final}GETFIELD: int
+        {static}{final}GETSTATIC: int
+        {static}{final}PUTFIELD: int
+        {static}{final}PUTSTATIC: int
+        {static}{final}H_INVOKEINTERFACE: int
+        {static}{final}H_INVOKESPECIAL: int
+        {static}{final}H_INVOKESTATIC: int
+        {static}{final}H_INVOKEVIRTUAL: int
+        {static}{final}INVOKEDYNAMIC: int
+        {static}{final}INVOKEINTERFACE: int
+        {static}{final}INVOKESPECIAL: int
+        {static}{final}INVOKEVIRTUAL: int
+        {static}{final}ALOAD: int
+        {static}{final}DLOAD: int
+        {static}{final}FLOAD: int
+        {static}{final}ILOAD: int
+        {static}{final}LLOAD: int
+        {static}{final}ASTORE: int
+        {static}{final}DSTORE: int
+        {static}{final}FSTORE: int
+        {static}{final}ISTORE: int
+        {static}{final}LSTORE: int
+        {static}{final}ASM8: int
     }
 }
 
@@ -495,6 +567,14 @@ package datasource {
     +class ByteCodeExporter{
         +save(outputPath: String, className: String, byteCode: byte[]): void
         -createDirectory(path: String): void
+    }
+
+    +interface Logger{
+        +write(diagramInfo: StringBuilder, fileType:String):void
+    }
+    +class DiagramLogger implements Logger{
+        -{final}outputPath: String
+        +DiagramLogger(outputPath: String)
     }
     note left of ByteCodeExporter
         ByteCodeExporter depends on File
@@ -534,6 +614,10 @@ package org.objectweb.asm {
    }
    +class ClassWriter{
    }
+   +class Type{
+   }
+   +class InnerClassNode{
+   }
 }
 
 LinterMain ..> Linter
@@ -542,6 +626,7 @@ LinterMain ..> Message
 LinterMain ..> MyASMClassNodeCreator
 LinterMain ..> MyClassNodeCreator
 LinterMain ..> Saver
+LinterMain ..> Logger
 
 Linter --> "*"Check
 Linter ..> Check
@@ -554,6 +639,8 @@ Linter -> "*"LintType
 Linter ..> LintType
 Linter -->"*" Transformation
 Linter ...> Transformation
+Linter -->"*" Diagram
+Linter ..> Diagram
 
 Message --> LintType
 
@@ -567,11 +654,13 @@ MyASMMethodInsnNode ..up|> MyMethodInsnNode
 MyMethodInsnNode -up-|> MyAbstractInsnNode
 MyASMMethodNode -up-|> MyMethodNode
 MyASMVarInsnNode -up|> MyVarInsnNode
+MyASMInnerClassNode -up|> MyInnerClassNode
 MyLabelNode -|> MyAbstractInsnNode
 MyVarInsnNode -up-|> MyAbstractInsnNode
 MyASMFieldInsnNode -up-|> MyFieldInsnNode
 MyFieldInsnNode -up-|> MyAbstractInsnNode
 MyDefaultInsnNode -up-|> MyAbstractInsnNode
+
 
 MyASMAbstractInsnNodeFactory ..> MyAbstractInsnNode
 MyASMAbstractInsnNodeFactory ..> MyASMFieldInsnNode
@@ -696,6 +785,15 @@ DeleteUnusedFields .> MyOpcodes
 Transformation .> Message
 Transformation .> MyClassNode
 
+Diagram .> MyClassNode
+
+ConvertASMToUML ..> MyClassNode
+ConvertASMToUML ..> MyFieldNode
+ConvertASMToUML ..> MyMethodNode
+ConvertASMToUML ..> MyLocalVariableNode
+ConvertASMToUML ..> MyInnerClassNode
+
+
 CustomMethodVisitor -|> MethodVisitor
 CustomMethodVisitor .> MethodVisitor
 
@@ -715,6 +813,7 @@ MyASMClassNode ..> MyASMFieldNode
 MyASMClassNode ..> MyFieldNode
 MyASMClassNode ..> MyASMMethodNode
 MyASMClassNode ..> MyMethodNode
+MyASMClassNode ..> MyInnerClassNode
 
 MyASMClassNodeCreator ..|> MyClassNodeCreator
 MyASMClassNodeCreator ..> ClassNode
@@ -774,6 +873,7 @@ MyASMVarInsnNode ..> VarInsnNode
 
 MyClassNode -->"*" MyFieldNode
 MyClassNode -->"*" MyMethodNode
+MyClassNode --> "*" MyInnerClassNode
 
 MyLabelNode ..> MyLabel
 
