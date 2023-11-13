@@ -1,17 +1,13 @@
 package domain.abescode;
 
-import domain.Message;
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
 import domain.abescode.alevelfeature.ConvertASMToUML;
-import domain.checks.HiddenFields;
 import domain.myasm.MyASMClassNodeCreator;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -53,6 +49,7 @@ public class AbesMain {
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
         ConvertASMToUML ASMConverter = new ConvertASMToUML();
         ASMConverter.run(myClassNode, umlBuilder);
+        umlBuilder.append("\n");
         System.out.println("\n");
     }
 }

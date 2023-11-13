@@ -1,19 +1,29 @@
 @startuml
-+class ConvertASMToUML{
-+ConvertASMToUML():void
-+run():void
--generateUmlDiagram():void
--convertClassInfo():String
--convertClassFields():String
--convertClassMethods():String
--getMethodInfo():String
--getFieldType():String
--getCollectionType():String
--appendFieldInfo():void
--isSynthetic():boolean
--getPrimitiveFieldType():String
--getAccessModifier():String
--getNonAccessModifiers():String
--getClassType():String
++interface Transformation{
++{abstract}run():List<Message>
 }
+
++class DeleteUnusedFields{
+-{final} modifiedClassNodes: List<ClassNode>
+-{final} outputPath: String
+-{final} byteCodeExporter: Exporter
++DeleteUnusedFields():void
++run():List<Message>
+-deleteUnusedFields():ClassNode
+-exportModifiedClassNodes():List<Message>
+}
+
+~class CustomMethodVisitor{
+-{final} fieldsToRemove: List<String>
++FieldsRemover$CustomMethodVisitor():void
++visitFieldInsn():void
+}
+
++class FieldsRemover{
+-{final} fieldsToRemove: List<String>
++FieldsRemover():void
++visitField():FieldVisitor
++visitMethod():MethodVisitor
+}
+
 @enduml

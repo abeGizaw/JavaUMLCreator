@@ -31,11 +31,21 @@ public class ConvertASMToUML {
         StringBuilder classString = new StringBuilder();
 
         String classType = getClassType(myClassNode.access);
-        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
+        System.out.println(RED + myClassNode.name + RESET);
+
+        if(myClassNode.name.contains("$")){
+            String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
+            
+        }
+        //Check for if it is an inner class
+        String className = myClassNode.name.contains("$") ?
+                myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1) :
+                myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
 
         if (classType.equals("enum")) {
             classString.append(classType).append(" ").append(className);
         } else {
+            System.out.println(myClassNode.access);
             String classModifier = getAccessModifier(myClassNode.access);
             classString.append(classModifier).append(classType).append(" ").append(className);
         }
@@ -55,8 +65,7 @@ public class ConvertASMToUML {
     private String convertClassMethods(List<MyMethodNode> methods, String className) {
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
-            //check for syntheitc methods and lambda methods
-            if ((method.access & MyOpcodes.ACC_SYNTHETIC) == 0 && !method.name.startsWith("lambda$")) {
+            if (methodIsUserGenerated(method)) {
                 String accessModifier = getAccessModifier(method.access);
                 String nonAccessModifier = getNonAccessModifiers(method.access);
                 methodString.append(accessModifier).append(nonAccessModifier);
@@ -68,6 +77,18 @@ public class ConvertASMToUML {
             }
         }
         return methodString.toString();
+    }
+
+    private boolean methodIsUserGenerated(MyMethodNode method) {
+        if((method.access & MyOpcodes.ACC_SYNTHETIC) != 0 || method.name.startsWith("lambda$")){
+            return false;
+        }
+        //inner class
+        System.out.println(method.name);
+        if (method.name.contains("$")) {
+            return false;
+        }
+        return !method.name.equals("<clinit>");
     }
 
     private String getMethodInfo(String desc) {
