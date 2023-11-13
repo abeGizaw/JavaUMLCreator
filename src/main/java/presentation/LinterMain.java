@@ -75,7 +75,7 @@ public class LinterMain {
     private static Path promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
         if (!isValidPath(userInput)) {
-            System.err.println("Invalid package");
+            System.err.println(INVALID_PACKAGE);
             return promptUserForDirectory();
         } else {
             return Path.of(userInput);
@@ -139,7 +139,7 @@ public class LinterMain {
                 case "NONE":
                     break;
                 default:
-                    System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                    System.out.println(ABBREVIATION_ERROR);
                     promptUserForPrinciples();
             }
 
@@ -173,7 +173,7 @@ public class LinterMain {
                 case "NONE":
                     break;
                 default:
-                    System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                    System.out.println(ABBREVIATION_ERROR);
                     promptUserForPatterns();
             }
         }
@@ -209,7 +209,7 @@ public class LinterMain {
                 case "NONE":
                     break;
                 default:
-                    System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                    System.out.println(ABBREVIATION_ERROR);
                     promptUserForStyle();
             }
         }
@@ -227,7 +227,7 @@ public class LinterMain {
             case "NONE":
                 break;
             default:
-                System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                System.out.println(ABBREVIATION_ERROR);
                 promptUserForTransformations();
         }
         return transformations;
@@ -244,7 +244,7 @@ public class LinterMain {
             case "NONE":
                 break;
             default:
-                System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                System.out.println(ABBREVIATION_ERROR);
                 promptUserForDiagrams();
         }
         return diagrams;
