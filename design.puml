@@ -37,8 +37,7 @@ package domain {
             -getNotJavaClassFieldTypes(myClassNode: MyClassNode): List<String>
             -fieldTypeIsClass(fieldType: String): boolean
             -findAdapterPatternClients(possibleAdapterPatterns: List<AdapterPatternClasses>): List<AdapterPatternClasses>
-            -getAdapterPatternClassesForInterface(interfaceName: String
-            possibleAdapterPatterns: List<AdapterPatternClasses>, myClassNode: MyClassNode): List<AdapterPatternClasses>
+            -getAdapterPatternClassesForInterface(interfaceName: String, possibleAdapterPatterns: List<AdapterPatternClasses>, myClassNode: MyClassNode): List<AdapterPatternClasses>
             -createMessages(adapterPatterns: List<AdapterPatternClasses>): List<Message>
         }
 
@@ -166,8 +165,7 @@ package domain {
             -getClassName(desc: String): String
             -isPrimitive(desc: String): boolean
             -isJavaAPIClass(className: String): boolean
-            -readJavaDefinedClass(classNode: MyClassNode, classNamePath: String , field: MyFieldNode, invalidUses: List<Message>): void
-            -readUserDefinedClass(classNode: MyClassNode, classNamePath: String , field: MyFieldNode, invalidUses: List<Message>): void
+            -checkFieldClassNode(classNode: MyClassNode, fieldClassNode: MyClassNode , field: MyFieldNode, invalidUses: List<Message>): void
             -implementsInterfaceOrExtendsClass(fieldClassNode: MyClassNode): boolean
             -checkIfAbstract(superName: String): boolean
         }

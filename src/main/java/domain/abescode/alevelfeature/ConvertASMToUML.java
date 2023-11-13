@@ -16,7 +16,7 @@ public class ConvertASMToUML {
 
     private void generateUmlDiagram(MyClassNode myClassNode, StringBuilder pumlContent) {
         pumlContent.append(convertClassInfo(myClassNode));
-        pumlContent.append("{\n");
+        pumlContent.append("{\n\t");
 
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
         pumlContent.append(convertClassFields(myClassNode.fields));
@@ -88,7 +88,7 @@ public class ConvertASMToUML {
                 String methodName = method.name.equals("<init>") ? className : method.name;
 
                 String methodInfo = method.signature == null ? getMethodInfo(method.desc) : getMethodInfo(method.signature);
-                methodString.append(methodName).append(methodInfo).append("\n");
+                methodString.append(methodName).append(methodInfo).append("\n\t");
             }
         }
         return methodString.toString();
@@ -99,7 +99,6 @@ public class ConvertASMToUML {
             return false;
         }
         //inner class
-        System.out.println(method.name);
         if (method.name.contains("$")) {
             return false;
         }
@@ -152,7 +151,7 @@ public class ConvertASMToUML {
         }
 
         if ((field.access & MyOpcodes.ACC_ENUM) != 0 && (field.access & MyOpcodes.ACC_STATIC) != 0) {
-            fieldString.append(field.name).append("\n");
+            fieldString.append(field.name).append("\n\t");
             return;
         }
 
@@ -162,7 +161,7 @@ public class ConvertASMToUML {
 
 
         String descName = (field.signature != null) ? getFieldType(field.signature) : getFieldType(field.desc);
-        fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n");
+        fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
     }
 
     private boolean isSynthetic(int access) {

@@ -43,7 +43,7 @@ public class ProgramInterfaceNotImplementation implements Check {
         return desc.substring(1, desc.length() - 1);
     }
 
-    boolean isPrimitive(String desc) {
+    private boolean isPrimitive(String desc) {
         if (desc.startsWith("[")) {
             return isPrimitive(desc.substring(1));
         }
