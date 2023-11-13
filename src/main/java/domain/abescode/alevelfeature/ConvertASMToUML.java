@@ -55,13 +55,17 @@ public class ConvertASMToUML {
     private String convertClassMethods(List<MyMethodNode> methods, String className) {
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
-            String accessModifier = getAccessModifier(method.access);
-            String nonAccessModifier = getNonAccessModifiers(method.access);
-            methodString.append(accessModifier).append(nonAccessModifier);
+            //check for syntheitc methods and lambda methods
+            if ((method.access & MyOpcodes.ACC_SYNTHETIC) == 0 && !method.name.startsWith("lambda$")) {
+                String accessModifier = getAccessModifier(method.access);
+                String nonAccessModifier = getNonAccessModifiers(method.access);
+                methodString.append(accessModifier).append(nonAccessModifier);
 
-            String methodName = method.name.equals("<init>") ? className : method.name;
-            String methodInfo = method.signature == null ? getMethodInfo(method.desc) : getMethodInfo(method.signature);
-            methodString.append(methodName).append(methodInfo).append("\n");
+                String methodName = method.name.equals("<init>") ? className : method.name;
+
+                String methodInfo = method.signature == null ? getMethodInfo(method.desc) : getMethodInfo(method.signature);
+                methodString.append(methodName).append(methodInfo).append("\n");
+            }
         }
         return methodString.toString();
     }
@@ -73,7 +77,6 @@ public class ConvertASMToUML {
         String params = desc.substring(startParams + 1, endParams);
         String returnType = getFieldType(desc.substring(endParams+ 1));
 
-        System.out.println(params);
         return "():" + returnType;
     }
 
