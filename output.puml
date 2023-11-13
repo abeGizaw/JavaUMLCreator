@@ -1,12 +1,449 @@
 @startuml
-+class ReturnTypeVariety{
-+ReturnTypeVariety():void
-+returnInt():int
-+returnString():String
--returnList():List<Integer>
-#returnSet():Set<Character>
-~returnCharacter():Character
-+returnArray():double[]
-+returnMap():Map<String, List<Double>>
++class ConvertASMToUML{
++ConvertASMToUML():void
++run():void
+-generateUmlDiagram():void
+-convertClassInfo():String
+-convertClassFields():String
+-convertClassMethods():String
+-getMethodInfo():String
+-getFieldType():String
+-getCollectionType():String
+-appendFieldInfo():void
+-isSynthetic():boolean
+-getPrimitiveFieldType():String
+-getAccessModifier():String
+-getNonAccessModifiers():String
+-getClassType():String
+-lambda$getCollectionType$0():String
+}
++class MakeUmlMock{
++MakeUmlMock():void
++{static}main():void
++{static}generatePumlForClass():void
+}
++class AbesMain{
+-{static}{final} creator: MyClassNodeCreator
+-{static} umlBuilder: StringBuilder
++AbesMain():void
++{static}main():void
+-{static}processClassFile():void
+-{static}lambda$main$0():boolean
+~{static}<clinit>():void
+}
++abstract class MyClassNode{
++ access: int
++ fields: List<MyFieldNode>
++ interfaces: List<String>
++ methods: List<MyMethodNode>
++ name: String
++ superName: String
++MyClassNode():void
+}
++abstract class MyFieldNode{
++ access: int
++ desc: String
++ name: String
++ signature: String
++MyFieldNode():void
+}
++abstract class MyMethodNode{
++ access: int
++ desc: String
++ instructions: List<MyAbstractInsnNode>
++ localVariables: List<MyLocalVariableNode>
++ name: String
++ signature: String
++MyMethodNode():void
+}
++abstract class MyAbstractInsnNode{
++{static}{final} FIELD_INSN: int
++{static}{final} LABEL: int
++{static}{final} METHOD_INSN: int
++{static}{final} VAR_INSN: int
++MyAbstractInsnNode():void
++{abstract}getNext():MyAbstractInsnNode
++{abstract}getOpcode():int
++{abstract}getType():int
+}
++abstract class MyLocalVariableNode{
++ end: MyLabelNode
++ index: int
++ name: String
++ start: MyLabelNode
++MyLocalVariableNode():void
+}
++abstract class MyLabelNode{
++MyLabelNode():void
++{abstract}getLabel():MyLabel
+}
++interface MyLabel{
++{abstract}equals():boolean
+}
++interface MyClassNodeCreator{
++{abstract}createMyClassNodeFromName():MyClassNode
++{abstract}createMyClassNodeFromFile():MyClassNode
++{abstract}createUniqueMyClassNodeFromName():MyClassNode
+}
++class MyDefaultInsnNode{
++MyDefaultInsnNode():void
++getNext():MyAbstractInsnNode
++getOpcode():int
++getType():int
+}
++abstract class MyFieldInsnNode{
++ desc: String
++ name: String
++ owner: String
++MyFieldInsnNode():void
+}
++abstract class MyMethodInsnNode{
++ desc: String
++ name: String
++ owner: String
++MyMethodInsnNode():void
+}
++abstract class MyType{
++MyType():void
++{abstract}getArgumentTypes():MyType[]
++{abstract}getType():MyType
+}
++abstract class MyVarInsnNode{
++ var: int
++MyVarInsnNode():void
+}
++class AdapterPattern{
+- myClassNodes: List<MyClassNode>
+- classNames: List<String>
+- interfaceNames: Set<String>
++AdapterPattern():void
++run():List<Message>
+-findAdapterPatterns():List<AdapterPatternClasses>
+-getImplementedInterfaces():List<String>
+-getNotJavaClassFieldTypes():List<String>
+-fieldTypeIsClass():boolean
+-findAdapterPatternClients():List<AdapterPatternClasses>
+-getAdapterPatternClassesForInterface():List<AdapterPatternClasses>
+-createMessages():List<Message>
+}
++interface Check{
++{abstract}run():List<Message>
+}
++class AdapterPatternClasses{
+- adapter: String
+- target: String
+- adaptee: String
+- client: String
++AdapterPatternClasses():void
++AdapterPatternClasses():void
++getAdapter():String
++getTarget():String
++getAdaptee():String
++getClient():String
+}
++class FinalLocalVariables{
+-{static}{final} STORE_OPCODES: Set<Integer>
+- localVariableManager: LocalVariableManager
++FinalLocalVariables():void
++run():List<Message>
+-checkMethodForFinalLocalVariables():void
+-handleValueStored():void
+-createMessagesForMethod():List<Message>
+~{static}<clinit>():void
+}
++class LocalVariableManager{
+-{static}{final} STORE_OPCODES: Set<Integer>
+-{static}{final} LOAD_OPCODES: Set<Integer>
+- localVariables: Set<LocalVariableInfo>
+- parameters: Set<LocalVariableInfo>
+- createdVariables: Set<LocalVariableInfo>
+- prevInsnIsLabel: boolean
+- prevInsn: MyAbstractInsnNode
++LocalVariableManager():void
+-loadLocalVariables():void
++updateVariableScopes():void
+-setInScopeVariables():void
+-setOutOfScopeVariables():void
++addCreatedVariable():void
++isCreatedVariable():boolean
++isParameter():boolean
++getVariableAtIndex():LocalVariableInfo
++getHasBeenStoredOnce():Set<LocalVariableInfo>
+~{static}<clinit>():void
+}
++class LocalVariableInfo{
+-{final} name: String
+-{final} firstLabel: MyLabel
+-{final} lastLabel: MyLabel
+-{final} index: int
+- isInScope: boolean
+- hasBeenStored: boolean
+- hasBeenStoredOnce: boolean
++LocalVariableInfo():void
++setIsInScope():void
++setHasBeenStored():void
++setHasBeenStoredOnce():void
++getName():String
++getFirstLabel():MyLabel
++getLastLabel():MyLabel
++getIndex():int
++getIsInScope():boolean
++getHasBeenStored():boolean
++getHasBeenStoredOnce():boolean
+}
++class PrincipleOfLeastKnowledge{
+-{static}{final} METHOD_OPCODES: Set<Integer>
+-{final} instructionStack: Stack<MyAbstractInsnNode>
++PrincipleOfLeastKnowledge():void
++run():List<Message>
+-checkMethod():List<String>
+-isConstructor():boolean
+-getInvalidReceiverNode():String
+-removeMethodArgument():void
+-createMessagesForMethod():List<Message>
+~{static}<clinit>():void
+}
++class NamingConventionCheck{
++NamingConventionCheck():void
++run():List<Message>
+-checkClassName():Message
+-checkFieldNames():List<Message>
+-checkMethodName():List<Message>
+-invalidCamelCase():boolean
+-invalidPascalCase():boolean
+-isAllCaps():boolean
+}
++class StrategyPattern{
+-{final} myClassNodeCreator: MyClassNodeCreator
++StrategyPattern():void
++run():List<Message>
+-checkForStrategyPattern():List<Message>
+-checkFieldForStrategyPattern():Message
+-fieldIsAbstractAndValidClass():boolean
+-fieldIsAbstractType():boolean
+-findSetter():String
+}
++class HiddenFields{
++HiddenFields():void
++run():List<Message>
+-checkFieldHiding():List<Message>
+}
++class ProgramInterfaceNotImplementation{
+-{final} classNodeCreator: MyClassNodeCreator
++ProgramInterfaceNotImplementation():void
++run():List<Message>
+-checkImplementInterface():List<Message>
+-getClassName():String
+~isPrimitive():boolean
+-isJavaAPIClass():boolean
+-readJavaDefinedClass():void
+-readUserDefinedClass():void
+-implementsInterfaceOrExtendsAbstractClass():boolean
+-checkIfAbstract():boolean
+}
++class TemplateMethodPattern{
++TemplateMethodPattern():void
++run():List<Message>
+-detectTemplateMethod():List<Message>
+-containsAbstractMethodCall():boolean
+-similarAbstractMethodInsn():boolean
+-isAMethodCall():boolean
+}
++class CompositionOverInheritance{
++CompositionOverInheritance():void
++run():List<Message>
+-checkForInheritance():List<Message>
+}
++class DetectUnusedFields{
+-{final} classNodes: List<MyClassNode>
+-{final} fieldUsageMap: Map<MyFieldNode, Boolean>
+-{final} fieldToClass: Map<MyFieldNode, MyClassNode>
+-{final} nameToFieldNode: Map<String, MyFieldNode>
++DetectUnusedFields():void
++run():List<Message>
+-detectAllUnusedFields():void
+-populateFieldMaps():void
++getNamesToDelete():List<String>
+-generateUnusedMessages():List<Message>
+}
++class Message{
+-{final} lintType: LintType
+-{final} message: String
+-{final} classOfInterest: String
++Message():void
++getCheckType():LintType
++getMessage():String
++getClassesOfInterest():String
++toString():String
++equals():boolean
++hashCode():int
+}
+enum LintType{
+HIDDEN_FIELDS
+NAMING_CONVENTION
+FINAL_LOCAL_VARIABLES
+UNUSED_FIELD
+INTERFACE_OVER_IMPLEMENTATION
+COMPOSITION_OVER_INHERITANCE
+PLK
+TEMPLATE_METHOD_PATTERN
+STRATEGY_PATTERN
+ADAPTER_PATTERN
++{static}values():LintType[]
++{static}valueOf():LintType
+-LintType():void
+~{static}<clinit>():void
+}
++class MyASMAbstractInsnNodeFactory{
++MyASMAbstractInsnNodeFactory():void
++constructTypedInsnNode():MyAbstractInsnNode
+}
++class MyASMFieldInsnNode{
+-{final} fieldInsnNode: FieldInsnNode
+-{final} factory: MyASMAbstractInsnNodeFactory
++MyASMFieldInsnNode():void
++getNext():MyAbstractInsnNode
++getOpcode():int
++getType():int
+}
++class MyASMFieldNode{
+-{final} fieldNode: FieldNode
++MyASMFieldNode():void
+}
++class MyASMLabel{
+-{final} label: Label
++MyASMLabel():void
++equals():boolean
++getLabel():Label
+}
++class MyASMLabelNode{
+-{final} labelNode: LabelNode
+-{final} factory: MyASMAbstractInsnNodeFactory
++MyASMLabelNode():void
++getNext():MyAbstractInsnNode
++getOpcode():int
++getType():int
++getLabel():MyLabel
+}
++class MyASMLocalVariableNode{
+-{final} localVariableNode: LocalVariableNode
++MyASMLocalVariableNode():void
+}
++class MyASMMethodInsnNode{
+-{final} methodInsnNode: MethodInsnNode
+-{final} factory: MyASMAbstractInsnNodeFactory
++MyASMMethodInsnNode():void
++getNext():MyAbstractInsnNode
++getOpcode():int
++getType():int
+}
++class MyASMMethodNode{
+-{final} methodNode: MethodNode
+-{final} factory: MyASMAbstractInsnNodeFactory
++MyASMMethodNode():void
+-convertInstructionNodes():List<MyAbstractInsnNode>
+-convertLocalVariableNodes():List<MyLocalVariableNode>
+}
++class MyASMType{
+-{final} type: Type
++MyASMType():void
++MyASMType():void
++getArgumentTypes():MyType[]
++getType():MyType
+}
++class MyASMVarInsnNode{
+-{final} varInsnNode: VarInsnNode
+-{final} factory: MyASMAbstractInsnNodeFactory
++MyASMVarInsnNode():void
++getNext():MyAbstractInsnNode
++getOpcode():int
++getType():int
+}
++class MyASMClassNode{
+-{final} classNode: ClassNode
++MyASMClassNode():void
+-convertFields():List<MyFieldNode>
+-convertMethods():List<MyMethodNode>
++getClassNode():ClassNode
+}
++class MyASMClassNodeCreator{
+-{final} directoryPath: Path
+-{final} PACKAGE_NOT_FOUND: int
++MyASMClassNodeCreator():void
+-createMyClassNode():MyClassNode
++createMyClassNodeFromName():MyClassNode
++createMyClassNodeFromFile():MyClassNode
++createUniqueMyClassNodeFromName():MyClassNode
+-findRelativePath():String
+}
++interface MyOpcodes{
++{static}{final} ACC_PUBLIC: int
++{static}{final} ACC_PRIVATE: int
++{static}{final} ACC_PROTECTED: int
++{static}{final} H_INVOKEVIRTUAL: int
++{static}{final} H_INVOKESTATIC: int
++{static}{final} H_INVOKESPECIAL: int
++{static}{final} ACC_STATIC: int
++{static}{final} H_INVOKEINTERFACE: int
++{static}{final} ACC_FINAL: int
++{static}{final} ILOAD: int
++{static}{final} LLOAD: int
++{static}{final} FLOAD: int
++{static}{final} DLOAD: int
++{static}{final} ALOAD: int
++{static}{final} ISTORE: int
++{static}{final} LSTORE: int
++{static}{final} FSTORE: int
++{static}{final} DSTORE: int
++{static}{final} ASTORE: int
++{static}{final} GETSTATIC: int
++{static}{final} PUTSTATIC: int
++{static}{final} GETFIELD: int
++{static}{final} PUTFIELD: int
++{static}{final} INVOKEVIRTUAL: int
++{static}{final} INVOKESPECIAL: int
++{static}{final} INVOKEINTERFACE: int
++{static}{final} INVOKEDYNAMIC: int
++{static}{final} ACC_INTERFACE: int
++{static}{final} ACC_ABSTRACT: int
++{static}{final} ACC_SYNTHETIC: int
++{static}{final} ACC_ENUM: int
++{static}{final} ASM8: int
+}
++class Linter{
+-{final} creator: MyClassNodeCreator
+-{final} myClassNodes: List<MyClassNode>
+-{final} checkTypeToCheck: Map<LintType, Check>
+-{final} transformationTypeToTransformation: Map<LintType, Transformation>
++Linter():void
+-populateTransformMap():void
+-populateCheckMap():void
+-createClassNodes():List<MyClassNode>
++runSelectedChecks():List<Message>
+-runCheckOnAllNodes():List<Message>
++runSelectedTransformations():List<Message>
+}
++interface Transformation{
++{abstract}run():List<Message>
+}
++class DeleteUnusedFields{
+-{final} modifiedClassNodes: List<ClassNode>
+-{final} outputPath: String
+-{final} byteCodeExporter: Exporter
++DeleteUnusedFields():void
++run():List<Message>
+-deleteUnusedFields():ClassNode
+-exportModifiedClassNodes():List<Message>
+}
+~class FieldsRemover$CustomMethodVisitor{
+-{final} fieldsToRemove: List<String>
++FieldsRemover$CustomMethodVisitor():void
++visitFieldInsn():void
+}
++class FieldsRemover{
+-{final} fieldsToRemove: List<String>
++FieldsRemover():void
++visitField():FieldVisitor
++visitMethod():MethodVisitor
 }
 @enduml

@@ -56,10 +56,9 @@ public class ConvertASMToUML {
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
             String accessModifier = getAccessModifier(method.access);
-            methodString.append(accessModifier);
-            if ((method.access & MyOpcodes.ACC_ABSTRACT) != 0) {
-                methodString.append("{abstract}");
-            }
+            String nonAccessModifier = getNonAccessModifiers(method.access);
+            methodString.append(accessModifier).append(nonAccessModifier);
+
             String methodName = method.name.equals("<init>") ? className : method.name;
             String methodInfo = method.signature == null ? getMethodInfo(method.desc) : getMethodInfo(method.signature);
             methodString.append(methodName).append(methodInfo).append("\n");
@@ -119,8 +118,12 @@ public class ConvertASMToUML {
         }
 
         String accessModifier = getAccessModifier(field.access);
+        String nonAccessModifier = getNonAccessModifiers(field.access);
+        fieldString.append(accessModifier).append(nonAccessModifier);
+
+
         String descName = (field.signature != null) ? getFieldType(field.signature) : getFieldType(field.desc);
-        fieldString.append(accessModifier).append(" ").append(field.name).append(": ").append(descName).append("\n");
+        fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n");
     }
 
     private boolean isSynthetic(int access) {
@@ -163,11 +166,25 @@ public class ConvertASMToUML {
             modifiers.append("~");
         }
 
+//        if ((access & MyOpcodes.ACC_STATIC) != 0) {
+//            modifiers.append("{static}");
+//        }
+//        if ((access & MyOpcodes.ACC_FINAL) != 0) {
+//            modifiers.append("{final}");
+//        }
+        return modifiers.toString();
+    }
+
+    private String getNonAccessModifiers(int access){
+        StringBuilder modifiers = new StringBuilder();
         if ((access & MyOpcodes.ACC_STATIC) != 0) {
             modifiers.append("{static}");
         }
         if ((access & MyOpcodes.ACC_FINAL) != 0) {
             modifiers.append("{final}");
+        }
+        if((access & MyOpcodes.ACC_ABSTRACT) != 0 && (access & MyOpcodes.ACC_INTERFACE) == 0){
+            modifiers.append("{abstract}");
         }
         return modifiers.toString();
     }

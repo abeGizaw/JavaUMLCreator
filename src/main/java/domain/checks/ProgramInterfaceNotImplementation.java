@@ -24,11 +24,13 @@ public class ProgramInterfaceNotImplementation implements Check {
 
             String className = getClassName(field.desc);
 
+            MyClassNode fieldClassNode;
             if (isJavaAPIClass(className)) {
-                readJavaDefinedClass(classNode, className, field, invalidUses);
+                fieldClassNode = classNodeCreator.createMyClassNodeFromName(className);
             } else {
-                readUserDefinedClass(classNode, className, field, invalidUses);
+                fieldClassNode = classNodeCreator.createUniqueMyClassNodeFromName(className);
             }
+            checkFieldClassNode(classNode, fieldClassNode, field, invalidUses);
 
         }
         return invalidUses;
@@ -53,21 +55,11 @@ public class ProgramInterfaceNotImplementation implements Check {
     }
 
 
-    private void readJavaDefinedClass(MyClassNode classNode, String classNamePath, MyFieldNode field, List<Message> invalidUses) {
-        MyClassNode fieldClassNode = classNodeCreator.createMyClassNodeFromName(classNamePath);
+    private void checkFieldClassNode(MyClassNode classNode, MyClassNode fieldClassNode, MyFieldNode field, List<Message> invalidUses) {
         if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
             String message = "Where you need to Programming to interface instead of implementation: " + field.name;
             invalidUses.add(new Message(LintType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
         }
-    }
-
-    private void readUserDefinedClass(MyClassNode classNode, String className, MyFieldNode field, List<Message> invalidUses) {
-        MyClassNode fieldClassNode = classNodeCreator.createUniqueMyClassNodeFromName(className);
-        if (implementsInterfaceOrExtendsAbstractClass(fieldClassNode)) {
-            String message = "Where you need to Programming to interface instead of implementation: " + field.name;
-            invalidUses.add(new Message(LintType.INTERFACE_OVER_IMPLEMENTATION, message, classNode.name));
-        }
-
     }
 
     private boolean implementsInterfaceOrExtendsAbstractClass(MyClassNode fieldClassNode) {
@@ -82,12 +74,12 @@ public class ProgramInterfaceNotImplementation implements Check {
     }
 
     private boolean checkIfAbstract(String superName) {
+        MyClassNode myClassNode;
         if (isJavaAPIClass(superName)) {
-            MyClassNode myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
-            return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
+            myClassNode = classNodeCreator.createMyClassNodeFromName(superName);
         } else {
-            MyClassNode myClassNode = classNodeCreator.createUniqueMyClassNodeFromName(superName);
-            return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
+            myClassNode = classNodeCreator.createUniqueMyClassNodeFromName(superName);
         }
+        return (myClassNode.access & MyOpcodes.ACC_ABSTRACT) != 0;
     }
 }
