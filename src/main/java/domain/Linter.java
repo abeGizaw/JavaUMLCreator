@@ -1,6 +1,8 @@
 package domain;
 
 import domain.checks.*;
+import domain.diagramconverter.ConvertASMToUML;
+import domain.diagramconverter.Diagram;
 import domain.transformations.DeleteUnusedFields;
 import domain.transformations.Transformation;
 
@@ -12,14 +14,22 @@ public class Linter {
     private final List<MyClassNode> myClassNodes;
     private final Map<LintType, Check> checkTypeToCheck;
     private final Map<LintType, Transformation> transformationTypeToTransformation;
+    private final Map<LintType, Diagram> diagramTypeToDiagram;
 
     public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator, String outputPath) {
         this.creator = myClassNodeCreator;
         this.myClassNodes = createClassNodes(classPaths);
         this.checkTypeToCheck = new HashMap<>();
         this.transformationTypeToTransformation = new HashMap<>();
+        this.diagramTypeToDiagram = new HashMap<>();
         populateCheckMap();
         populateTransformMap(outputPath);
+        populateDiagramMap();
+    }
+
+    private void populateDiagramMap() {
+        diagramTypeToDiagram.put(LintType.UML_CONVERTER, new ConvertASMToUML(new StringBuilder()));
+
     }
 
     private void populateTransformMap(String outputPath) {
@@ -87,4 +97,14 @@ public class Linter {
         return allMessages;
     }
 
+    public Map<StringBuilder, LintType> generateDiagrams(Set<LintType> diagrams) {
+        Map<StringBuilder, LintType> diagramBuilders = new HashMap<>();
+        for(LintType lintType: diagrams){
+            Diagram diagram = diagramTypeToDiagram.get(lintType);
+            StringBuilder diagramBuilder = diagram.generateDiagram(myClassNodes);
+            diagramBuilders.put(diagramBuilder, lintType);
+
+        }
+        return diagramBuilders;
+    }
 }

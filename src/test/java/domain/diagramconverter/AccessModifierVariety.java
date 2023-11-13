@@ -1,4 +1,4 @@
-package domain.umlconverter;
+package domain.diagramconverter;
 
 public class AccessModifierVariety {
     public void publicMethod() {}

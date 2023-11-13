@@ -1,4 +1,4 @@
-package domain.umlconverter;
+package domain.diagramconverter;
 
 public class PrimitiveFieldsConverter {
     public final int anInt = 1;

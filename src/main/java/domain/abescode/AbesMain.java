@@ -2,7 +2,7 @@ package domain.abescode;
 
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
-import domain.umlconverter.ConvertASMToUML;
+import domain.diagramconverter.ConvertASMToUML;
 import domain.myasm.MyASMClassNodeCreator;
 import java.io.File;
 import java.io.FileWriter;
@@ -47,8 +47,8 @@ public class AbesMain {
         System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-        ConvertASMToUML ASMConverter = new ConvertASMToUML();
-        ASMConverter.run(myClassNode, umlBuilder);
+        ConvertASMToUML ASMConverter = new ConvertASMToUML(new StringBuilder());
+        ASMConverter.generateDiagram(myClassNode, umlBuilder);
         umlBuilder.append("\n");
         System.out.println("\n");
     }

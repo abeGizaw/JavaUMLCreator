@@ -1,4 +1,4 @@
-package domain.umlconverter;
+package domain.diagramconverter;
 import domain.*;
 
 import java.util.Arrays;
@@ -8,12 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class ConvertASMToUML {
-    public void run(MyClassNode classNode, StringBuilder pumlContent) {
-        generateUmlDiagram(classNode, pumlContent);
+public class ConvertASMToUML implements Diagram{
+    StringBuilder classUmlContent;
+    public ConvertASMToUML(StringBuilder classUmlContent){
+        this.classUmlContent = classUmlContent;
+
     }
 
-    private void generateUmlDiagram(MyClassNode myClassNode, StringBuilder pumlContent) {
+    public void generateDiagram(MyClassNode myClassNode, StringBuilder pumlContent) {
         pumlContent.append(convertClassInfo(myClassNode));
         pumlContent.append("{\n\t");
 
@@ -23,6 +25,20 @@ public class ConvertASMToUML {
 
         pumlContent.append("}\n");
     }
+
+    @Override
+    //will be the one I want to use once fully working
+    public StringBuilder generateDiagram(List<MyClassNode> myClassNodeList) {
+        classUmlContent.append("@startuml\n");
+        for(MyClassNode classNode: myClassNodeList){
+            generateDiagram(classNode, classUmlContent);
+            classUmlContent.append("\n");
+        }
+        classUmlContent.append("@enduml");
+        return classUmlContent;
+    }
+
+
 
     private String convertClassInfo(MyClassNode myClassNode){
         StringBuilder classString = new StringBuilder();

@@ -1,5 +1,7 @@
 package presentation;
 
+import datasource.DiagramLogger;
+import datasource.Logger;
 import datasource.MessageSaver;
 import datasource.Saver;
 import domain.LintType;
@@ -15,25 +17,23 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static domain.constants.Constants.*;
+
 public class LinterMain {
-
-
-    // need to add logic using the base path
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
         List<String> files = parseDirectory(directoryPath);
-        String outputPath = promptUserForOutputFileName();
+        String outputPath = promptUserForOutputFileName(OUTPUT_FOR_LINT_CHECK);
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations = promptUserForTransformations();
-        Set<LintType> diagrams = promptUserForDiagrams();
+        Map<LintType, String> diagrams = promptUserForDiagrams();
 
         List<Message> messages = lint(checks, transformations, diagrams, outputPath, files, directoryPath);
         prettyPrint(messages);
+
         saveToFile(messages, outputPath);
 
     }
-
-
 
     private static List<String> parseDirectory(Path directoryPath) {
         List<String> files = new ArrayList<>();
@@ -47,15 +47,28 @@ public class LinterMain {
         return files;
     }
 
-    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, Set<LintType> diagrams,
+    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, Map<LintType, String> diagrams,
                                       String outputPath, List<String> files, Path directoryPath) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
         Linter linter = new Linter(files, creator, outputPath);
 
         List<Message> allMessages = new ArrayList<>(linter.runSelectedTransformations(transformations));
         List<Message> messages = linter.runSelectedChecks(checks);
+        Map<StringBuilder, LintType> diagramBuilders = linter.generateDiagrams(diagrams.keySet());
+        for(StringBuilder stringBuilder: diagramBuilders.keySet()){
+            LintType lintType = diagramBuilders.get(stringBuilder);
+            String fileOutput = diagrams.get(lintType);
+            writeDiagramFiles(fileOutput, lintType, stringBuilder);
+        }
         allMessages.addAll(messages);
         return allMessages;
+    }
+
+    private static void writeDiagramFiles(String fileOutput, LintType lintType, StringBuilder stringBuilder) {
+        Logger diagramLogger = new DiagramLogger(fileOutput);
+        if(lintType == LintType.UML_CONVERTER){
+            diagramLogger.write(stringBuilder, PUML_TYPE);
+        }
     }
 
 
@@ -85,8 +98,8 @@ public class LinterMain {
     }
 
 
-    private static String promptUserForOutputFileName() {
-        return promptUser("Please enter an output file path");
+    private static String promptUserForOutputFileName(String destinationMessage) {
+        return promptUser(destinationMessage);
     }
 
     private static Set<LintType> promptUserForChecks() {
@@ -220,14 +233,14 @@ public class LinterMain {
         return transformations;
     }
 
-    private static Set<LintType> promptUserForDiagrams() {
+    private static Map<LintType, String> promptUserForDiagrams() {
         String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UMLCLASS), NONE");
 
-        Set<LintType> diagrams = new HashSet<>();
+        Map<LintType, String> diagrams = new HashMap<>();
 
         switch (userInput.toUpperCase()) {
             case "UMLCLASS":
-                diagrams.add(LintType.UML_CONVERTER);
+                diagrams.put(LintType.UML_CONVERTER, promptUserForOutputFileName(OUTPUT_FOR_PUML_CLASSDIAGRAM));
             case "NONE":
                 break;
             default:
