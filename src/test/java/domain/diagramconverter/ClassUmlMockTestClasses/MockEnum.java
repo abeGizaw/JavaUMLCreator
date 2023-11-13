@@ -1,4 +1,4 @@
-package domain.diagramconverter;
+package domain.diagramconverter.ClassUmlMockTestClasses;
 
 public enum MockEnum {
     RED("Red Value", 1),

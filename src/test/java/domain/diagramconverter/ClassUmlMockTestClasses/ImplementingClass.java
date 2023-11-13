@@ -1,4 +1,4 @@
-package domain.diagramconverter;
+package domain.diagramconverter.ClassUmlMockTestClasses;
 
 public class ImplementingClass implements MockInterface {
 

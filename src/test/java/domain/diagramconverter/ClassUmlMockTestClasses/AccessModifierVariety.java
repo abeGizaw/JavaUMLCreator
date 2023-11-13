@@ -1,4 +1,4 @@
-package domain.diagramconverter;
+package domain.diagramconverter.ClassUmlMockTestClasses;
 
 public class AccessModifierVariety {
     public void publicMethod() {}
