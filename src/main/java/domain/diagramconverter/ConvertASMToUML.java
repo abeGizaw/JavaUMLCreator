@@ -1,12 +1,15 @@
 package domain.diagramconverter;
 import domain.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static presentation.ANSIColors.*;
 
 public class ConvertASMToUML implements Diagram{
     StringBuilder classUmlContent;
@@ -15,7 +18,7 @@ public class ConvertASMToUML implements Diagram{
 
     }
 
-    public void generateDiagram(MyClassNode myClassNode, StringBuilder pumlContent) {
+    public void generateDiagramByNode(MyClassNode myClassNode, StringBuilder pumlContent) {
         pumlContent.append(convertClassInfo(myClassNode));
         pumlContent.append("{\n\t");
 
@@ -31,7 +34,7 @@ public class ConvertASMToUML implements Diagram{
     public StringBuilder generateDiagram(List<MyClassNode> myClassNodeList) {
         classUmlContent.append("@startuml\n");
         for(MyClassNode classNode: myClassNodeList){
-            generateDiagram(classNode, classUmlContent);
+            generateDiagramByNode(classNode, classUmlContent);
             classUmlContent.append("\n");
         }
         classUmlContent.append("@enduml");
@@ -54,34 +57,6 @@ public class ConvertASMToUML implements Diagram{
         return classString.toString();
     }
 
-    private void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
-        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-        if (classType.equals("enum")) {
-            classString.append(classType).append(" ").append(className);
-        } else {
-            String classModifier = getAccessModifier(myClassNode.access);
-            classString.append(classModifier).append(classType).append(" ").append(className);
-        }
-    }
-
-
-    private void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
-        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
-        MyInnerClassNode innerClassNode = findInnerClassNode(myClassNode, myClassNode.name);
-        if(innerClassNode != null){
-            String classModifier = getAccessModifier(innerClassNode.access);
-            classString.append(classModifier).append(classType).append(" ").append(className);
-        }
-    }
-
-    private MyInnerClassNode findInnerClassNode(MyClassNode myClassNode, String name) {
-        for (MyInnerClassNode icn : myClassNode.innerClasses) {
-            if (icn.name.equals(name)) {
-                return icn;
-            }
-        }
-        return null;
-    }
 
     private String convertClassFields(List<MyFieldNode> fields) {
         StringBuilder fieldString = new StringBuilder();
@@ -102,11 +77,55 @@ public class ConvertASMToUML implements Diagram{
 
                 String methodName = method.name.equals("<init>") ? className : method.name;
 
-                String methodInfo = method.signature == null ? getMethodInfo(method.desc) : getMethodInfo(method.signature);
+                String methodInfo = method.signature == null ?
+                        getMethodInfo(method.desc, method.localVariables) :
+                        getMethodInfo(method.signature, method.localVariables);
+
                 methodString.append(methodName).append(methodInfo).append("\n\t");
             }
         }
         return methodString.toString();
+    }
+
+    private void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
+        if (classType.equals("enum")) {
+            classString.append(classType).append(" ").append(className);
+        } else {
+            String classModifier = getAccessModifier(myClassNode.access);
+            classString.append(classModifier).append(classType).append(" ").append(className);
+        }
+    }
+
+
+    private void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
+        MyInnerClassNode innerClassNode = findInnerClassNode(myClassNode, myClassNode.name);
+        if(innerClassNode != null){
+            String classModifier = getAccessModifier(innerClassNode.access);
+            classString.append(classModifier).append(classType).append(" ").append(className);
+        }
+    }
+    private String getClassType(int access) {
+        if((access & MyOpcodes.ACC_INTERFACE) != 0){
+            return "interface";
+        } else if((access & MyOpcodes.ACC_ABSTRACT) != 0){
+            return "abstract class";
+        } else if((access & MyOpcodes.ACC_ENUM) != 0){
+            return "enum";
+        } else {
+            return "class";
+        }
+    }
+
+
+    private MyInnerClassNode findInnerClassNode(MyClassNode myClassNode, String name) {
+        for (MyInnerClassNode icn : myClassNode.innerClasses) {
+            if (icn.name.equals(name)) {
+                return icn;
+            }
+        }
+        return null;
     }
 
     private boolean methodIsUserGenerated(MyMethodNode method) {
@@ -120,14 +139,120 @@ public class ConvertASMToUML implements Diagram{
         return !method.name.equals("<clinit>");
     }
 
-    private String getMethodInfo(String desc) {
+    private void appendFieldInfo(StringBuilder fieldString, MyFieldNode field) {
+        if (isSynthetic(field.access)) {
+            return;
+        }
+
+        if ((field.access & MyOpcodes.ACC_ENUM) != 0 && (field.access & MyOpcodes.ACC_STATIC) != 0) {
+            fieldString.append(field.name).append("\n\t");
+            return;
+        }
+
+        String accessModifier = getAccessModifier(field.access);
+        String nonAccessModifier = getNonAccessModifiers(field.access);
+        fieldString.append(accessModifier).append(nonAccessModifier);
+
+
+        String descName = (field.signature != null) ? getFieldType(field.signature) : getFieldType(field.desc);
+        fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
+    }
+
+    private String getMethodInfo(String desc,List<MyLocalVariableNode> localVariableNodes) {
         int startParams = desc.indexOf('(');
         int endParams = desc.indexOf(')');
 
-        String params = desc.substring(startParams + 1, endParams);
+        List<String> params = new ArrayList<>();
+        generateListOfParams(desc.substring(startParams + 1, endParams), params);
+
+        String parsedParams = analyzeForParams(params, localVariableNodes);
         String returnType = getFieldType(desc.substring(endParams+ 1));
 
-        return "():" + returnType;
+        return "(" + parsedParams + "):" + returnType;
+    }
+
+    private void generateListOfParams(String desc, List<String> params) {
+        if (desc.isEmpty()) {
+            return;
+        }
+
+        int startIndex =0;
+
+        while (startIndex < desc.length()) {
+            char startChar = desc.charAt(startIndex);
+            if (isPrimitive(String.valueOf(startChar))) {
+                params.add(String.valueOf(startChar));
+                startIndex ++;
+            } else if (startChar == 'L') {
+                String javaObjDesc = processObjectDescriptor(desc.substring(startIndex));
+                params.add(javaObjDesc);
+                startIndex += javaObjDesc.length();
+            } else if (startChar == '[') {
+                String arrayDesc = processArrayDescriptor(desc.substring(startIndex));
+                params.add(arrayDesc);
+                startIndex += arrayDesc.length();
+            }
+        }
+
+    }
+
+    private String processObjectDescriptor(String desc) {
+        int nestingLevel = 0;
+        int index = 0;
+
+        while (index < desc.length()) {
+            char currentChar = desc.charAt(index);
+            if (currentChar == '<') {
+                nestingLevel++;
+            } else if (currentChar == '>') {
+                nestingLevel--;
+            } else if (currentChar == ';' && nestingLevel == 0) {
+                break;
+            }
+            index++;
+        }
+        index++;
+        return desc.substring(0, index);
+    }
+
+    private String processArrayDescriptor(String desc) {
+        int index = 0;
+        while (desc.charAt(index) == '[') {
+            index++;
+        }
+        if (desc.charAt(index) == 'L') {
+            String objectPart = processObjectDescriptor(desc.substring(index));
+            return desc.substring(0, index) + objectPart;
+        } else {
+            return desc.substring(0, index + 1);
+        }
+    }
+
+    private String analyzeForParams(List<String> paramInfo, List<MyLocalVariableNode> localVariableNodes) {
+        if (paramInfo.isEmpty()) {
+            return "";
+        }
+        StringBuilder paramsBuilder = new StringBuilder();
+
+        int localVarIndex = 1;
+        for (int i = 0; i < paramInfo.size(); i++) {
+            String parameterName = localVariableNodes == null ?
+                    "Param" + localVarIndex :
+                    localVariableNodes.get(i).name;
+
+            appendParamInfo(paramsBuilder, paramInfo.get(i), parameterName);
+            if (i < paramInfo.size() - 1) {
+                paramsBuilder.append(", ");
+            }
+            localVarIndex++;
+        }
+
+        return paramsBuilder.toString();
+    }
+
+    private void appendParamInfo(StringBuilder paramsBuilder, String param, String parameterName) {
+        String fieldType = getFieldType(param);
+        paramsBuilder.append(fieldType).append(":").append(parameterName);
     }
 
     private String getFieldType(String desc) {
@@ -160,27 +285,12 @@ public class ConvertASMToUML implements Diagram{
         return desc;
     }
 
-    private void appendFieldInfo(StringBuilder fieldString, MyFieldNode field) {
-        if (isSynthetic(field.access)) {
-            return;
-        }
-
-        if ((field.access & MyOpcodes.ACC_ENUM) != 0 && (field.access & MyOpcodes.ACC_STATIC) != 0) {
-            fieldString.append(field.name).append("\n\t");
-            return;
-        }
-
-        String accessModifier = getAccessModifier(field.access);
-        String nonAccessModifier = getNonAccessModifiers(field.access);
-        fieldString.append(accessModifier).append(nonAccessModifier);
-
-
-        String descName = (field.signature != null) ? getFieldType(field.signature) : getFieldType(field.desc);
-        fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
-    }
 
     private boolean isSynthetic(int access) {
         return (access & MyOpcodes.ACC_SYNTHETIC) != 0;
+    }
+    private boolean isPrimitive(String desc) {
+        return !desc.startsWith("L") && !desc.startsWith("[");
     }
     private String getPrimitiveFieldType(String desc) {
         switch(desc){
@@ -233,17 +343,5 @@ public class ConvertASMToUML implements Diagram{
             modifiers.append("{abstract}");
         }
         return modifiers.toString();
-    }
-
-    private String getClassType(int access) {
-        if((access & MyOpcodes.ACC_INTERFACE) != 0){
-            return "interface";
-        } else if((access & MyOpcodes.ACC_ABSTRACT) != 0){
-            return "abstract class";
-        } else if((access & MyOpcodes.ACC_ENUM) != 0){
-            return "enum";
-        } else {
-            return "class";
-        }
     }
 }

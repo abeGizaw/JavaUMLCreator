@@ -1,8 +1,7 @@
-package domain.abescode;
+package domain.diagramconverter;
 
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
-import domain.diagramconverter.ConvertASMToUML;
 import domain.myasm.MyASMClassNodeCreator;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +10,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class AbesMain {
+public class UMLMain {
     private static final MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of(""));
     private static StringBuilder umlBuilder = new StringBuilder();
 
@@ -25,7 +24,7 @@ public class AbesMain {
 
         try(Stream<Path> stream = Files.walk(startPath)){
             stream.filter(p -> p.toString().endsWith(".class"))
-                    .forEach(AbesMain::processClassFile);
+                    .forEach(UMLMain::processClassFile);
         } catch (IOException e) {
             System.err.println("Error walking the directory: " + e.getMessage());
         }
@@ -48,7 +47,7 @@ public class AbesMain {
 
         MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
         ConvertASMToUML ASMConverter = new ConvertASMToUML(new StringBuilder());
-        ASMConverter.generateDiagram(myClassNode, umlBuilder);
+        ASMConverter.generateDiagramByNode(myClassNode, umlBuilder);
         umlBuilder.append("\n");
         System.out.println("\n");
     }
