@@ -25,20 +25,14 @@ public class LinterMain {
         String outputPath = promptUserForOutputFileName();
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations = promptUserForTransformations();
+        Set<LintType> diagrams = promptUserForDiagrams();
 
-        for (String p : files) {
-            System.out.println(p);
-        }
-        System.out.println("OUTPUT PATH: " + outputPath);
-
-        for (LintType type : checks) {
-            System.out.println(type.toString());
-        }
-        List<Message> messages = lint(checks, transformations, outputPath, files, directoryPath);
+        List<Message> messages = lint(checks, transformations, diagrams, outputPath, files, directoryPath);
         prettyPrint(messages);
         saveToFile(messages, outputPath);
 
     }
+
 
 
     private static List<String> parseDirectory(Path directoryPath) {
@@ -53,12 +47,12 @@ public class LinterMain {
         return files;
     }
 
-    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files, Path directoryPath) {
+    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, Set<LintType> diagrams,
+                                      String outputPath, List<String> files, Path directoryPath) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
         Linter linter = new Linter(files, creator, outputPath);
 
-        List<Message> allMessages = new ArrayList<>();
-        allMessages.addAll(linter.runSelectedTransformations(transformations));
+        List<Message> allMessages = new ArrayList<>(linter.runSelectedTransformations(transformations));
         List<Message> messages = linter.runSelectedChecks(checks);
         allMessages.addAll(messages);
         return allMessages;
@@ -226,6 +220,23 @@ public class LinterMain {
         return transformations;
     }
 
+    private static Set<LintType> promptUserForDiagrams() {
+        String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UMLCLASS), NONE");
+
+        Set<LintType> diagrams = new HashSet<>();
+
+        switch (userInput.toUpperCase()) {
+            case "UMLCLASS":
+                diagrams.add(LintType.UML_CONVERTER);
+            case "NONE":
+                break;
+            default:
+                System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                promptUserForDiagrams();
+        }
+        return diagrams;
+
+    }
     private static String promptUser(String prompt) {
         Scanner keyboard = new Scanner(System.in);
         System.out.println(prompt);

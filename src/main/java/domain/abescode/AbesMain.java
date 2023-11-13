@@ -2,7 +2,7 @@ package domain.abescode;
 
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
-import domain.abescode.alevelfeature.ConvertASMToUML;
+import domain.umlconverter.ConvertASMToUML;
 import domain.myasm.MyASMClassNodeCreator;
 import java.io.File;
 import java.io.FileWriter;

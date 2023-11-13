@@ -1,4 +1,4 @@
-package domain.abescode.alevelfeature;
+package domain.umlconverter;
 import domain.*;
 
 import java.util.Arrays;
@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import static presentation.ANSIColors.*;
 
 public class ConvertASMToUML {
     public void run(MyClassNode classNode, StringBuilder pumlContent) {
