@@ -7,12 +7,11 @@ package presentation {
     +class LinterMain {
         +LinterMain()
         +{static}main(args: String[]): void
-        -{static}parseDirectory(directoryPath: Path): List<String>
+        -{static}parseDirectory(directoryPath: Path):Map<String, String>
         -{static}lintForMessages(checks: Set<LintType>, transformations: Set<LintType>, linter: Linter): List<Message>
         -{static}generateAndSaveDiagramsToFile(linter: Linter, diagrams: Map<LintType, String>, saver: Saver):void
-        -{static}promptUserForDirectory(): Path
-        -{static}generatePackageToFilePairing():Map<String, Set<String>>
         -{static}isValidPath(inputPath: String): boolean
+        -{static}promptUserForDirectory(): Path
         -{static}promptUserForOutputFileName(): String
         -{static}promptUserForChecks(): Set<LintType>
         -{static}promptUserForPrinciples(): Set<LintType>
@@ -20,7 +19,6 @@ package presentation {
         -{static}promptUserForStyle(): Set<LintType>
         -{static}promptUserForTransformations(): Set<LintType>
         -{static}promptUserForDiagrams:Map<LintType,String>
-        -{static}promptUser(): String
         -{static}prettyPrint(): void
         -{static}saveMessagesToFile(messages: List<Message>, outputPath: String): void
         -{static}writeDiagramFiles(fileOutput:String, lintType:LintType, stringBuilder:StringBuilder, saver:Saver):void
@@ -558,7 +556,6 @@ package datasource {
     +interface Saver {
         +{abstract} saveMessage(message: String): void
         +{abstract} writeToFile(info: String, fileType: String, outputPath: String):void
-
     }
     +class LintResultSaver implements Saver {
         -logStream: PrintStream
@@ -577,10 +574,7 @@ package datasource {
         +save(outputPath: String, className: String, byteCode: byte[]): void
         -createDirectory(path: String): void
     }
-    note left of ByteCodeExporter
-        ByteCodeExporter depends on File
-        and FIleOutputStream
-    end note
+
     ByteCodeExporter .up.|> Exporter
 }
 
@@ -627,6 +621,7 @@ LinterMain ..> Message
 LinterMain ..> MyASMClassNodeCreator
 LinterMain ..> MyClassNodeCreator
 LinterMain ..> Saver
+LinterMain ..> Constants
 
 Linter --> "*"Check
 Linter ..> Check

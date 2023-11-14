@@ -14,33 +14,27 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static domain.constants.Constants.*;
+import static presentation.ANSIColors.*;
 
 public class LinterMain {
 
-    private static final Map<String, Set<String>> packageContents = new HashMap<>();
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
-        List<String> files = parseDirectory(directoryPath);
+        Map<String, String> fileToPackage = parseDirectory(directoryPath);
         String outputPath = promptUserForOutputFileName(OUTPUT_DIRECTORY_FOR_CHECKS);
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations = promptUserForTransformations();
         Map<LintType, String> diagrams = promptUserForDiagrams();
 
+        List<String> files = new ArrayList<>(fileToPackage.keySet());
+
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
         Linter linter = new Linter(files, creator, outputPath);
         List<Message> messages = lintForMessages(checks, transformations, linter);
         prettyPrint(messages);
-
-        for (Map.Entry<String, Set<String>> entry : packageContents.entrySet()) {
-            System.out.println("Package: " + entry.getKey());
-            for (String className : entry.getValue()) {
-                System.out.println(" - " + className);
-            }
-        }
 
         Saver saver = new LintResultSaver(outputPath);
         saveMessagesToFile(messages, saver);
@@ -54,28 +48,21 @@ public class LinterMain {
         return allMessages;
     }
 
-    private static List<String> parseDirectory(Path directoryPath) {
-        List<String> classFiles = new ArrayList<>();
+    private static Map<String, String> parseDirectory(Path directoryPath) {
+        Map<String, String> fileToPackage = new HashMap<>();
 
         try (Stream<Path> stream = Files.walk(directoryPath)) {
-            List<Path> paths = stream
-                    .filter(p -> p.toString().endsWith(".class"))
-                    .collect(Collectors.toList());
-
-            for (Path path : paths) {
-                Path packagePath = directoryPath.relativize(path.getParent());
-                String packageName = packagePath.toString().replace(File.separator, ".");
-                packageContents.putIfAbsent(packageName, new HashSet<>());
-                String fileName = path.getFileName().toString();
-                String className = fileName.substring(0, fileName.lastIndexOf("."));
-                packageContents.get(packageName).add(className);
-                classFiles.add(path.toString());
-            }
+            stream.filter(p -> p.toString().endsWith(".class"))
+                    .forEach(path -> {
+                        Path packagePath = directoryPath.relativize(path.getParent());
+                        String packageName = packagePath.toString().replace(File.separator, ".");
+                        fileToPackage.put(path.toString(), packageName);
+                    });
         } catch (Exception e) {
             System.err.println("Error walking through the directory: " + e.getMessage());
         }
 
-        return classFiles;
+        return fileToPackage;
     }
 
     private static void generateAndSaveDiagramsToFile(Linter linter, Map<LintType, String> diagrams, Saver saver) {
