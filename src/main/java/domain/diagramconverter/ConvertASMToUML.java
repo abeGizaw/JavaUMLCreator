@@ -9,6 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static presentation.ANSIColors.*;
+
 public class ConvertASMToUML implements Diagram{
     private final StringBuilder classUmlContent;
     public ConvertASMToUML(StringBuilder classUmlContent){
@@ -175,6 +177,7 @@ public class ConvertASMToUML implements Diagram{
 
 
         int startLocalIndex = (methodNode.access & MyOpcodes.ACC_STATIC) != 0 && methodNode.localVariables != null? 0 : 1;
+
 
         if (methodNode.localVariables != null) {
             for (int i = 0; i < paramInfo.size(); i++) {

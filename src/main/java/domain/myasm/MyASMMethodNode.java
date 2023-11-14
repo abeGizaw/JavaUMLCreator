@@ -4,12 +4,12 @@ import domain.MyAbstractInsnNode;
 import domain.MyLocalVariableNode;
 import domain.MyMethodNode;
 import org.objectweb.asm.tree.AbstractInsnNode;
-
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
 
 public class MyASMMethodNode extends MyMethodNode {
     private final MethodNode methodNode;
@@ -24,7 +24,6 @@ public class MyASMMethodNode extends MyMethodNode {
         super.name = methodNode.name;
         super.signature = methodNode.signature;
     }
-
     private List<MyAbstractInsnNode> convertInstructionNodes() {
         List<MyAbstractInsnNode> instructions = new ArrayList<>();
         for (AbstractInsnNode instruction : methodNode.instructions) {
@@ -35,7 +34,11 @@ public class MyASMMethodNode extends MyMethodNode {
 
     private List<MyLocalVariableNode> convertLocalVariableNodes() {
         List<MyLocalVariableNode> localVariables = new ArrayList<>();
-        for (LocalVariableNode localVariableNode : methodNode.localVariables) {
+
+        List<LocalVariableNode> sortedLocalVariables = new ArrayList<>(methodNode.localVariables);
+        sortedLocalVariables.sort(Comparator.comparingInt(lv -> lv.index));
+
+        for (LocalVariableNode localVariableNode : sortedLocalVariables) {
             localVariables.add(new MyASMLocalVariableNode(localVariableNode));
         }
         return localVariables;
