@@ -8,6 +8,6 @@ public class CollectionFieldsConverter {
     private Map<String, Integer> map;
     public Queue<Character> charQueue;
     public Stack<Boolean> booleanStack;
-    public Map<List<Set<String>>, List<String>> advancedMap;
+    public Map<List<Set<String>>, Map<String, String>> advancedMap;
 }
 

@@ -260,6 +260,9 @@ package domain {
         	-appendParamInfo(paramsBuilder:StringBuilder, param:String, parameterName:String):void
         	-getFieldType(desc:String):String
         	-getCollectionType(desc:String):String
+            -parseGenericTypes(innerTypes:String):List<String>
+            -generateCollectedTypes(collectionTypeList:List<String):String
+            -cleanCollectionParsing(originalList:List<String>):List<String>
         	-isSynthetic(access:int):boolean
         	-isPrimitive(desc:String):boolean
         	-getPrimitiveFieldType(desc:String):String

@@ -1,22 +1,12 @@
 @startuml
-+class LinterMain{
-	+LinterMain():void
-	+{static}main(args:String[]):void
-	-{static}parseDirectory(directoryPath:Path):List<String>
-	-{static}lint(checks:Set<LintType>, transformations:Set<LintType>, diagrams:Map<LintType, String>, outputPath:String, files:List<String>, directoryPath:Path):List<Message>
-	-{static}writeDiagramFiles(fileOutput:String, lintType:LintType, stringBuilder:StringBuilder):void
-	-{static}promptUserForDirectory():Path
-	-{static}isValidPath(inputPath:String):boolean
-	-{static}promptUserForOutputFileName(destinationMessage:String):String
-	-{static}promptUserForChecks():Set<LintType>
-	-{static}promptUserForPrinciples():Set<LintType>
-	-{static}promptUserForPatterns():Set<LintType>
-	-{static}promptUserForStyle():Set<LintType>
-	-{static}promptUserForTransformations():Set<LintType>
-	-{static}promptUserForDiagrams():Map<LintType, String>
-	-{static}promptUser(prompt:String):String
-	-{static}prettyPrint(messages:List<Message>):void
-	-{static}saveToFile(messages:List<Message>, outputPath:String):void
++class CollectionFieldsConverter{
+	+ stringList: List<String>
+	+ doubleSet: Set<Double>
+	- map: Map<String,Integer>
+	+ charQueue: Queue<Character>
+	+ booleanStack: Stack<Boolean>
+	+ advancedMap: Map<List<Set<String>>,Map<String,String>>
+	+CollectionFieldsConverter():void
 	}
 
 @enduml

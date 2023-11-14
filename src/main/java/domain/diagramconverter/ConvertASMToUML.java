@@ -291,15 +291,63 @@ public class ConvertASMToUML implements Diagram{
         Matcher matcher = pattern.matcher(desc);
         if(matcher.find()){
             String collectionType = matcher.group(1);
-            String[] collectionHoldTypes = desc.substring(desc.indexOf("<") + 1, desc.lastIndexOf(">")).split(";");
-            String collectedTypes = Arrays.stream(collectionHoldTypes)
-                    .map(typeDesc -> getFieldType(typeDesc + (typeDesc.contains("<") ? ";>;" : ";"))) // Add semicolon back if needed
-                    .filter(Objects::nonNull) // Ignore null values
-                    .collect(Collectors.joining(", "));
-
+            int collectionParamsIndex = desc.indexOf(collectionType) + collectionType.length() + 1;
+            List<String> collectionHoldTypeList = cleanCollectionParsing(parseGenericTypes(desc.substring(collectionParamsIndex)));
+            String collectedTypes = generateCollectedTypes(collectionHoldTypeList);
             return collectionType + "<" + collectedTypes + ">";
         }
         return desc;
+    }
+
+    private String generateCollectedTypes(List<String> collectionTypeList) {
+        StringBuilder s= new StringBuilder();
+        for(int i = 0; i < collectionTypeList.size(); i ++){
+            String fieldType = getFieldType(collectionTypeList.get(i));
+            s.append(fieldType);
+            if(i != collectionTypeList.size() - 1){
+                s.append(",");
+            }
+        }
+        return s.toString();
+    }
+
+    private List<String> cleanCollectionParsing(List<String> originalList){
+        List<String> modifiedList = new ArrayList<>();
+        for (String entry : originalList) {
+            if (entry.equals(">;")) {
+                break;
+            } else {
+                modifiedList.add(entry + ";");
+            }
+        }
+        return modifiedList;
+    }
+
+    private List<String> parseGenericTypes(String innerTypes) {
+        List<String> types = new ArrayList<>();
+        int level = 0;
+        StringBuilder currentType = new StringBuilder();
+
+        for (int i = 0; i < innerTypes.length(); i++) {
+            char currentChar = innerTypes.charAt(i);
+            if (currentChar == '<') {
+                level++;
+                currentType.append(currentChar);
+            } else if (currentChar == '>') {
+                level--;
+                currentType.append(currentChar);
+            } else if (currentChar == ';' && level == 0) {
+                types.add(currentType.toString());
+                currentType.setLength(0);
+            } else {
+                currentType.append(currentChar);
+            }
+        }
+        if (currentType.length() > 0) {
+            types.add(currentType.toString());
+        }
+
+        return types;
     }
 
 
