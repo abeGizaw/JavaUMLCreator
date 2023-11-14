@@ -8,7 +8,8 @@ package presentation {
         +LinterMain()
         +{static}main(args: String[]): void
         -{static}parseDirectory(directoryPath: Path): List<String>
-        -{static}lint(checks: Set<LintType>, transformations: Set<LintType>, diagrams:Map<LintType,String>, outputPath: String, files: List<String>, directoryPath: Path): List<Message>
+        -{static}lintForMessages(checks: Set<LintType>, transformations: Set<LintType>, linter: Linter): List<Message>
+        -{static}generateAndSaveDiagramsToFile(linter: Linter, diagrams: Map<LintType, String>, saver: Saver):void
         -{static}promptUserForDirectory(): Path
         -{static}isValidPath(inputPath: String): boolean
         -{static}promptUserForOutputFileName(): String
@@ -20,8 +21,8 @@ package presentation {
         -{static}promptUserForDiagrams:Map<LintType,String>
         -{static}promptUser(): String
         -{static}prettyPrint(): void
-        -{static}saveToFile(messages: List<Message>, outputPath: String): void
-        -{static}writeDiagramFiles(fileOutput:String, lintType:LintType, stringBuilder:StringBuilder):void
+        -{static}saveMessagesToFile(messages: List<Message>, outputPath: String): void
+        -{static}writeDiagramFiles(fileOutput:String, lintType:LintType, stringBuilder:StringBuilder, saver:Saver):void
     }
 }
 
@@ -29,7 +30,7 @@ package domain {
    package constants{
         +class Constants{
             +{static}{final}PUML_TYPE: String
-            +{static}{final}OUTPUT_FOR_LINT_CHECK: String
+            +{static}{final}OUTPUT_DIRECTORY_FOR_CHECKS: String
             +{static}{final}OUTPUT_FOR_PUML_CLASSDIAGRAM: String
             +{static}{final}ABBREVIATION_ERROR: String
             +{static}{final}INVALID_PACKAGE: String
@@ -552,11 +553,15 @@ package domain {
 package datasource {
     +interface Saver {
         +{abstract} saveMessage(message: String): void
+        +{abstract} writeToFile(info: String, fileType: String, outputPath: String):void
+
     }
-    +class MessageSaver implements Saver {
+    +class LintResultSaver implements Saver {
         -logStream: PrintStream
-        +MessageSaver(path: String)
+        -basePath: String
+        +LintResultSaver(path: String)
         +saveMessage(message: String): void
+        +writeToFile(info: String, fileType: String, outputPath: String):void
         -createDirectory(path: String): void
     }
 
@@ -567,14 +572,6 @@ package datasource {
     +class ByteCodeExporter{
         +save(outputPath: String, className: String, byteCode: byte[]): void
         -createDirectory(path: String): void
-    }
-
-    +interface Logger{
-        +write(diagramInfo: StringBuilder, fileType:String):void
-    }
-    +class DiagramLogger implements Logger{
-        -{final}outputPath: String
-        +DiagramLogger(outputPath: String)
     }
     note left of ByteCodeExporter
         ByteCodeExporter depends on File
@@ -626,7 +623,6 @@ LinterMain ..> Message
 LinterMain ..> MyASMClassNodeCreator
 LinterMain ..> MyClassNodeCreator
 LinterMain ..> Saver
-LinterMain ..> Logger
 
 Linter --> "*"Check
 Linter ..> Check

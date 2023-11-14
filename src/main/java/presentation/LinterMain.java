@@ -1,15 +1,12 @@
 package presentation;
 
-import datasource.DiagramLogger;
-import datasource.Logger;
-import datasource.MessageSaver;
+import datasource.LintResultSaver;
 import datasource.Saver;
 import domain.LintType;
 import domain.Linter;
 import domain.Message;
 import domain.MyClassNodeCreator;
 import domain.myasm.MyASMClassNodeCreator;
-
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -23,16 +20,28 @@ public class LinterMain {
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
         List<String> files = parseDirectory(directoryPath);
-        String outputPath = promptUserForOutputFileName(OUTPUT_FOR_LINT_CHECK);
+        String outputPath = promptUserForOutputFileName(OUTPUT_DIRECTORY_FOR_CHECKS);
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations = promptUserForTransformations();
         Map<LintType, String> diagrams = promptUserForDiagrams();
 
-        List<Message> messages = lint(checks, transformations, diagrams, outputPath, files, directoryPath);
+        MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
+        Linter linter = new Linter(files, creator, outputPath);
+        List<Message> messages = lintForMessages(checks, transformations, linter);
         prettyPrint(messages);
 
-        saveToFile(messages, outputPath);
+        Saver saver = new LintResultSaver(outputPath);
+        saveMessagesToFile(messages, saver);
+        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+    }
 
+    private static void generateAndSaveDiagramsToFile(Linter linter, Map<LintType, String> diagrams, Saver saver) {
+        Map<StringBuilder, LintType> diagramBuilders = linter.generateDiagrams(diagrams.keySet());
+        for(StringBuilder stringBuilder: diagramBuilders.keySet()){
+            LintType lintType = diagramBuilders.get(stringBuilder);
+            String fileOutput = diagrams.get(lintType);
+            writeDiagramFiles(fileOutput, lintType, stringBuilder, saver);
+        }
     }
 
     private static List<String> parseDirectory(Path directoryPath) {
@@ -47,28 +56,11 @@ public class LinterMain {
         return files;
     }
 
-    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, Map<LintType, String> diagrams,
-                                      String outputPath, List<String> files, Path directoryPath) {
-        MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
-        Linter linter = new Linter(files, creator, outputPath);
-
+    private static List<Message> lintForMessages(Set<LintType> checks, Set<LintType> transformations, Linter linter) {
         List<Message> allMessages = new ArrayList<>(linter.runSelectedTransformations(transformations));
         List<Message> messages = linter.runSelectedChecks(checks);
-        Map<StringBuilder, LintType> diagramBuilders = linter.generateDiagrams(diagrams.keySet());
-        for(StringBuilder stringBuilder: diagramBuilders.keySet()){
-            LintType lintType = diagramBuilders.get(stringBuilder);
-            String fileOutput = diagrams.get(lintType);
-            writeDiagramFiles(fileOutput, lintType, stringBuilder);
-        }
         allMessages.addAll(messages);
         return allMessages;
-    }
-
-    private static void writeDiagramFiles(String fileOutput, LintType lintType, StringBuilder stringBuilder) {
-        Logger diagramLogger = new DiagramLogger(fileOutput);
-        if(lintType == LintType.UML_CONVERTER){
-            diagramLogger.write(stringBuilder, PUML_TYPE);
-        }
     }
 
 
@@ -263,13 +255,14 @@ public class LinterMain {
         }
     }
 
-    private static void saveToFile(List<Message> messages, String outputPath) {
-        Saver saver = new MessageSaver(outputPath);
+    private static void saveMessagesToFile(List<Message> messages, Saver saver) {
         for (Message message : messages) {
             saver.saveMessage(message.toString());
         }
-
     }
-
-
+    private static void writeDiagramFiles(String fileOutput, LintType lintType, StringBuilder stringBuilder, Saver saver) {
+        if(lintType == LintType.UML_CONVERTER){
+            saver.writeToFile(stringBuilder.toString(), PUML_TYPE, fileOutput);
+        }
+    }
 }
