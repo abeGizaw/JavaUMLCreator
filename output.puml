@@ -1,12 +1,13 @@
 @startuml
-+class CollectionFieldsConverter{
-	+ stringList: List<String>
-	+ doubleSet: Set<Double>
-	- map: Map<String,Integer>
-	+ charQueue: Queue<Character>
-	+ booleanStack: Stack<Boolean>
-	+ advancedMap: Map<List<Set<String>>,Map<String,String>>
-	+CollectionFieldsConverter():void
-	}
 
+package domain.myasm{
+ +class sun{
+    +print()
+ }
+}
+
+package domain.tran{
+ +class what{
+ }
+}
 @enduml

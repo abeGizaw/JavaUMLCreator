@@ -11,6 +11,7 @@ package presentation {
         -{static}lintForMessages(checks: Set<LintType>, transformations: Set<LintType>, linter: Linter): List<Message>
         -{static}generateAndSaveDiagramsToFile(linter: Linter, diagrams: Map<LintType, String>, saver: Saver):void
         -{static}promptUserForDirectory(): Path
+        -{static}generatePackageToFilePairing():Map<String, Set<String>>
         -{static}isValidPath(inputPath: String): boolean
         -{static}promptUserForOutputFileName(): String
         -{static}promptUserForChecks(): Set<LintType>

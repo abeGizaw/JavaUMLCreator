@@ -7,11 +7,14 @@ import domain.Linter;
 import domain.Message;
 import domain.MyClassNodeCreator;
 import domain.myasm.MyASMClassNodeCreator;
+
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static domain.constants.Constants.*;
@@ -20,6 +23,7 @@ public class LinterMain {
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
         List<String> files = parseDirectory(directoryPath);
+        Map<String, Set<String>> packageToFile = generatePackageToFilePairing(directoryPath);
         String outputPath = promptUserForOutputFileName(OUTPUT_DIRECTORY_FOR_CHECKS);
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations = promptUserForTransformations();
@@ -30,9 +34,58 @@ public class LinterMain {
         List<Message> messages = lintForMessages(checks, transformations, linter);
         prettyPrint(messages);
 
+        for (Map.Entry<String, Set<String>> entry : packageToFile.entrySet()) {
+            System.out.println("Package: " + entry.getKey());
+            for (String className : entry.getValue()) {
+                System.out.println(" - " + className);
+            }
+        }
+
         Saver saver = new LintResultSaver(outputPath);
         saveMessagesToFile(messages, saver);
         generateAndSaveDiagramsToFile(linter, diagrams, saver);
+    }
+
+    private static List<Message> lintForMessages(Set<LintType> checks, Set<LintType> transformations, Linter linter) {
+        List<Message> allMessages = new ArrayList<>(linter.runSelectedTransformations(transformations));
+        List<Message> messages = linter.runSelectedChecks(checks);
+        allMessages.addAll(messages);
+        return allMessages;
+    }
+
+    private static Map<String, Set<String>> generatePackageToFilePairing(Path directoryPath) {
+        Map<String, Set<String>> packageContents = new HashMap<>();
+
+        try (Stream<Path> stream = Files.walk(directoryPath)) {
+            List<Path> paths = stream
+                    .filter(p -> p.toString().endsWith(".class"))
+                    .collect(Collectors.toList());
+
+            for (Path path : paths) {
+                Path packagePath = directoryPath.relativize(path.getParent());
+                String packageName = packagePath.toString().replace(File.separator, ".");
+                packageContents.putIfAbsent(packageName, new HashSet<>());
+                String fileName = path.getFileName().toString();
+                String className = fileName.substring(0, fileName.lastIndexOf("."));
+                packageContents.get(packageName).add(className);
+            }
+        } catch (Exception e) {
+            System.err.println("Error walking through the directory: " + e.getMessage());
+        }
+
+        return packageContents;
+    }
+    private static List<String> parseDirectory(Path directoryPath) {
+        List<String> files = new ArrayList<>();
+
+        try (Stream<Path> stream = Files.walk(directoryPath)) {
+            stream.filter(p -> p.toString().endsWith(".class"))
+                    .forEach(file -> files.add(file.toString()));
+        } catch (Exception e) {
+            System.err.println("Error walking through the directory: " + e.getMessage());
+        }
+
+        return files;
     }
 
     private static void generateAndSaveDiagramsToFile(Linter linter, Map<LintType, String> diagrams, Saver saver) {
@@ -44,24 +97,6 @@ public class LinterMain {
         }
     }
 
-    private static List<String> parseDirectory(Path directoryPath) {
-        List<String> files = new ArrayList<>();
-        try (Stream<Path> stream = Files.walk(directoryPath)) {
-            stream.filter(p -> p.toString().endsWith(".class"))
-                    .forEach(file -> files.add(file.toString()));
-        } catch (Exception e) {
-            System.err.println("Error walking through the directory: " + e.getMessage());
-        }
-
-        return files;
-    }
-
-    private static List<Message> lintForMessages(Set<LintType> checks, Set<LintType> transformations, Linter linter) {
-        List<Message> allMessages = new ArrayList<>(linter.runSelectedTransformations(transformations));
-        List<Message> messages = linter.runSelectedChecks(checks);
-        allMessages.addAll(messages);
-        return allMessages;
-    }
 
 
     private static Path promptUserForDirectory() {

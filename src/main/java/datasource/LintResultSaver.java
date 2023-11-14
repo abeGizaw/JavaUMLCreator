@@ -11,7 +11,7 @@ public class LintResultSaver implements Saver {
     public LintResultSaver(String path) {
         this.basePath = path.endsWith(File.separator) ? path : path + File.separator;
         this.basePath += "output";
-        createDirectory(path);
+        createDirectory(this.basePath);
         try {
             logStream = new PrintStream(new FileOutputStream(this.basePath + File.separator + "linter_log.txt", false));
         } catch (FileNotFoundException e) {
