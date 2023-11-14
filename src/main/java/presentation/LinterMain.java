@@ -20,10 +20,11 @@ import java.util.stream.Stream;
 import static domain.constants.Constants.*;
 
 public class LinterMain {
+
+    private static final Map<String, Set<String>> packageContents = new HashMap<>();
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
         List<String> files = parseDirectory(directoryPath);
-        Map<String, Set<String>> packageToFile = generatePackageToFilePairing(directoryPath);
         String outputPath = promptUserForOutputFileName(OUTPUT_DIRECTORY_FOR_CHECKS);
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations = promptUserForTransformations();
@@ -34,7 +35,7 @@ public class LinterMain {
         List<Message> messages = lintForMessages(checks, transformations, linter);
         prettyPrint(messages);
 
-        for (Map.Entry<String, Set<String>> entry : packageToFile.entrySet()) {
+        for (Map.Entry<String, Set<String>> entry : packageContents.entrySet()) {
             System.out.println("Package: " + entry.getKey());
             for (String className : entry.getValue()) {
                 System.out.println(" - " + className);
@@ -53,8 +54,8 @@ public class LinterMain {
         return allMessages;
     }
 
-    private static Map<String, Set<String>> generatePackageToFilePairing(Path directoryPath) {
-        Map<String, Set<String>> packageContents = new HashMap<>();
+    private static List<String> parseDirectory(Path directoryPath) {
+        List<String> classFiles = new ArrayList<>();
 
         try (Stream<Path> stream = Files.walk(directoryPath)) {
             List<Path> paths = stream
@@ -68,24 +69,13 @@ public class LinterMain {
                 String fileName = path.getFileName().toString();
                 String className = fileName.substring(0, fileName.lastIndexOf("."));
                 packageContents.get(packageName).add(className);
+                classFiles.add(path.toString());
             }
         } catch (Exception e) {
             System.err.println("Error walking through the directory: " + e.getMessage());
         }
 
-        return packageContents;
-    }
-    private static List<String> parseDirectory(Path directoryPath) {
-        List<String> files = new ArrayList<>();
-
-        try (Stream<Path> stream = Files.walk(directoryPath)) {
-            stream.filter(p -> p.toString().endsWith(".class"))
-                    .forEach(file -> files.add(file.toString()));
-        } catch (Exception e) {
-            System.err.println("Error walking through the directory: " + e.getMessage());
-        }
-
-        return files;
+        return classFiles;
     }
 
     private static void generateAndSaveDiagramsToFile(Linter linter, Map<LintType, String> diagrams, Saver saver) {
