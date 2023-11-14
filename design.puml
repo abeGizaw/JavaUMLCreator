@@ -233,14 +233,14 @@ package domain {
     package diagramconverter{
         +interface Diagram{
         	+generateDiagramByNode(myClassNode:MyClassNode, pumlContent:StringBuilder):void
-        	+generateDiagram(classNode:List<MyClassNode>):StringBuilder
+        	+generateDiagramByPackage(classNode:List<MyClassNode>, packageToMyClassNodes: Map<String, Set<MyClassNode>):StringBuilder
         }
 
         +class ConvertASMToUML{
         	-{final} classUmlContent: StringBuilder
         	+ConvertASMToUML(classUmlContent:StringBuilder):void
         	+generateDiagramByNode(myClassNode:MyClassNode, pumlContent:StringBuilder):void
-        	+generateDiagram(myClassNodeList:List<MyClassNode>):StringBuilder
+        	+generateDiagramByPackage(myClassNodeList:List<MyClassNode>,packageToMyClassNodes: Map<String, Set<MyClassNode>):StringBuilder
         	-convertClassInfo(myClassNode:MyClassNode):String
         	-convertClassFields(fields:List<MyFieldNode>):String
         	-convertClassMethods(methods:List<MyMethodNode>, className:String):String

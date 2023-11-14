@@ -109,7 +109,7 @@ public class Linter {
         Map<StringBuilder, LintType> diagramBuilders = new HashMap<>();
         for(LintType lintType: diagrams){
             Diagram diagram = diagramTypeToDiagram.get(lintType);
-            StringBuilder diagramBuilder = diagram.generateDiagram(myClassNodes);
+            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(myClassNodes, packageToMyClassNode);
             diagramBuilders.put(diagramBuilder, lintType);
 
         }

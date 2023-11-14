@@ -1,21 +1,14 @@
 package domain.diagramconverter;
 import domain.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import static presentation.ANSIColors.*;
 
 public class ConvertASMToUML implements Diagram{
     private final StringBuilder classUmlContent;
     public ConvertASMToUML(StringBuilder classUmlContent){
         this.classUmlContent = classUmlContent;
-
     }
 
     public void generateDiagramByNode(MyClassNode myClassNode, StringBuilder pumlContent) {
@@ -31,11 +24,23 @@ public class ConvertASMToUML implements Diagram{
 
     @Override
     //will be the one I want to use once fully working
-    public StringBuilder generateDiagram(List<MyClassNode> myClassNodeList) {
+    public StringBuilder generateDiagramByPackage(List<MyClassNode> myClassNodeList, Map<String, List<MyClassNode>> packageToMyClassNode) {
         classUmlContent.append("@startuml\n");
-        for(MyClassNode classNode: myClassNodeList){
-            generateDiagramByNode(classNode, classUmlContent);
-            classUmlContent.append("\n");
+        for(String packageName : packageToMyClassNode.keySet()){
+            if (!packageName.isEmpty()) {
+                classUmlContent.append("package ").append(packageName).append(" {\n\t");
+            }
+
+            List<MyClassNode> nodesForPackage = packageToMyClassNode.get(packageName);
+            for (MyClassNode myClassNode : nodesForPackage) {
+                generateDiagramByNode(myClassNode, classUmlContent);
+                classUmlContent.append("\n");
+            }
+
+            if (!packageName.isEmpty()) {
+                classUmlContent.append("}\n");
+            }
+
         }
         classUmlContent.append("@enduml");
         return classUmlContent;
