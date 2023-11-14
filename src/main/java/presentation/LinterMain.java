@@ -17,7 +17,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static domain.constants.Constants.*;
-import static presentation.ANSIColors.*;
 
 public class LinterMain {
 
@@ -32,7 +31,7 @@ public class LinterMain {
         List<String> files = new ArrayList<>(fileToPackage.keySet());
 
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
-        Linter linter = new Linter(files, creator, outputPath);
+        Linter linter = new Linter(files, creator, outputPath, fileToPackage);
         List<Message> messages = lintForMessages(checks, transformations, linter);
         prettyPrint(messages);
 
