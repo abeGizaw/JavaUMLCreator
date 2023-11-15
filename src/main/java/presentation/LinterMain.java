@@ -132,7 +132,12 @@ public class LinterMain {
                     principles.add(LintType.PLK);
                     break;
                 case "PINI":
-                    principles.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
+                    boolean acceptedWarning = promptThirdPartyWarning();
+                    if(acceptedWarning){
+                        principles.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
+                    } else {
+                        promptUserForPrinciples();
+                    }
                     break;
                 case "ALL":
                     principles.add(LintType.COMPOSITION_OVER_INHERITANCE);
@@ -151,6 +156,19 @@ public class LinterMain {
         return principles;
     }
 
+    private static boolean promptThirdPartyWarning() {
+        String userInput = promptUser("This check (Either Strategy pattern or PINI) is not compatible with any file that references a third party class. Proceed? (y/n)");
+        switch (userInput.toUpperCase()) {
+            case "Y":
+                return true;
+            case "N":
+                return false;
+            default:
+                System.out.println(YES_OR_NO_INPUT_ERROR);
+                return promptThirdPartyWarning();
+        }
+    }
+
     private static Set<LintType> promptUserForPatterns() {
         String userInput = promptUser("Enter Pattern Checks to run separated by comma: \n Strategy Pattern (SP), Adapter Pattern (AP) , Template Method Pattern (TMP), ALL, NONE");
 
@@ -160,6 +178,12 @@ public class LinterMain {
         for (String s : inputArray) {
             switch (s.toUpperCase()) {
                 case "SP":
+                    boolean acceptedWarning = promptThirdPartyWarning();
+                    if(acceptedWarning){
+                        patterns.add(LintType.STRATEGY_PATTERN);
+                    } else {
+                        promptUserForPatterns();
+                    }
                     patterns.add(LintType.STRATEGY_PATTERN);
                     break;
                 case "AP":

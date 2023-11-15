@@ -18,7 +18,8 @@ package presentation {
         -{static}promptUserForPatterns(): Set<LintType>
         -{static}promptUserForStyle(): Set<LintType>
         -{static}promptUserForTransformations(): Set<LintType>
-        -{static}promptUserForDiagrams:Map<LintType,String>
+        -{static}promptUserForDiagrams():Map<LintType,String>
+        -{static}promptThirdPartyWarning():boolean
         -{static}prettyPrint(): void
         -{static}saveMessagesToFile(messages: List<Message>, outputPath: String): void
         -{static}writeDiagramFiles(fileOutput:String, lintType:LintType, stringBuilder:StringBuilder, saver:Saver):void
@@ -33,6 +34,7 @@ package domain {
             +{static}{final}OUTPUT_FOR_PUML_CLASSDIAGRAM: String
             +{static}{final}ABBREVIATION_ERROR: String
             +{static}{final}INVALID_PACKAGE: String
+            +{static}{final}YES_OR_NO_INPUT_ERROR: String
         }
    }
 

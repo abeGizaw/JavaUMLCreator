@@ -14,7 +14,8 @@ import java.util.stream.Stream;
 /**
  * @author gizawaa
  * This class is strictly to test the uml converter by itself. It is not part of the overall proejct, hence why it is not in the uml
- * This is a feature that I have decided I will keep working on, to see how accurate I can make it
+ * This is a feature that I have decided I will keep working on, to see how accurate I can make it and try to use some better practices
+ * to make the program more flexible
  * Again this project does not depend on this class AT ALL. This is for personal use over break.
  */
 public class UMLMain {
