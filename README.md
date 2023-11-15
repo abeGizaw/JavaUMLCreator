@@ -27,12 +27,16 @@ Abe Gizaw, Ari Duvall, Kiana Fan
 When running the Linter the user will be prompted through the command line for the following information:
 - File Location Information
   - Absolute path for the directory containing the .class files to process
-  - To process more than one of the options above, sepearte each path with a comma and no spaces. 
+  - To process more than one of the options above, separate each path with a comma and no spaces. 
 - Desired Style Checks to run [Naming Convention, Final Local Variables, Hidden Fields]
 - Desired Principle Checks to run [Favor Composition over Inheritance, PLK, Program to Interface not Implementation]
 - Desired Pattern Checks to run [Strategy Pattern, Adapter Pattern, Template Method Pattern]
+  - An extra prompt will appear if the Strategy Pattern or Program to Interface not Implementation is chosen due to incompatibility with Third-party libraries.
+- Transformations to run [Remove Unused Fields]
+- Diagrams to generate [UMLCLASS]
+  - Diagrams will also prompt the user for a filename for the diagram    
 
-After the user enters a response, the response will be process to ensure it is a valid input. If the input is invalid the user will be prompted again. 
+After the user enters a response, the response will be processed to ensure it is a valid input. If the input is invalid the user will be prompted again. 
 
 Example Input      
 > -> Enter Directory/Package:         
@@ -47,15 +51,22 @@ Example Input
      &nbsp; &nbsp; &nbsp; ALL   
 > -> Enter Principle Checks to run separated by comma:  
      &nbsp;  &nbsp; &nbsp; &nbsp; Favor Composition over Inheritance (FCOI) , PLK (PLK), Program to Interface not Implementation (PINI), ALL, NONE  
-     &nbsp; &nbsp; &nbsp; TMP  
+     &nbsp; &nbsp; &nbsp; PINI  
+> -> This check (Either Strategy pattern or PINI) is not compatible with any file that references a third party class. Proceed? (y/n)  
+     &nbsp; &nbsp; &nbsp; y  
 > -> Enter Transformations to run:  
      &nbsp;  &nbsp; &nbsp; &nbsp; Remove Unused Fields (RUF), NONE  
-     &nbsp; &nbsp; &nbsp; NONE   
+     &nbsp; &nbsp; &nbsp; NONE  
+> -> Enter Diagrams to generate:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; UML Class Diagram (UMLCLASS), NONE  
+     &nbsp; &nbsp; &nbsp; umlclass  
+> -> Please enter a name for the PUML class diagram  
+     &nbsp; &nbsp; &nbsp; design  
 
   
 ### Output 
-Once the Linter completes the user selected checks, the resulting output will be displayed to both the console and a log file. 
-The log file, `linter_log.txt`,  can be found in the directory provided. 
+Once the Linter completes the user selected checks, the resulting output will be displayed to both the console and a log file. Diagrams won't be in the console, just the log file.
+The log file, `linter_log.txt`, and any diagrams generated can be found in the directory provided. 
 
 All output will be formatted as follows:      
 
@@ -79,4 +90,9 @@ All output will be formatted as follows:
      &nbsp; &nbsp; &nbsp; ALL  
 > -> Enter Transformations to run:  
      &nbsp;  &nbsp; &nbsp; &nbsp; Remove Unused Fields (RUF), NONE  
-     &nbsp; &nbsp; &nbsp; RUF
+     &nbsp; &nbsp; &nbsp; RUF  
+> -> Enter Diagrams to generate:  
+     &nbsp;  &nbsp; &nbsp; &nbsp; UML Class Diagram (UMLCLASS), NONE  
+     &nbsp; &nbsp; &nbsp; umlclass  
+> -> Please enter a name for the PUML class diagram  
+     &nbsp; &nbsp; &nbsp; design  
