@@ -8,10 +8,11 @@ import org.objectweb.asm.tree.LabelNode;
 
 public class MyASMLabelNode extends MyLabelNode {
     private final LabelNode labelNode;
-    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
+    private final MyASMAbstractInsnNodeFactory factory;
 
-    public MyASMLabelNode(AbstractInsnNode labelNode) {
+    public MyASMLabelNode(AbstractInsnNode labelNode, MyASMAbstractInsnNodeFactory factory) {
         this.labelNode = (LabelNode) labelNode;
+        this.factory = factory;
     }
 
     @Override

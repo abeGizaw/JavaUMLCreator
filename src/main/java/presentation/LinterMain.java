@@ -1,6 +1,6 @@
 package presentation;
 
-import datasource.MessageSaver;
+import datasource.LintResultSaver;
 import datasource.Saver;
 import domain.LintType;
 import domain.Linter;
@@ -8,6 +8,7 @@ import domain.Message;
 import domain.MyClassNodeCreator;
 import domain.myasm.MyASMClassNodeCreator;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -15,60 +16,69 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static domain.constants.Constants.*;
+
 public class LinterMain {
 
-
-    // need to add logic using the base path
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
-        List<String> files = parseDirectory(directoryPath);
-        String outputPath = promptUserForOutputFileName();
+        Map<String, String> fileToPackage = parseDirectory(directoryPath);
+        String outputPath = promptUserForOutputFileName(OUTPUT_DIRECTORY_FOR_CHECKS);
         Set<LintType> checks = promptUserForChecks();
         Set<LintType> transformations = promptUserForTransformations();
+        Map<LintType, String> diagrams = promptUserForDiagrams();
 
-        for (String p : files) {
-            System.out.println(p);
-        }
-        System.out.println("OUTPUT PATH: " + outputPath);
+        List<String> files = new ArrayList<>(fileToPackage.keySet());
 
-        for (LintType type : checks) {
-            System.out.println(type.toString());
-        }
-        List<Message> messages = lint(checks, transformations, outputPath, files, directoryPath);
-        prettyPrint(messages);
-        saveToFile(messages, outputPath);
-
-    }
-
-
-    private static List<String> parseDirectory(Path directoryPath) {
-        List<String> files = new ArrayList<>();
-        try (Stream<Path> stream = Files.walk(directoryPath)) {
-            stream.filter(p -> p.toString().endsWith(".class"))
-                    .forEach(file -> files.add(file.toString()));
-        } catch (Exception e) {
-            System.err.println("Error walking through the directory: " + e.getMessage());
-        }
-
-        return files;
-    }
-
-    private static List<Message> lint(Set<LintType> checks, Set<LintType> transformations, String outputPath, List<String> files, Path directoryPath) {
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
-        Linter linter = new Linter(files, creator, outputPath);
+        Linter linter = new Linter(files, creator, outputPath, fileToPackage);
+        List<Message> messages = lintForMessages(checks, transformations, linter);
+        prettyPrint(messages);
 
-        List<Message> allMessages = new ArrayList<>();
-        allMessages.addAll(linter.runSelectedTransformations(transformations));
+        Saver saver = new LintResultSaver(outputPath);
+        saveMessagesToFile(messages, saver);
+        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+    }
+
+    private static List<Message> lintForMessages(Set<LintType> checks, Set<LintType> transformations, Linter linter) {
+        List<Message> allMessages = new ArrayList<>(linter.runSelectedTransformations(transformations));
         List<Message> messages = linter.runSelectedChecks(checks);
         allMessages.addAll(messages);
         return allMessages;
     }
 
+    private static Map<String, String> parseDirectory(Path directoryPath) {
+        Map<String, String> fileToPackage = new HashMap<>();
+
+        try (Stream<Path> stream = Files.walk(directoryPath)) {
+            stream.filter(p -> p.toString().endsWith(".class"))
+                    .forEach(path -> {
+                        Path packagePath = directoryPath.relativize(path.getParent());
+                        String packageName = packagePath.toString().replace(File.separator, ".");
+                        fileToPackage.put(path.toString(), packageName);
+                    });
+        } catch (Exception e) {
+            System.err.println("Error walking through the directory: " + e.getMessage());
+        }
+
+        return fileToPackage;
+    }
+
+    private static void generateAndSaveDiagramsToFile(Linter linter, Map<LintType, String> diagrams, Saver saver) {
+        Map<StringBuilder, LintType> diagramBuilders = linter.generateDiagrams(diagrams.keySet());
+        for(StringBuilder stringBuilder: diagramBuilders.keySet()){
+            LintType lintType = diagramBuilders.get(stringBuilder);
+            String fileOutput = diagrams.get(lintType);
+            writeDiagramFiles(fileOutput, lintType, stringBuilder, saver);
+        }
+    }
+
+
 
     private static Path promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
         if (!isValidPath(userInput)) {
-            System.err.println("Invalid package");
+            System.err.println(INVALID_PACKAGE);
             return promptUserForDirectory();
         } else {
             return Path.of(userInput);
@@ -91,8 +101,8 @@ public class LinterMain {
     }
 
 
-    private static String promptUserForOutputFileName() {
-        return promptUser("Please enter an output file path");
+    private static String promptUserForOutputFileName(String destinationMessage) {
+        return promptUser(destinationMessage);
     }
 
     private static Set<LintType> promptUserForChecks() {
@@ -122,7 +132,12 @@ public class LinterMain {
                     principles.add(LintType.PLK);
                     break;
                 case "PINI":
-                    principles.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
+                    boolean acceptedWarning = promptThirdPartyWarning();
+                    if(acceptedWarning){
+                        principles.add(LintType.INTERFACE_OVER_IMPLEMENTATION);
+                    } else {
+                        promptUserForPrinciples();
+                    }
                     break;
                 case "ALL":
                     principles.add(LintType.COMPOSITION_OVER_INHERITANCE);
@@ -132,13 +147,26 @@ public class LinterMain {
                 case "NONE":
                     break;
                 default:
-                    System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                    System.out.println(ABBREVIATION_ERROR);
                     promptUserForPrinciples();
             }
 
 
         }
         return principles;
+    }
+
+    private static boolean promptThirdPartyWarning() {
+        String userInput = promptUser("This check (Either Strategy pattern or PINI) is not compatible with any file that references a third party class. Proceed? (y/n)");
+        switch (userInput.toUpperCase()) {
+            case "Y":
+                return true;
+            case "N":
+                return false;
+            default:
+                System.out.println(YES_OR_NO_INPUT_ERROR);
+                return promptThirdPartyWarning();
+        }
     }
 
     private static Set<LintType> promptUserForPatterns() {
@@ -150,6 +178,12 @@ public class LinterMain {
         for (String s : inputArray) {
             switch (s.toUpperCase()) {
                 case "SP":
+                    boolean acceptedWarning = promptThirdPartyWarning();
+                    if(acceptedWarning){
+                        patterns.add(LintType.STRATEGY_PATTERN);
+                    } else {
+                        promptUserForPatterns();
+                    }
                     patterns.add(LintType.STRATEGY_PATTERN);
                     break;
                 case "AP":
@@ -166,7 +200,7 @@ public class LinterMain {
                 case "NONE":
                     break;
                 default:
-                    System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                    System.out.println(ABBREVIATION_ERROR);
                     promptUserForPatterns();
             }
         }
@@ -202,7 +236,7 @@ public class LinterMain {
                 case "NONE":
                     break;
                 default:
-                    System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                    System.out.println(ABBREVIATION_ERROR);
                     promptUserForStyle();
             }
         }
@@ -220,12 +254,29 @@ public class LinterMain {
             case "NONE":
                 break;
             default:
-                System.out.println("Invalid Input. Please Enter Abbreviations. ");
+                System.out.println(ABBREVIATION_ERROR);
                 promptUserForTransformations();
         }
         return transformations;
     }
 
+    private static Map<LintType, String> promptUserForDiagrams() {
+        String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UMLCLASS), NONE");
+
+        Map<LintType, String> diagrams = new HashMap<>();
+
+        switch (userInput.toUpperCase()) {
+            case "UMLCLASS":
+                diagrams.put(LintType.UML_CONVERTER, promptUserForOutputFileName(OUTPUT_FOR_PUML_CLASSDIAGRAM));
+            case "NONE":
+                break;
+            default:
+                System.out.println(ABBREVIATION_ERROR);
+                promptUserForDiagrams();
+        }
+        return diagrams;
+
+    }
     private static String promptUser(String prompt) {
         Scanner keyboard = new Scanner(System.in);
         System.out.println(prompt);
@@ -239,13 +290,14 @@ public class LinterMain {
         }
     }
 
-    private static void saveToFile(List<Message> messages, String outputPath) {
-        Saver saver = new MessageSaver(outputPath);
+    private static void saveMessagesToFile(List<Message> messages, Saver saver) {
         for (Message message : messages) {
             saver.saveMessage(message.toString());
         }
-
     }
-
-
+    private static void writeDiagramFiles(String fileOutput, LintType lintType, StringBuilder stringBuilder, Saver saver) {
+        if(lintType == LintType.UML_CONVERTER){
+            saver.writeToFile(stringBuilder.toString(), PUML_TYPE, fileOutput);
+        }
+    }
 }

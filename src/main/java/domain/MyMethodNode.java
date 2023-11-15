@@ -8,4 +8,5 @@ public abstract class MyMethodNode {
     public List<MyAbstractInsnNode> instructions;
     public List<MyLocalVariableNode> localVariables;
     public String name;
+    public String signature;
 }

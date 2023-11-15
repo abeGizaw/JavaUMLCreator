@@ -1,6 +1,8 @@
 package domain;
 
 import domain.checks.*;
+import domain.diagramconverter.ConvertASMToUML;
+import domain.diagramconverter.Diagram;
 import domain.transformations.DeleteUnusedFields;
 import domain.transformations.Transformation;
 
@@ -12,14 +14,26 @@ public class Linter {
     private final List<MyClassNode> myClassNodes;
     private final Map<LintType, Check> checkTypeToCheck;
     private final Map<LintType, Transformation> transformationTypeToTransformation;
+    private final Map<LintType, Diagram> diagramTypeToDiagram;
+    private final Map<String, List<MyClassNode>> packageToMyClassNode = new HashMap<>();
 
-    public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator, String outputPath) {
+    public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator, String outputPath, Map<String, String> fileToPackage) {
         this.creator = myClassNodeCreator;
-        this.myClassNodes = createClassNodes(classPaths);
+        this.myClassNodes = createClassNodes(classPaths, fileToPackage);
         this.checkTypeToCheck = new HashMap<>();
         this.transformationTypeToTransformation = new HashMap<>();
+        this.diagramTypeToDiagram = new HashMap<>();
+        populateMaps(outputPath);
+    }
+
+    private void populateMaps(String outputPath) {
         populateCheckMap();
         populateTransformMap(outputPath);
+        populateDiagramMap();
+    }
+    private void populateDiagramMap() {
+        diagramTypeToDiagram.put(LintType.UML_CONVERTER, new ConvertASMToUML(new StringBuilder()));
+
     }
 
     private void populateTransformMap(String outputPath) {
@@ -39,11 +53,15 @@ public class Linter {
         checkTypeToCheck.put(LintType.UNUSED_FIELD, new DetectUnusedFields(myClassNodes));
     }
 
-    private List<MyClassNode> createClassNodes(List<String> classPaths) {
+    private List<MyClassNode> createClassNodes(List<String> classPaths, Map<String, String> fileToPackage) {
         List<MyClassNode> myNodes = new ArrayList<>();
         for (String path : classPaths) {
+            String packageName = fileToPackage.get(path);
+            packageToMyClassNode.putIfAbsent(packageName, new ArrayList<>());
             Path p = Path.of(path);
-            myNodes.add(creator.createMyClassNodeFromFile(p.toFile()));
+            MyClassNode myClassNode = creator.createMyClassNodeFromFile(p.toFile());
+            myNodes.add(myClassNode);
+            packageToMyClassNode.get(packageName).add(myClassNode);
         }
         return myNodes;
     }
@@ -87,4 +105,14 @@ public class Linter {
         return allMessages;
     }
 
+    public Map<StringBuilder, LintType> generateDiagrams(Set<LintType> diagrams) {
+        Map<StringBuilder, LintType> diagramBuilders = new HashMap<>();
+        for(LintType lintType: diagrams){
+            Diagram diagram = diagramTypeToDiagram.get(lintType);
+            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(myClassNodes, packageToMyClassNode);
+            diagramBuilders.put(diagramBuilder, lintType);
+
+        }
+        return diagramBuilders;
+    }
 }

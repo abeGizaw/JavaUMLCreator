@@ -11,5 +11,6 @@ public class MyASMFieldNode extends MyFieldNode {
         super.access = fieldNode.access;
         super.desc = fieldNode.desc;
         super.name = fieldNode.name;
+        super.signature = fieldNode.signature;
     }
 }

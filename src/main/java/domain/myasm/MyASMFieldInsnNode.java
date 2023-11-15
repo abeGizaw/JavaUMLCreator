@@ -7,13 +7,14 @@ import org.objectweb.asm.tree.FieldInsnNode;
 
 public class MyASMFieldInsnNode extends MyFieldInsnNode {
     private final FieldInsnNode fieldInsnNode;
-    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
+    private final MyASMAbstractInsnNodeFactory factory;
 
-    public MyASMFieldInsnNode(AbstractInsnNode abstractInsnNode) {
+    public MyASMFieldInsnNode(AbstractInsnNode abstractInsnNode, MyASMAbstractInsnNodeFactory factory) {
         this.fieldInsnNode = (FieldInsnNode) abstractInsnNode;
         super.name = this.fieldInsnNode.name;
         super.desc = this.fieldInsnNode.desc;
         super.owner = this.fieldInsnNode.owner;
+        this.factory = factory;
     }
 
     @Override
