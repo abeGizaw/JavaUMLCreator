@@ -831,7 +831,6 @@ MyASMFieldInsnNode ..> AbstractInsnNode
 MyASMFieldInsnNode --> FieldInsnNode
 MyASMFieldInsnNode ..> FieldInsnNode
 MyASMFieldInsnNode --> MyASMAbstractInsnNodeFactory
-MyASMFieldInsnNode ..> MyASMAbstractInsnNodeFactory
 MyASMFieldInsnNode ..> MyAbstractInsnNode
 
 MyASMFieldNode --> FieldNode
@@ -843,12 +842,12 @@ MyASMLabel ..> Label
 MyASMLabelNode ..> AbstractInsnNode
 MyASMLabelNode --> LabelNode
 MyASMLabelNode --> MyASMAbstractInsnNodeFactory
-MyASMLabelNode ..> MyASMAbstractInsnNodeFactory
 MyASMLabelNode ..> MyAbstractInsnNode
 MyASMLabelNode ..> MyLabel
 
 MyASMLocalVariableNode -down--> LocalVariableNode
 MyASMLocalVariableNode .down..> MyASMLabelNode
+MyASMLocalVariableNode ..> MyASMAbstractInsnNodeFactory
 
 MyASMMethodInsnNode ..> AbstractInsnNode
 MyASMMethodInsnNode -> MethodInsnNode
@@ -860,7 +859,6 @@ MyASMMethodInsnNode ..> MyASMAbstractInsnNodeFactory
 MyASMMethodNode --> MethodNode
 MyASMMethodNode ..> MethodNode
 MyASMMethodNode --> MyASMAbstractInsnNodeFactory
-MyASMMethodNode ..> MyASMAbstractInsnNodeFactory
 MyASMMethodNode ..> MyAbstractInsnNode
 MyASMMethodNode ..> MyLocalVariableNode
 
@@ -870,7 +868,6 @@ MyASMType --> Type
 
 MyASMVarInsnNode ..> AbstractInsnNode
 MyASMVarInsnNode --> MyASMAbstractInsnNodeFactory
-MyASMVarInsnNode ..> MyASMAbstractInsnNodeFactory
 MyASMVarInsnNode --> VarInsnNode
 MyASMVarInsnNode ..> VarInsnNode
 

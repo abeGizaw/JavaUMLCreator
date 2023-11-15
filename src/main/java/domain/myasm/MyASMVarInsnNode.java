@@ -7,11 +7,12 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 public class MyASMVarInsnNode extends MyVarInsnNode {
     private final VarInsnNode varInsnNode;
-    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
+    private final MyASMAbstractInsnNodeFactory factory;
 
-    public MyASMVarInsnNode(AbstractInsnNode varInsnNode) {
+    public MyASMVarInsnNode(AbstractInsnNode varInsnNode, MyASMAbstractInsnNodeFactory factory) {
         this.varInsnNode = (VarInsnNode) varInsnNode;
         super.var = this.varInsnNode.var;
+        this.factory = factory;
     }
 
     @Override

@@ -7,10 +7,11 @@ import org.objectweb.asm.tree.MethodInsnNode;
 
 public class MyASMMethodInsnNode extends MyMethodInsnNode {
     private final MethodInsnNode methodInsnNode;
-    private final MyASMAbstractInsnNodeFactory factory = new MyASMAbstractInsnNodeFactory();
+    private final MyASMAbstractInsnNodeFactory factory;
 
-    public MyASMMethodInsnNode(AbstractInsnNode methodInsnNode) {
+    public MyASMMethodInsnNode(AbstractInsnNode methodInsnNode, MyASMAbstractInsnNodeFactory factory) {
         this.methodInsnNode = (MethodInsnNode) methodInsnNode;
+        this.factory = factory;
         super.desc = this.methodInsnNode.desc;
         super.name = this.methodInsnNode.name;
         super.owner = this.methodInsnNode.owner;

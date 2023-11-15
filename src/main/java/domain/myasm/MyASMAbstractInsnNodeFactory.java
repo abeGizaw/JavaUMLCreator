@@ -11,13 +11,13 @@ public class MyASMAbstractInsnNodeFactory {
         }
         int type = node.getType();
         if (type == MyAbstractInsnNode.FIELD_INSN) {
-            return new MyASMFieldInsnNode(node);
+            return new MyASMFieldInsnNode(node, new MyASMAbstractInsnNodeFactory());
         } else if (type == MyAbstractInsnNode.LABEL) {
-            return new MyASMLabelNode(node);
+            return new MyASMLabelNode(node, new MyASMAbstractInsnNodeFactory());
         } else if (type == MyAbstractInsnNode.METHOD_INSN) {
-            return new MyASMMethodInsnNode(node);
+            return new MyASMMethodInsnNode(node, new MyASMAbstractInsnNodeFactory());
         } else if (type == MyAbstractInsnNode.VAR_INSN) {
-            return new MyASMVarInsnNode(node);
+            return new MyASMVarInsnNode(node, new MyASMAbstractInsnNodeFactory());
         }
         return new MyDefaultInsnNode();
     }

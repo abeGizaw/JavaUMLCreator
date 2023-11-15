@@ -8,9 +8,9 @@ public class MyASMLocalVariableNode extends MyLocalVariableNode {
 
     public MyASMLocalVariableNode(LocalVariableNode localVariableNode) {
         this.localVariableNode = localVariableNode;
-        super.end = new MyASMLabelNode(localVariableNode.end);
+        super.end = new MyASMLabelNode(localVariableNode.end, new MyASMAbstractInsnNodeFactory());
         super.index = localVariableNode.index;
         super.name = localVariableNode.name;
-        super.start = new MyASMLabelNode(localVariableNode.start);
+        super.start = new MyASMLabelNode(localVariableNode.start, new MyASMAbstractInsnNodeFactory());
     }
 }
