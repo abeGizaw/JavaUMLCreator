@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 public class ConvertASMToUML implements Diagram{
     private final StringBuilder classUmlContent;
+    private Map<String, Integer> hasARelationShipByClass = new HashMap<>();
+    private Set<String> allHasARelationships = new HashSet<>();
     public ConvertASMToUML(StringBuilder classUmlContent){
         this.classUmlContent = classUmlContent;
     }
@@ -16,10 +18,13 @@ public class ConvertASMToUML implements Diagram{
         pumlContent.append("{\n\t");
 
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-        pumlContent.append(convertClassFields(myClassNode.fields));
+        pumlContent.append(convertClassFields(myClassNode.fields, className));
         pumlContent.append(convertClassMethods(myClassNode.methods, className));
 
         pumlContent.append("}\n");
+
+        allHasARelationships.addAll(hasARelationShipByClass.keySet());
+        hasARelationShipByClass.clear();
     }
 
     @Override
@@ -42,6 +47,10 @@ public class ConvertASMToUML implements Diagram{
             }
 
         }
+
+        for(String relationship: allHasARelationships){
+            classUmlContent.append(relationship).append("\n");
+        }
         classUmlContent.append("@enduml");
         return classUmlContent;
     }
@@ -63,10 +72,10 @@ public class ConvertASMToUML implements Diagram{
     }
 
 
-    private String convertClassFields(List<MyFieldNode> fields) {
+    private String convertClassFields(List<MyFieldNode> fields, String className) {
         StringBuilder fieldString = new StringBuilder();
         for(MyFieldNode field: fields){
-            appendFieldInfo(fieldString, field);
+            appendFieldInfo(fieldString, field, className);
         }
 
         return fieldString.toString();
@@ -144,7 +153,7 @@ public class ConvertASMToUML implements Diagram{
         return !method.name.equals("<clinit>");
     }
 
-    private void appendFieldInfo(StringBuilder fieldString, MyFieldNode field) {
+    private void appendFieldInfo(StringBuilder fieldString, MyFieldNode field, String className) {
         if (isSynthetic(field.access)) {
             return;
         }
@@ -158,9 +167,42 @@ public class ConvertASMToUML implements Diagram{
         String nonAccessModifier = getNonAccessModifiers(field.access);
         fieldString.append(accessModifier).append(nonAccessModifier);
 
+        String fullDesc = (field.signature != null) ? field.signature : field.desc;
+        String descName = getFieldType(fullDesc);
 
-        String descName = (field.signature != null) ? getFieldType(field.signature) : getFieldType(field.desc);
+
+        if(!isJavaAPIClass(fullDesc)){
+            addAHasARelationship(descName, className);
+        }
         fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
+    }
+
+    private void addAHasARelationship(String descName, String className) {
+        String baseRelationShip = className + "-->";
+        String relationship = baseRelationShip + descName;
+        String multipleRelationship = baseRelationShip + "\"*\"" + descName;
+
+        if (isCollectionType(descName)) {
+            hasARelationShipByClass.putIfAbsent(multipleRelationship, 1);
+        } else {
+            if (!hasARelationShipByClass.containsKey(multipleRelationship)) {
+                int count = hasARelationShipByClass.getOrDefault(relationship, 0);
+                if (count > 0) {
+                    hasARelationShipByClass.remove(relationship);
+                }
+
+                if (count > 0) {
+                    relationship = baseRelationShip + "\"" + (count + 1) + "\"" + descName;
+                    hasARelationShipByClass.put(relationship, count + 1);
+                } else {
+                    hasARelationShipByClass.put(relationship, 1);
+                }
+            }
+        }
+    }
+
+    private boolean isCollectionType(String descName) {
+        return descName.contains("[") || descName.contains("<");
     }
 
     private String getMethodInfo(String desc, MyMethodNode methodNode) {
@@ -297,11 +339,15 @@ public class ConvertASMToUML implements Diagram{
         if(matcher.find()){
             String collectionType = matcher.group(1);
             int collectionParamsIndex = desc.indexOf(collectionType) + collectionType.length() + 1;
-            List<String> collectionHoldTypeList = cleanCollectionParsing(parseGenericTypes(desc.substring(collectionParamsIndex)));
-            String collectedTypes = generateCollectedTypes(collectionHoldTypeList);
+            String collectedTypes = getCollectionHoldTypes(desc.substring(collectionParamsIndex));
             return collectionType + "<" + collectedTypes + ">";
         }
         return desc;
+    }
+
+    private String getCollectionHoldTypes(String collected) {
+        List<String> collectionHoldTypeList = cleanCollectionParsing(parseGenericTypes(collected));
+        return generateCollectedTypes(collectionHoldTypeList);
     }
 
     private String generateCollectedTypes(List<String> collectionTypeList) {
@@ -414,4 +460,21 @@ public class ConvertASMToUML implements Diagram{
         }
         return modifiers.toString();
     }
+
+    private boolean isJavaAPIClass(String desc) {
+        if(isPrimitive(desc)){
+            return true;
+        }
+        if (isCollectionType(desc)) {
+            if(desc.startsWith("[")){
+                return isJavaAPIClass(desc.substring(1));
+            } else{
+                //It is a list/set, so we need to check for unique classes in their hold types
+            }
+        }
+
+        String className = desc.substring(1, desc.length() - 1);
+        return className.startsWith("java/");
+    }
+
 }

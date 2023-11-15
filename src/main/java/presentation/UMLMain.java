@@ -1,7 +1,8 @@
-package domain.diagramconverter;
+package presentation;
 
 import domain.MyClassNode;
 import domain.MyClassNodeCreator;
+import domain.diagramconverter.ConvertASMToUML;
 import domain.myasm.MyASMClassNodeCreator;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,6 +11,12 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
+/**
+ * @author gizawaa
+ * This class is strictly to test the uml converter by itself. It is not part of the overall proejct, hence why it is not in the uml
+ * This is a feature that I have decided I will keep working on, to see how accurate I can make it
+ * Again this project does not depend on this class AT ALL. This is for personal use over break.
+ */
 public class UMLMain {
     private static final MyClassNodeCreator creator = new MyASMClassNodeCreator(Path.of(""));
     private static StringBuilder umlBuilder = new StringBuilder();

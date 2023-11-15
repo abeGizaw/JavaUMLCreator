@@ -238,18 +238,20 @@ package domain {
 
         +class ConvertASMToUML{
         	-{final} classUmlContent: StringBuilder
+        	-hasARelationshipByClass: Map<String, Integer>
+        	-allHasARelationships: Set<String>
         	+ConvertASMToUML(classUmlContent:StringBuilder):void
         	+generateDiagramByNode(myClassNode:MyClassNode, pumlContent:StringBuilder):void
         	+generateDiagramByPackage(myClassNodeList:List<MyClassNode>,packageToMyClassNodes: Map<String, Set<MyClassNode>):StringBuilder
         	-convertClassInfo(myClassNode:MyClassNode):String
-        	-convertClassFields(fields:List<MyFieldNode>):String
+        	-convertClassFields(fields:List<MyFieldNode>, className):String
         	-convertClassMethods(methods:List<MyMethodNode>, className:String):String
         	-convertOuterClassInfo(myClassNode:MyClassNode, classString:StringBuilder, classType:String):void
         	-convertInnerClassInfo(myClassNode:MyClassNode, classString:StringBuilder, classType:String):void
         	-getClassType(access:int):String
         	-findInnerClassNode(myClassNode:MyClassNode, name:String):MyInnerClassNode
         	-methodIsUserGenerated(method:MyMethodNode):boolean
-        	-appendFieldInfo(fieldString:StringBuilder, field:MyFieldNode):void
+        	-appendFieldInfo(fieldString:StringBuilder, field:MyFieldNode, className: String):void
         	-getMethodInfo(desc:String, methodNode:MyMethodNode):String
         	-getParameterNames(methodNode:MyMethodNode, paramInfo:List<String>):List<String>
         	-generateListOfParams(desc:String, params:List<String>):void
@@ -267,6 +269,10 @@ package domain {
         	-getPrimitiveFieldType(desc:String):String
         	-getAccessModifier(access:int):String
         	-getNonAccessModifiers(access:int):String
+        	-addAHasARelationship(descName:String, className:String):void
+        	-isCollectionType(descName:String):boolean
+        	-getCollectionHoldTypes(collected:String):String
+        	-isJavaAPIClass(desc:String):boolean
         }
 
     }
