@@ -172,9 +172,18 @@ public class ConvertASMToUML implements Diagram{
 
 
         if(!isJavaAPIClass(fullDesc)){
-            addAHasARelationship(descName, className);
+            String cleanedDescName = cleanDescName(descName);
+            addAHasARelationship(cleanedDescName, className);
         }
         fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
+    }
+
+    private String cleanDescName(String descName) {
+        if(descName.contains("[]")){
+            return descName.substring(0, descName.length() - 2);
+        }
+
+        return descName;
     }
 
     private void addAHasARelationship(String descName, String className) {

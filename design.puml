@@ -262,6 +262,7 @@ package domain {
         	-analyzeForParams(paramInfo:List<String>, paramNames:List<String>):String
         	-appendParamInfo(paramsBuilder:StringBuilder, param:String, parameterName:String):void
         	-getFieldType(desc:String):String
+        	
         	-getCollectionType(desc:String):String
             -parseGenericTypes(innerTypes:String):List<String>
             -generateCollectedTypes(collectionTypeList:List<String):String
