@@ -60,8 +60,8 @@ Example Input
 > -> Enter Diagrams to generate:  
      &nbsp;  &nbsp; &nbsp; &nbsp; UML Class Diagram (UMLCLASS), NONE  
      &nbsp; &nbsp; &nbsp; umlclass  
-> -> Please enter an output file path for PUML class diagram  
-     &nbsp;  &nbsp; &nbsp; &nbsp; design  
+> -> Please enter a name for the PUML class diagram  
+     &nbsp; &nbsp; &nbsp; design  
 
   
 ### Output 
@@ -94,5 +94,5 @@ All output will be formatted as follows:
 > -> Enter Diagrams to generate:  
      &nbsp;  &nbsp; &nbsp; &nbsp; UML Class Diagram (UMLCLASS), NONE  
      &nbsp; &nbsp; &nbsp; umlclass  
-> -> Please enter an output file path for PUML class diagram  
-     &nbsp;  &nbsp; &nbsp; &nbsp; design  
+> -> Please enter a name for the PUML class diagram  
+     &nbsp; &nbsp; &nbsp; design  
