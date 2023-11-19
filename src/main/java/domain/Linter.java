@@ -9,25 +9,23 @@ import java.util.*;
 public class Linter {
     private final MyClassNodeCreator creator;
     private final List<MyClassNode> myClassNodes;
-    private final Map<LintType, Diagram> diagramTypeToDiagram;
+    private final Map<DiagramType, Diagram> diagramTypeToDiagram;
     private final Map<String, List<MyClassNode>> packageToMyClassNode = new HashMap<>();
 
     public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator, String outputPath, Map<String, String> fileToPackage) {
         this.creator = myClassNodeCreator;
         this.myClassNodes = createClassNodes(classPaths, fileToPackage);
         this.diagramTypeToDiagram = new HashMap<>();
-        populateMaps(outputPath);
+        populateMaps();
     }
 
-    private void populateMaps(String outputPath) {
+    private void populateMaps() {
         populateDiagramMap();
     }
     private void populateDiagramMap() {
-        diagramTypeToDiagram.put(LintType.UML_CONVERTER, new ConvertASMToUML(new StringBuilder()));
+        diagramTypeToDiagram.put(DiagramType.UML_CONVERTER, new ConvertASMToUML(new StringBuilder()));
 
     }
-
-
 
     private List<MyClassNode> createClassNodes(List<String> classPaths, Map<String, String> fileToPackage) {
         List<MyClassNode> myNodes = new ArrayList<>();
@@ -42,14 +40,12 @@ public class Linter {
         return myNodes;
     }
 
-
-
-    public Map<StringBuilder, LintType> generateDiagrams(Set<LintType> diagrams) {
-        Map<StringBuilder, LintType> diagramBuilders = new HashMap<>();
-        for(LintType lintType: diagrams){
-            Diagram diagram = diagramTypeToDiagram.get(lintType);
+    public Map<StringBuilder, DiagramType> generateDiagrams(Set<DiagramType> diagrams) {
+        Map<StringBuilder, DiagramType> diagramBuilders = new HashMap<>();
+        for(DiagramType diagramType : diagrams){
+            Diagram diagram = diagramTypeToDiagram.get(diagramType);
             StringBuilder diagramBuilder = diagram.generateDiagramByPackage(myClassNodes, packageToMyClassNode);
-            diagramBuilders.put(diagramBuilder, lintType);
+            diagramBuilders.put(diagramBuilder, diagramType);
 
         }
         return diagramBuilders;
