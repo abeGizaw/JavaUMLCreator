@@ -32,20 +32,11 @@ public class LinterMain {
 
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
         Linter linter = new Linter(files, creator, outputPath, fileToPackage);
-        List<Message> messages = lintForMessages(checks, transformations, linter);
-        prettyPrint(messages);
 
         Saver saver = new LintResultSaver(outputPath);
-        saveMessagesToFile(messages, saver);
         generateAndSaveDiagramsToFile(linter, diagrams, saver);
     }
 
-    private static List<Message> lintForMessages(Set<LintType> checks, Set<LintType> transformations, Linter linter) {
-        List<Message> allMessages = new ArrayList<>(linter.runSelectedTransformations(transformations));
-        List<Message> messages = linter.runSelectedChecks(checks);
-        allMessages.addAll(messages);
-        return allMessages;
-    }
 
     private static Map<String, String> parseDirectory(Path directoryPath) {
         Map<String, String> fileToPackage = new HashMap<>();
@@ -290,11 +281,6 @@ public class LinterMain {
         }
     }
 
-    private static void saveMessagesToFile(List<Message> messages, Saver saver) {
-        for (Message message : messages) {
-            saver.saveMessage(message.toString());
-        }
-    }
     private static void writeDiagramFiles(String fileOutput, LintType lintType, StringBuilder stringBuilder, Saver saver) {
         if(lintType == LintType.UML_CONVERTER){
             saver.writeToFile(stringBuilder.toString(), PUML_TYPE, fileOutput);
