@@ -1,0 +1,17 @@
+@startuml
+package .. {
+	+class HasATest{
+	- a: AccessModifierVariety
+	- b: ArrayFieldsConverter
+	- c: CollectionFieldsConverter[]
+	- d: ArrayList<ImplementingClass>
+	- e: Set<MockAbstract>
+	- f: HashMap<MockEnum,MockInterface>
+	+HasATest():void
+	}
+
+}
+HasATest-->AccessModifierVariety
+HasATest-->ArrayFieldsConverter
+HasATest-->CollectionFieldsConverter
+@enduml

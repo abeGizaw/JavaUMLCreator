@@ -5,14 +5,32 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Converts ASM representation of classes to UML diagrams.
+ * This class provides methods to generate UML diagram content from a given set of class nodes,
+ * handling the conversion of class information, fields, and methods into UML syntax.
+ */
 public class ConvertASMToUML implements Diagram{
     private final StringBuilder classUmlContent;
     private Map<String, Integer> hasARelationShipByClass = new HashMap<>();
     private Set<String> allHasARelationships = new HashSet<>();
+
+    /**
+     * Constructs a new ConvertASMToUML instance with a StringBuilder to hold the UML diagram content.
+     *
+     * @param classUmlContent The StringBuilder instance that will accumulate the UML diagram content.
+     */
     public ConvertASMToUML(StringBuilder classUmlContent){
         this.classUmlContent = classUmlContent;
     }
 
+    /**
+     * Generates UML diagram content for a single class node and appends it to the provided StringBuilder.
+     * This includes the class's fields, methods, and any relationships identified during conversion.
+     *
+     * @param myClassNode  The class node to convert into UML diagram content.
+     * @param pumlContent  The StringBuilder instance to which the UML content will be appended.
+     */
     public void generateDiagramByNode(MyClassNode myClassNode, StringBuilder pumlContent) {
         pumlContent.append(convertClassInfo(myClassNode));
         pumlContent.append("{\n\t");
@@ -27,6 +45,14 @@ public class ConvertASMToUML implements Diagram{
         hasARelationShipByClass.clear();
     }
 
+    /**
+     * Generates a UML diagram for an entire package, organizing class nodes by package and converting each to UML content.
+     * This method also handles the aggregation of relationship information across classes.
+     *
+     * @param myClassNodeList       A list of MyClassNode instances representing the classes to be included in the diagram.
+     * @param packageToMyClassNode  A map associating package names with lists of MyClassNode instances belonging to each package.
+     * @return                      A StringBuilder containing the complete UML diagram content.
+     */
     public StringBuilder generateDiagramByPackage(List<MyClassNode> myClassNodeList, Map<String, List<MyClassNode>> packageToMyClassNode) {
         classUmlContent.append("@startuml\n");
         for(String packageName : packageToMyClassNode.keySet()){
@@ -54,7 +80,11 @@ public class ConvertASMToUML implements Diagram{
     }
 
 
-
+    /**
+     * Converts the information of a MyClassNode object's class type into a UML formatted string.
+     * @param myClassNode The class node containing the information to convert.
+     * @return A string representing the class in UML format.
+     */
     private String convertClassInfo(MyClassNode myClassNode){
         StringBuilder classString = new StringBuilder();
 
@@ -99,6 +129,31 @@ public class ConvertASMToUML implements Diagram{
         return methodString.toString();
     }
 
+    /**
+     * Determines the UML type based on the access flags.
+     *
+     * @param access Access flags of the class.
+     * @return A string representing the UML type.
+     */
+    private String getClassType(int access) {
+        if((access & MyOpcodes.ACC_INTERFACE) != 0){
+            return "interface";
+        } else if((access & MyOpcodes.ACC_ABSTRACT) != 0){
+            return "abstract class";
+        } else if((access & MyOpcodes.ACC_ENUM) != 0){
+            return "enum";
+        } else {
+            return "class";
+        }
+    }
+
+    /**
+     * Generates UML information for non-inner (outer) classes.
+     *
+     * @param myClassNode MyClassNode representing the class.
+     * @param classString StringBuilder to append the class information.
+     * @param classType The type of class (e.g., class, abstract class, interface).
+     */
     private void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
         if (classType.equals("enum")) {
@@ -110,23 +165,19 @@ public class ConvertASMToUML implements Diagram{
     }
 
 
+    /**
+     * Generates UML information for inner classes.
+     *
+     * @param myClassNode MyClassNode representing the class.
+     * @param classString StringBuilder to append the class information.
+     * @param classType The type of class (e.g., class, abstract class, interface).
+     */
     private void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
         MyInnerClassNode innerClassNode = findInnerClassNode(myClassNode, myClassNode.name);
         if(innerClassNode != null){
             String classModifier = getAccessModifier(innerClassNode.access);
             classString.append(classModifier).append(classType).append(" ").append(className);
-        }
-    }
-    private String getClassType(int access) {
-        if((access & MyOpcodes.ACC_INTERFACE) != 0){
-            return "interface";
-        } else if((access & MyOpcodes.ACC_ABSTRACT) != 0){
-            return "abstract class";
-        } else if((access & MyOpcodes.ACC_ENUM) != 0){
-            return "enum";
-        } else {
-            return "class";
         }
     }
 

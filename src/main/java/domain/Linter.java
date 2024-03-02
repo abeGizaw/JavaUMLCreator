@@ -24,7 +24,6 @@ public class Linter {
     }
     private void populateDiagramMap() {
         diagramTypeToDiagram.put(DiagramType.UML_CONVERTER, new ConvertASMToUML(new StringBuilder()));
-
     }
 
     private List<MyClassNode> createClassNodes(List<String> classPaths, Map<String, String> fileToPackage) {
