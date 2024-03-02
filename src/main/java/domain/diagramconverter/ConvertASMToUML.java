@@ -27,8 +27,6 @@ public class ConvertASMToUML implements Diagram{
         hasARelationShipByClass.clear();
     }
 
-    @Override
-    //will be the one I want to use once fully working
     public StringBuilder generateDiagramByPackage(List<MyClassNode> myClassNodeList, Map<String, List<MyClassNode>> packageToMyClassNode) {
         classUmlContent.append("@startuml\n");
         for(String packageName : packageToMyClassNode.keySet()){

@@ -10,7 +10,6 @@ public class LintResultSaver implements Saver {
 
     public LintResultSaver(String path) {
         this.basePath = path.endsWith(File.separator) ? path : path + File.separator;
-        this.basePath += "output";
         createDirectory(this.basePath);
     }
 

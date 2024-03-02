@@ -22,7 +22,7 @@ public class LinterMain {
     public static void main(String[] args) {
         Path directoryPath = promptUserForDirectory();
         Map<String, String> fileToPackage = parseDirectory(directoryPath);
-        String outputPath = promptUserForOutputFileName(OUTPUT_DIRECTORY_FOR_CHECKS);
+        String outputPath = promptUser(OUTPUT_DIRECTORY_FOR_CHECKS);
 
         Map<DiagramType, String> diagrams = promptUserForDiagrams();
 
@@ -35,6 +35,12 @@ public class LinterMain {
         generateAndSaveDiagramsToFile(linter, diagrams, saver);
     }
 
+    /**
+     * Generates and saves diagrams to files.
+     * @param linter The linter to use for generating diagrams.
+     * @param diagrams A map of diagram types to their respective output paths.
+     * @param saver The saver object to use for writing diagrams to files.
+     */
     private static void generateAndSaveDiagramsToFile(Linter linter, Map<DiagramType, String> diagrams, Saver saver) {
         Map<StringBuilder, DiagramType> diagramBuilders = linter.generateDiagrams(diagrams.keySet());
         for(StringBuilder stringBuilder: diagramBuilders.keySet()){
@@ -44,6 +50,11 @@ public class LinterMain {
         }
     }
 
+    /**
+     * Parses a directory and maps files to their respective packages.
+     * @param directoryPath The path to the directory to parse.
+     * @return A map of file paths to package names.
+     */
     private static Map<String, String> parseDirectory(Path directoryPath) {
         Map<String, String> fileToPackage = new HashMap<>();
 
@@ -61,6 +72,10 @@ public class LinterMain {
         return fileToPackage;
     }
 
+    /**
+     * Prompts the user for a directory and validates the input.
+     * @return The path to the valid directory input by the user.
+     */
     private static Path promptUserForDirectory() {
         String userInput = promptUser("Enter Directory/Package: ");
         if (!isValidPath(userInput)) {
@@ -71,6 +86,11 @@ public class LinterMain {
         }
     }
 
+    /**
+     * Validates if the provided input path is valid.
+     * @param inputPath The path to validate.
+     * @return True if the path is valid, false otherwise.
+     */
     private static boolean isValidPath(String inputPath) {
         if (inputPath == null || inputPath.isEmpty()) {
             return false;
@@ -87,10 +107,10 @@ public class LinterMain {
     }
 
 
-    private static String promptUserForOutputFileName(String destinationMessage) {
-        return promptUser(destinationMessage);
-    }
-
+    /**
+     * Prompts the user to select diagrams to generate.
+     * @return A map of selected diagram types to their output file names.
+     */
     private static Map<DiagramType, String> promptUserForDiagrams() {
         String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UMLCLASS), NONE");
 
@@ -98,7 +118,7 @@ public class LinterMain {
 
         switch (userInput.toUpperCase()) {
             case "UMLCLASS":
-                diagrams.put(DiagramType.UML_CONVERTER, promptUserForOutputFileName(OUTPUT_FOR_PUML_CLASSDIAGRAM));
+                diagrams.put(DiagramType.UML_CONVERTER, promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM));
             case "NONE":
                 break;
             default:
@@ -108,12 +128,25 @@ public class LinterMain {
         return diagrams;
 
     }
+
+    /**
+     * Prompts the user and returns their input.
+     * @param prompt The message to display to the user.
+     * @return The user input as a string.
+     */
     private static String promptUser(String prompt) {
         Scanner keyboard = new Scanner(System.in);
         System.out.println(prompt);
         return keyboard.nextLine();
     }
 
+    /**
+     * Writes the diagram files to the output destination.
+     * @param fileOutput The output file name.
+     * @param diagramType The type of the diagram.
+     * @param stringBuilder The string builder containing the diagram.
+     * @param saver The saver object to write the diagram to a file.
+     */
     private static void writeDiagramFiles(String fileOutput, DiagramType diagramType, StringBuilder stringBuilder, Saver saver) {
         if(diagramType == DiagramType.UML_CONVERTER){
             saver.writeToFile(stringBuilder.toString(), PUML_TYPE, fileOutput);
