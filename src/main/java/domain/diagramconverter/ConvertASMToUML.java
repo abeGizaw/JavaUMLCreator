@@ -219,6 +219,12 @@ public class ConvertASMToUML implements Diagram{
         String fullDesc = (field.signature != null) ? field.signature : field.desc;
         String descName = getFieldType(fullDesc);
 
+//        System.out.println("field: " + field.name);
+//        System.out.println("field access: " + field.access);
+//        System.out.println("field signature: " + field.signature);
+//        System.out.println("field desc: " + field.desc);
+//        System.out.println();
+
 
         if(!isJavaAPIClass(fullDesc)){
             String cleanedDescName = cleanDescName(descName);
@@ -229,13 +235,18 @@ public class ConvertASMToUML implements Diagram{
 
     private String cleanDescName(String descName) {
         if(descName.contains("[]")){
-            return descName.substring(0, descName.length() - 2);
+            System.out.println("caught: " + descName);
+
+            return cleanDescName(descName.substring(0, descName.length() - 2));
         }
 
         return descName;
     }
 
     private void addAHasARelationship(String descName, String className) {
+        System.out.println("desc name " + descName);
+        System.out.println("class name " + className);
+        System.out.println();
         String baseRelationShip = className + "-->";
         String relationship = baseRelationShip + descName;
         String multipleRelationship = baseRelationShip + "\"*\"" + descName;
@@ -525,6 +536,7 @@ public class ConvertASMToUML implements Diagram{
         }
         if (isCollectionType(desc)) {
             if(desc.startsWith("[")){
+
                 return isJavaAPIClass(desc.substring(1));
             } else{
                 //It is a list/set, so we need to check for unique classes in their hold types
