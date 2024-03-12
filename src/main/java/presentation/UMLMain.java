@@ -43,8 +43,6 @@ public class UMLMain {
         } catch (IOException e) {
             System.err.println("Error writing UML to output file");
         }
-
-
     }
 
     private static void processClassFile(Path filePath) {

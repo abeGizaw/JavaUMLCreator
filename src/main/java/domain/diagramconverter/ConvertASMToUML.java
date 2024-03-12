@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
  */
 public class ConvertASMToUML implements Diagram{
     private final StringBuilder classUmlContent;
-    private Map<String, Integer> hasARelationShipByClass = new HashMap<>();
-    private Set<String> allHasARelationships = new HashSet<>();
+    private final Map<String, Integer> hasARelationShipByClass = new HashMap<>();
+    private final Set<String> allHasARelationships = new HashSet<>();
 
     /**
      * Constructs a new ConvertASMToUML instance with a StringBuilder to hold the UML diagram content.
@@ -227,17 +227,15 @@ public class ConvertASMToUML implements Diagram{
 
 
         if(!isJavaAPIClass(fullDesc)){
-            String cleanedDescName = cleanDescName(descName);
+            String cleanedDescName = removeBracketsFromDesc(descName);
             addAHasARelationship(cleanedDescName, className);
         }
         fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
     }
 
-    private String cleanDescName(String descName) {
+    private String removeBracketsFromDesc(String descName) {
         if(descName.contains("[]")){
-            System.out.println("caught: " + descName);
-
-            return cleanDescName(descName.substring(0, descName.length() - 2));
+            return removeBracketsFromDesc(descName.substring(0, descName.length() - 2));
         }
 
         return descName;
@@ -274,6 +272,14 @@ public class ConvertASMToUML implements Diagram{
         return descName.contains("[") || descName.contains("<");
     }
 
+
+    /**
+     * @param desc format:
+     *     ()V for void methods with no params
+     *     (Ljava/lang/String;)V params are passed within the ()
+     * @param methodNode MyASM methodNode
+     * @return UML method declaration
+     */
     private String getMethodInfo(String desc, MyMethodNode methodNode) {
         int startParams = desc.indexOf('(');
         int endParams = desc.indexOf(')');
@@ -288,6 +294,12 @@ public class ConvertASMToUML implements Diagram{
         return "(" + parsedParams + "):" + returnType;
     }
 
+    /**
+     *
+     * @param methodNode - passed in to check the local variables (parameters) in method
+     * @param paramInfo - example format: [I, Ljava/lang/String;, D]
+     * @return will return names of params as a list. Example: [a, b, c]
+     */
     private List<String> getParameterNames(MyMethodNode methodNode, List<String> paramInfo) {
         List<String> paramNames = new ArrayList<>();
 
@@ -309,6 +321,11 @@ public class ConvertASMToUML implements Diagram{
         return paramNames;
     }
 
+    /**
+     *
+     * @param desc example format: ILjava/lang/String;D -> int String double
+     * @param params an emtpy list to hold params: For above example: [I, Ljava/lang/String;, D]
+     */
     private void generateListOfParams(String desc, List<String> params) {
         if (desc.isEmpty()) {
             return;
@@ -331,7 +348,6 @@ public class ConvertASMToUML implements Diagram{
                 startIndex += arrayDesc.length();
             }
         }
-
     }
 
     private String processObjectDescriptor(String desc) {
@@ -366,6 +382,12 @@ public class ConvertASMToUML implements Diagram{
         }
     }
 
+    /**
+     * Helps of mapping from type to name
+     * @param paramInfo example: [I, Ljava/lang/String;, D]
+     * @param paramNames example: [a, b, c]
+     * @return example: a:int, b:String, c:double
+     */
     private String analyzeForParams(List<String> paramInfo, List<String> paramNames) {
         if (paramInfo.isEmpty()) {
             return "";
@@ -383,11 +405,23 @@ public class ConvertASMToUML implements Diagram{
         return paramsBuilder.toString();
     }
 
+    /**
+     *
+     * @param paramsBuilder String of built param list. Example: a:int, b:double,
+     * @param param type param to be added example: Ljava/lang/String;
+     * @param parameterName name of param being added: param name s
+     *
+     * ensures: paramsBuilder -> a:int, b:double, s:String (using above example)
+     */
     private void appendParamInfo(StringBuilder paramsBuilder, String param, String parameterName) {
         String fieldType = getFieldType(param);
         paramsBuilder.append(parameterName).append(":").append(fieldType);
     }
 
+    /**
+     * @param desc examples: V, I, Ljava/lang/String; Ljava/util/List<Ljava/lang/Integer;>;
+     * @return The type of desc passed in. example: int, String, List<Integer>
+     */
     private String getFieldType(String desc) {
         if (desc.startsWith("[")) {
             return getFieldType(desc.substring(1)) + "[]";
@@ -402,23 +436,53 @@ public class ConvertASMToUML implements Diagram{
         }
     }
 
+    /**
+     *
+     * @param desc collections.
+     *             Examples: Ljava/util/List<Ljava/lang/Integer;>;
+     *                      Ljava/util/Map<Ljava/lang/String;Ljava/util/List<Ljava/lang/Double;>;>;
+     * <p>
+     * Matcher looking for java.util.regex.Matcher[pattern=.*?/(\w+)<.* region=0,x lastmatch=]
+     *
+     * @return desc in UML collection format (Java format)
+     *         Examples: List<Integer>
+     *                   Map<String,List<Double>>
+     */
     private String getCollectionType(String desc) {
         Pattern pattern = Pattern.compile(".*?/(\\w+)<.*");
         Matcher matcher = pattern.matcher(desc);
+
         if(matcher.find()){
             String collectionType = matcher.group(1);
             int collectionParamsIndex = desc.indexOf(collectionType) + collectionType.length() + 1;
             String collectedTypes = getCollectionHoldTypes(desc.substring(collectionParamsIndex));
+
             return collectionType + "<" + collectedTypes + ">";
         }
+
         return desc;
     }
 
+    /**
+     *
+     * @param collected Java type in a collection.
+     *                  Example: Ljava/lang/Character;>;
+     *                           Ljava/lang/String;Ljava/util/List<Ljava/lang/Double;>;>;
+     * @return Examples: Integer
+     *                   Map<String,List<Double>>
+     */
     private String getCollectionHoldTypes(String collected) {
         List<String> collectionHoldTypeList = cleanCollectionParsing(parseGenericTypes(collected));
         return generateCollectedTypes(collectionHoldTypeList);
     }
 
+    /**
+     *
+     * @param collectionTypeList Examples: [Ljava/lang/Integer;]
+     *                                     [Ljava/lang/String;, Ljava/util/List<Ljava/lang/Double;>;]
+     * @return Examples: Integer
+     *                   Map<String,List<Double>>
+     */
     private String generateCollectedTypes(List<String> collectionTypeList) {
         StringBuilder s= new StringBuilder();
         for(int i = 0; i < collectionTypeList.size(); i ++){
@@ -431,6 +495,12 @@ public class ConvertASMToUML implements Diagram{
         return s.toString();
     }
 
+    /**
+     *
+     * @param originalList cleans the output of @parseGenericTypes when needed
+     * @return [Ljava/lang/Integer, >;] -> [Ljava/lang/Integer;]
+     *         [Ljava/lang/String, Ljava/util/List<Ljava/lang/Double;>, >;] -> [Ljava/lang/String;, Ljava/util/List<Ljava/lang/Double;>;]
+     */
     private List<String> cleanCollectionParsing(List<String> originalList){
         List<String> modifiedList = new ArrayList<>();
         for (String entry : originalList) {
@@ -443,6 +513,14 @@ public class ConvertASMToUML implements Diagram{
         return modifiedList;
     }
 
+    /**
+     *
+     * @param innerTypes Takes a generic type and tries to separate in a list
+     *                   Example: Ljava/lang/Character;>;
+     *                            Ljava/lang/String;Ljava/util/List<Ljava/lang/Double;>;>;
+     * @return Example: [Ljava/lang/Integer, >;]
+     *                  [Ljava/lang/String, Ljava/util/List<Ljava/lang/Double;>, >;]
+     */
     private List<String> parseGenericTypes(String innerTypes) {
         List<String> types = new ArrayList<>();
         int level = 0;
@@ -477,6 +555,12 @@ public class ConvertASMToUML implements Diagram{
     private boolean isPrimitive(String desc) {
         return !desc.startsWith("L") && !desc.startsWith("[");
     }
+
+    /**
+     *
+     * @param desc - 1 char representing the primitive type
+     * @return java primitive type
+     */
     private String getPrimitiveFieldType(String desc) {
         switch(desc){
             case "B":
@@ -539,6 +623,7 @@ public class ConvertASMToUML implements Diagram{
 
                 return isJavaAPIClass(desc.substring(1));
             } else{
+                return false;
                 //It is a list/set, so we need to check for unique classes in their hold types
             }
         }
