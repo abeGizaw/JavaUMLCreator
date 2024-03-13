@@ -1,5 +1,6 @@
 package domain.diagramconverter;
 import domain.*;
+import presentation.ANSIColors;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -350,6 +351,16 @@ public class ConvertASMToUML implements Diagram{
         }
     }
 
+    /**
+     * Returns first object type in a desc type object
+     *
+     * @param desc examples: Ljava/lang/String;
+     *                       Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Double;
+     *                       Ljava/util/List<Ljava/lang/String;>;Ljava/util/Set<Ljava/lang/Character;>;Ljava/util/Map<Ljava/lang/String;Ljava/lang/Double;>;
+     * @return examples: Ljava/lang/String;
+     *                   Ljava/lang/String;
+     *                   Ljava/util/List<Ljava/lang/String;>;
+     */
     private String processObjectDescriptor(String desc) {
         int nestingLevel = 0;
         int index = 0;
@@ -366,10 +377,20 @@ public class ConvertASMToUML implements Diagram{
             index++;
         }
         index++;
+
         return desc.substring(0, index);
     }
 
+    /**
+     * Returns first object type in a desc type list
+     *
+     * @param desc examples: [DLjava/util/Map<Ljava/lang/String;Ljava/util/Set<Ljava/lang/Character;>;>;
+     *                       [ILjava/util/List<Ljava/lang/Double;>;
+     * @return examples: [D
+     *                   [I
+     */
     private String processArrayDescriptor(String desc) {
+
         int index = 0;
         while (desc.charAt(index) == '[') {
             index++;
