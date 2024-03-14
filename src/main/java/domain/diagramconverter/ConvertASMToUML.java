@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class ConvertASMToUML implements Diagram{
     private final StringBuilder classUmlContent;
     private final Map<String, Integer> hasARelationShipByClass = new HashMap<>();
-    private final Set<String> allHasARelationships = new HashSet<>();
+    private Set<String> allHasARelationships = new HashSet<>();
 
     /**
      * Constructs a new ConvertASMToUML instance with a StringBuilder to hold the UML diagram content.
@@ -41,8 +41,25 @@ public class ConvertASMToUML implements Diagram{
 
         pumlContent.append("}\n");
 
-        allHasARelationships.addAll(hasARelationShipByClass.keySet());
+        allHasARelationships = convertKeyNames(hasARelationShipByClass);
         hasARelationShipByClass.clear();
+    }
+
+    private Set<String> convertKeyNames(Map<String, Integer> hasARelMap) {
+        Set<String> results = new HashSet<>();
+        for(String relation: hasARelMap.keySet()){
+            if(hasARelMap.get(relation) == 1){
+                results.add(relation);
+            } else {
+                int count = hasARelMap.get(relation);
+                String relWithNum = relation.substring(0, relation.indexOf('>') + 1)
+                                    + "\"" + count + "\"" +
+                                    relation.substring(relation.indexOf('>') + 1);
+
+                results.add(relWithNum);
+            }
+        }
+        return results;
     }
 
     /**
@@ -228,7 +245,7 @@ public class ConvertASMToUML implements Diagram{
 
         if(!isJavaAPIClass(fullDesc)){
             String cleanedDescName = removeBracketsFromDesc(descName);
-            addAHasARelationship(cleanedDescName, className);
+            addAHasARelationship(cleanedDescName, className, isCollectionType(descName));
         }
         fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
     }
@@ -241,7 +258,7 @@ public class ConvertASMToUML implements Diagram{
         return descName;
     }
 
-    private void addAHasARelationship(String descName, String className) {
+    private void addAHasARelationship(String descName, String className, boolean collectionType) {
         System.out.println("desc name " + descName);
         System.out.println("class name " + className);
         System.out.println();
@@ -249,21 +266,16 @@ public class ConvertASMToUML implements Diagram{
         String relationship = baseRelationShip + descName;
         String multipleRelationship = baseRelationShip + "\"*\"" + descName;
 
-        if (isCollectionType(descName)) {
+        if (collectionType) {
             hasARelationShipByClass.putIfAbsent(multipleRelationship, 1);
         } else {
             if (!hasARelationShipByClass.containsKey(multipleRelationship)) {
-                int count = hasARelationShipByClass.getOrDefault(relationship, 0);
-                if (count > 0) {
-                    hasARelationShipByClass.remove(relationship);
-                }
-
-                if (count > 0) {
-                    relationship = baseRelationShip + "\"" + (count + 1) + "\"" + descName;
-                    hasARelationShipByClass.put(relationship, count + 1);
+                if (hasARelationShipByClass.containsKey(relationship)) {
+                    hasARelationShipByClass.put(relationship, hasARelationShipByClass.get(relationship) + 1);
                 } else {
                     hasARelationShipByClass.put(relationship, 1);
                 }
+
             }
         }
     }
@@ -620,9 +632,9 @@ public class ConvertASMToUML implements Diagram{
         }
         if (isCollectionType(desc)) {
             if(desc.startsWith("[")){
-
                 return isJavaAPIClass(desc.substring(1));
             } else{
+                System.out.println("Is java api class " + desc);
                 return false;
                 //It is a list/set, so we need to check for unique classes in their hold types
             }
