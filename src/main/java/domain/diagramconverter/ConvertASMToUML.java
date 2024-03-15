@@ -1,6 +1,8 @@
 package domain.diagramconverter;
 import domain.*;
+import presentation.ANSIColors;
 
+import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,16 +34,20 @@ public class ConvertASMToUML implements Diagram{
      * @param pumlContent  The StringBuilder instance to which the UML content will be appended.
      */
     public void generateDiagramByNode(MyClassNode myClassNode, StringBuilder pumlContent) {
+        System.out.println("hi");
         pumlContent.append(convertClassInfo(myClassNode));
         pumlContent.append("{\n\t");
 
-        String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-        pumlContent.append(convertClassFields(myClassNode.fields, className));
-        pumlContent.append(convertClassMethods(myClassNode.methods, className));
+        String cleanClassName = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
+
+        pumlContent.append(convertClassFields(myClassNode.fields, myClassNode.name));
+        pumlContent.append(convertClassMethods(myClassNode.methods, cleanClassName));
 
         pumlContent.append("}\n");
 
-        allHasARelationships = convertKeyNames(hasARelationShipByClass);
+        System.out.println(cleanClassName);
+        System.out.println(ANSIColors.RED+ hasARelationShipByClass + ANSIColors.RESET);
+        allHasARelationships.addAll(convertKeyNames(hasARelationShipByClass));
         hasARelationShipByClass.clear();
     }
 
@@ -88,6 +94,8 @@ public class ConvertASMToUML implements Diagram{
             }
 
         }
+
+        System.out.println("Finished gen diagram by node: " + allHasARelationships);
 
         for(String relationship: allHasARelationships){
             classUmlContent.append(relationship).append("\n");
@@ -236,46 +244,59 @@ public class ConvertASMToUML implements Diagram{
         String fullDesc = (field.signature != null) ? field.signature : field.desc;
         String descName = getFieldType(fullDesc);
 
-//        System.out.println("field: " + field.name);
-//        System.out.println("field access: " + field.access);
-//        System.out.println("field signature: " + field.signature);
-//        System.out.println("field desc: " + field.desc);
-//        System.out.println();
 
-
-        if(!isJavaAPIClass(fullDesc)){
+        if(!isJavaAPIClass(fullDesc, className)){
             String cleanedDescName = removeBracketsFromDesc(descName);
             addAHasARelationship(cleanedDescName, className, isCollectionType(descName));
         }
         fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
     }
 
+    /**
+     *
+     * @param descName exmaple: Set<MockAbstract>
+     *                          HashMap<MockEnum,MockInterface>
+     *                          AccessModifierVariety[]
+     * @return example: MockAbstract
+     *                  MockEnum,MockInterface
+     *                  AccessModifierVariety
+     */
     private String removeBracketsFromDesc(String descName) {
-        if(descName.contains("[]")){
+        if(descName.endsWith("[]")){
             return removeBracketsFromDesc(descName.substring(0, descName.length() - 2));
+        } else if(descName.contains("<")){
+            while(descName.contains("<")){
+                 descName = descName.substring(descName.indexOf("<") + 1);
+            }
+            descName = descName.substring(0, descName.indexOf(">"));
+            descName = descName.replace("[]", "");
         }
 
         return descName;
     }
 
     private void addAHasARelationship(String descName, String className, boolean collectionType) {
-        System.out.println("desc name " + descName);
-        System.out.println("class name " + className);
-        System.out.println();
-        String baseRelationShip = className + "-->";
-        String relationship = baseRelationShip + descName;
-        String multipleRelationship = baseRelationShip + "\"*\"" + descName;
+        for (String field: descName.split(",")){
+            String cleanClassName = className.substring(className.lastIndexOf("/") + 1);
+//            System.out.println("desc name " + field);
+//            System.out.println("class name " + cleanClassName);
+//            System.out.println();
+            String baseRelationShip = cleanClassName + "-->";
+            String relationship = baseRelationShip + field;
+            String multipleRelationship = baseRelationShip + "\"*\"" + field;
 
-        if (collectionType) {
-            hasARelationShipByClass.putIfAbsent(multipleRelationship, 1);
-        } else {
-            if (!hasARelationShipByClass.containsKey(multipleRelationship)) {
-                if (hasARelationShipByClass.containsKey(relationship)) {
-                    hasARelationShipByClass.put(relationship, hasARelationShipByClass.get(relationship) + 1);
-                } else {
-                    hasARelationShipByClass.put(relationship, 1);
+            if (collectionType) {
+                hasARelationShipByClass.remove(relationship);
+                hasARelationShipByClass.putIfAbsent(multipleRelationship, 1);
+            } else {
+                if (!hasARelationShipByClass.containsKey(multipleRelationship)) {
+                    if (hasARelationShipByClass.containsKey(relationship)) {
+                        hasARelationShipByClass.put(relationship, hasARelationShipByClass.get(relationship) + 1);
+                    } else {
+                        hasARelationShipByClass.put(relationship, 1);
+                    }
+
                 }
-
             }
         }
     }
@@ -626,22 +647,32 @@ public class ConvertASMToUML implements Diagram{
         return modifiers.toString();
     }
 
-    private boolean isJavaAPIClass(String desc) {
+    /**
+     *
+     * @param desc format: Ljava/util/List<Ljava/lang/Integer;>;
+     *                     [Ldomain/diagramconverter/ClassUmlMockTestClasses/CollectionFieldsConverter;
+     *                     Ldomain/diagramconverter/ClassUmlMockTestClasses/ArrayFieldsConverter;
+     *
+     * @param originalClassName format: <pathFromPackage>/<classname>
+     *                                  domain/diagramconverter/ClassUmlMockTestClasses/HasATest
+     * @return T/F if it's a javaAPIclass
+     */
+    private boolean isJavaAPIClass(String desc, String originalClassName) {
         if(isPrimitive(desc)){
             return true;
         }
+
+        String classNameDirectory = originalClassName.substring(0, originalClassName.lastIndexOf('/'));
         if (isCollectionType(desc)) {
             if(desc.startsWith("[")){
-                return isJavaAPIClass(desc.substring(1));
-            } else{
-                System.out.println("Is java api class " + desc);
+                return isJavaAPIClass(desc.substring(1), originalClassName);
+            } else if (desc.contains(classNameDirectory)) {
                 return false;
-                //It is a list/set, so we need to check for unique classes in their hold types
             }
         }
 
-        String className = desc.substring(1, desc.length() - 1);
-        return className.startsWith("java/");
+        String fieldClassName = desc.substring(1, desc.length() - 1);
+        return fieldClassName.startsWith("java/");
     }
 
 }

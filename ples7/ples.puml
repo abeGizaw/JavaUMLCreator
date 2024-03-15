@@ -1,0 +1,30 @@
+@startuml
+package .. {
+	+class HasATest{
+	- singleAccessModifierVariety: AccessModifierVariety
+	- firstArrayFieldsConverter: ArrayFieldsConverter
+	- secondArrayFieldsConverter: ArrayFieldsConverter
+	- thirdArrayFieldsConverter: ArrayFieldsConverter
+	- arrayOfCollectionFieldsConverters: CollectionFieldsConverter[]
+	- listOfListsImplementingClass: List<List<ImplementingClass>>
+	- setOfMockAbstracts: Set<MockAbstract>
+	- enumToInterfaceMap: HashMap<MockEnum,MockInterface>
+	- listOfAccessModifierVarieties: ArrayList<AccessModifierVariety>
+	- mapOfMapsEnumToAbstractToInterface: Map<HashMap<MockEnum,MockAbstract>,MockInterface>
+	- setOfHashSetObjectFieldConverters: Set<HashSet<ObjectFieldsConverter>>
+	- listOfIntegers: List<Integer>
+	- stringToIntegerMap: HashMap<String,Integer>
+	+HasATest():void
+	}
+
+}
+HasATest-->AccessModifierVariety
+HasATest-->"*"Set<MockAbstract>
+HasATest-->"*"ArrayList<AccessModifierVariety>
+HasATest-->"*"HashMap<MockEnum,MockInterface>
+HasATest-->"*"Set<HashSet<ObjectFieldsConverter>>
+HasATest-->"*"List<List<ImplementingClass>>
+HasATest-->"*"Map<HashMap<MockEnum,MockAbstract>,MockInterface>
+HasATest-->"*"CollectionFieldsConverter
+HasATest-->"3"ArrayFieldsConverter
+@enduml
