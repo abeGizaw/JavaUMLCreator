@@ -2,7 +2,6 @@ package domain.diagramconverter;
 import domain.*;
 import presentation.ANSIColors;
 
-import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +14,7 @@ import java.util.regex.Pattern;
 public class ConvertASMToUML implements Diagram{
     private final StringBuilder classUmlContent;
     private final Map<String, Integer> hasARelationShipByClass = new HashMap<>();
-    private Set<String> allHasARelationships = new HashSet<>();
+    private final Set<String> allHasARelationships = new HashSet<>();
 
     /**
      * Constructs a new ConvertASMToUML instance with a StringBuilder to hold the UML diagram content.
@@ -34,7 +33,6 @@ public class ConvertASMToUML implements Diagram{
      * @param pumlContent  The StringBuilder instance to which the UML content will be appended.
      */
     public void generateDiagramByNode(MyClassNode myClassNode, StringBuilder pumlContent) {
-        System.out.println("hi");
         pumlContent.append(convertClassInfo(myClassNode));
         pumlContent.append("{\n\t");
 
@@ -45,10 +43,31 @@ public class ConvertASMToUML implements Diagram{
 
         pumlContent.append("}\n");
 
-        System.out.println(cleanClassName);
-        System.out.println(ANSIColors.RED+ hasARelationShipByClass + ANSIColors.RESET);
+
         allHasARelationships.addAll(convertKeyNames(hasARelationShipByClass));
+        addExtendsAndImplementsRelation(myClassNode, cleanClassName);
         hasARelationShipByClass.clear();
+    }
+
+    private void addExtendsAndImplementsRelation(MyClassNode myClassNode, String cleanClassName) {
+        // Adds the implement relations
+        if(!myClassNode.interfaces.isEmpty()){
+            for(String classInterface : myClassNode.interfaces){
+                if(!classInterface.startsWith("java")){
+                    String interfaceName = classInterface.substring(classInterface.lastIndexOf('/') + 1);
+                    allHasARelationships.add(cleanClassName + "..|>" + interfaceName);
+                }
+            }
+        }
+
+        // Adds the extends relations
+        String abstractClass = myClassNode.superName;
+        if(!abstractClass.isEmpty()){
+            if(!abstractClass.startsWith("java")){
+                String abstractClassName = abstractClass.substring(abstractClass.lastIndexOf('/') + 1);
+                allHasARelationships.add(cleanClassName + "--|>" + abstractClassName);
+            }
+        }
     }
 
     private Set<String> convertKeyNames(Map<String, Integer> hasARelMap) {
@@ -94,8 +113,6 @@ public class ConvertASMToUML implements Diagram{
             }
 
         }
-
-        System.out.println("Finished gen diagram by node: " + allHasARelationships);
 
         for(String relationship: allHasARelationships){
             classUmlContent.append(relationship).append("\n");
@@ -278,9 +295,6 @@ public class ConvertASMToUML implements Diagram{
     private void addAHasARelationship(String descName, String className, boolean collectionType) {
         for (String field: descName.split(",")){
             String cleanClassName = className.substring(className.lastIndexOf("/") + 1);
-//            System.out.println("desc name " + field);
-//            System.out.println("class name " + cleanClassName);
-//            System.out.println();
             String baseRelationShip = cleanClassName + "-->";
             String relationship = baseRelationShip + field;
             String multipleRelationship = baseRelationShip + "\"*\"" + field;
