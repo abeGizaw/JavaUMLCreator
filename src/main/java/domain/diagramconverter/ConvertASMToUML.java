@@ -49,6 +49,37 @@ public class ConvertASMToUML implements Diagram{
         hasARelationShipByClass.clear();
     }
 
+    /**
+     * Generates a UML diagram for an entire package, organizing class nodes by package and converting each to UML content.
+     * This method also handles the aggregation of relationship information across classes.
+     *
+     * @param packageToMyClassNode  A map associating package names with lists of MyClassNode instances belonging to each package.
+     * @return                      A StringBuilder containing the complete UML diagram content.
+     */
+    public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode) {
+        classUmlContent.append("@startuml\n");
+        for(String packageName : packageToMyClassNode.keySet()){
+            if (!packageName.isEmpty()) {
+                classUmlContent.append("package ").append(packageName).append(" {\n\t");
+            }
+
+            List<MyClassNode> nodesForPackage = packageToMyClassNode.get(packageName);
+            for (MyClassNode myClassNode : nodesForPackage) {
+                generateDiagramByNode(myClassNode, classUmlContent);
+                classUmlContent.append("\n");
+            }
+
+            if (!packageName.isEmpty()) {
+                classUmlContent.append("}\n");
+            }
+        }
+        for(String relationship: allHasARelationships){
+            classUmlContent.append(relationship).append("\n");
+        }
+        classUmlContent.append("@enduml");
+        return classUmlContent;
+    }
+
     private void addExtendsAndImplementsRelation(MyClassNode myClassNode, String cleanClassName) {
         // Adds the implement relations
         if(!myClassNode.interfaces.isEmpty()){
@@ -85,40 +116,6 @@ public class ConvertASMToUML implements Diagram{
             }
         }
         return results;
-    }
-
-    /**
-     * Generates a UML diagram for an entire package, organizing class nodes by package and converting each to UML content.
-     * This method also handles the aggregation of relationship information across classes.
-     *
-     * @param myClassNodeList       A list of MyClassNode instances representing the classes to be included in the diagram.
-     * @param packageToMyClassNode  A map associating package names with lists of MyClassNode instances belonging to each package.
-     * @return                      A StringBuilder containing the complete UML diagram content.
-     */
-    public StringBuilder generateDiagramByPackage(List<MyClassNode> myClassNodeList, Map<String, List<MyClassNode>> packageToMyClassNode) {
-        classUmlContent.append("@startuml\n");
-        for(String packageName : packageToMyClassNode.keySet()){
-            if (!packageName.isEmpty()) {
-                classUmlContent.append("package ").append(packageName).append(" {\n\t");
-            }
-
-            List<MyClassNode> nodesForPackage = packageToMyClassNode.get(packageName);
-            for (MyClassNode myClassNode : nodesForPackage) {
-                generateDiagramByNode(myClassNode, classUmlContent);
-                classUmlContent.append("\n");
-            }
-
-            if (!packageName.isEmpty()) {
-                classUmlContent.append("}\n");
-            }
-
-        }
-
-        for(String relationship: allHasARelationships){
-            classUmlContent.append(relationship).append("\n");
-        }
-        classUmlContent.append("@enduml");
-        return classUmlContent;
     }
 
 
@@ -520,7 +517,7 @@ public class ConvertASMToUML implements Diagram{
      */
     private String getCollectionHoldTypes(String collected) {
         List<String> collectionHoldTypeList = cleanCollectionParsing(parseGenericTypes(collected));
-        return generateCollectedTypes(collectionHoldTypeList);
+        return "WHATTT";
     }
 
     /**

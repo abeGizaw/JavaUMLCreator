@@ -43,7 +43,7 @@ public class Linter {
         Map<StringBuilder, DiagramType> diagramBuilders = new HashMap<>();
         for(DiagramType diagramType : diagrams){
             Diagram diagram = diagramTypeToDiagram.get(diagramType);
-            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(myClassNodes, packageToMyClassNode);
+            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(packageToMyClassNode);
             diagramBuilders.put(diagramBuilder, diagramType);
 
         }
