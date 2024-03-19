@@ -13,7 +13,7 @@ public abstract class UMLConverterBase implements UMLConverter{
     }
 
 
-    private Set<String> convertKeyNames(Map<String, Integer> hasARelMap) {
+    public Set<String> convertKeyNames(Map<String, Integer> hasARelMap) {
         Set<String> results = new HashSet<>();
         for(String relation: hasARelMap.keySet()){
             if(hasARelMap.get(relation) == 1){
