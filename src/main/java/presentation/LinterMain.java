@@ -119,6 +119,7 @@ public class LinterMain {
         switch (userInput.toUpperCase()) {
             case "UMLCLASS":
                 diagrams.put(DiagramType.UML_CONVERTER, promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM));
+                diagrams.put(DiagramType.UML_CONVERTER2, diagrams.get(DiagramType.UML_CONVERTER));
             case "NONE":
                 break;
             default:
