@@ -119,7 +119,6 @@ public class LinterMain {
         switch (userInput.toUpperCase()) {
             case "UMLCLASS":
                 diagrams.put(DiagramType.UML_CONVERTER, promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM));
-                diagrams.put(DiagramType.UML_CONVERTER2, diagrams.get(DiagramType.UML_CONVERTER) + "2");
             case "NONE":
                 break;
             default:
@@ -149,7 +148,7 @@ public class LinterMain {
      * @param saver The saver object to write the diagram to a file.
      */
     private static void writeDiagramFiles(String fileOutput, DiagramType diagramType, StringBuilder stringBuilder, Saver saver) {
-        if(diagramType == DiagramType.UML_CONVERTER || diagramType == DiagramType.UML_CONVERTER2){
+        if(diagramType == DiagramType.UML_CONVERTER){
             saver.writeToFile(stringBuilder.toString(), PUML_TYPE, fileOutput);
         }
     }

@@ -1,7 +1,6 @@
 package domain;
 
 import domain.diagramconverter.ConvertASMToUML;
-import domain.diagramconverter.ConvertASMToUMLMock;
 import domain.diagramconverter.Diagram;
 import domain.diagramconverter.RelationsManager;
 
@@ -25,8 +24,7 @@ public class Linter {
         populateDiagramMap();
     }
     private void populateDiagramMap() {
-        diagramTypeToDiagram.put(DiagramType.UML_CONVERTER, new ConvertASMToUML(new StringBuilder()));
-        diagramTypeToDiagram.put(DiagramType.UML_CONVERTER2, new ConvertASMToUMLMock(new RelationsManager(), new StringBuilder()));
+        diagramTypeToDiagram.put(DiagramType.UML_CONVERTER, new ConvertASMToUML(new RelationsManager(), new StringBuilder()));
     }
 
     private List<MyClassNode> createClassNodes(List<String> classPaths, Map<String, String> fileToPackage) {

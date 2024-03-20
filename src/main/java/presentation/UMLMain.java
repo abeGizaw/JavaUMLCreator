@@ -46,15 +46,15 @@ public class UMLMain {
     }
 
     private static void processClassFile(Path filePath) {
-        File file = filePath.toFile();
-        String[] fileProperties = file.toString().split("\\\\");
-
-        System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
-
-        MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
-        ConvertASMToUML ASMConverter = new ConvertASMToUML(new StringBuilder());
-        ASMConverter.generateDiagramByNode(myClassNode, umlBuilder);
-        umlBuilder.append("\n");
-        System.out.println("\n");
+//        File file = filePath.toFile();
+//        String[] fileProperties = file.toString().split("\\\\");
+//
+//        System.out.println("Looking through Class: " + fileProperties[fileProperties.length - 1] + " at: " + file);
+//
+//        MyClassNode myClassNode  = creator.createMyClassNodeFromFile(file);
+//        ConvertASMToUML ASMConverter = new ConvertASMToUML(new StringBuilder());
+//        ASMConverter.generateDiagramByNode(myClassNode, umlBuilder);
+//        umlBuilder.append("\n");
+//        System.out.println("\n");
     }
 }
