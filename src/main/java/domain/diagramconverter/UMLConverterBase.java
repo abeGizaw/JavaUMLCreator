@@ -7,11 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class UMLConverterBase implements UMLConverter{
-    @Override
-    public String convert(MyClassNode myclassNode, RelationsManager relationsManager) {
-        return null;
-    }
 
+    abstract public String convert(MyClassNode myclassNode, RelationsManager relationsManager);
 
     public Set<String> convertKeyNames(Map<String, Integer> hasARelMap) {
         Set<String> results = new HashSet<>();
@@ -32,61 +29,12 @@ public abstract class UMLConverterBase implements UMLConverter{
 
 
     /**
-     * Converts the information of a MyClassNode object's class type into a UML formatted string.
-     * @param myClassNode The class node containing the information to convert.
-     * @return A string representing the class in UML format.
-     */
-    private String convertClassInfo(MyClassNode myClassNode){
-        StringBuilder classString = new StringBuilder();
-
-        String classType = getClassType(myClassNode.access);
-
-        if(myClassNode.name.contains("$")){
-            convertInnerClassInfo(myClassNode, classString, classType);
-        } else {
-            convertOuterClassInfo(myClassNode, classString, classType);
-        }
-
-        return classString.toString();
-    }
-
-
-    private String convertClassFields(List<MyFieldNode> fields, String className) {
-        StringBuilder fieldString = new StringBuilder();
-        for(MyFieldNode field: fields){
-            appendFieldInfo(fieldString, field, className);
-        }
-
-        return fieldString.toString();
-    }
-
-    private String convertClassMethods(List<MyMethodNode> methods, String className) {
-        StringBuilder methodString = new StringBuilder();
-        for(MyMethodNode method: methods){
-            if (methodIsUserGenerated(method)) {
-                String accessModifier = getAccessModifier(method.access);
-                String nonAccessModifier = getNonAccessModifiers(method.access);
-                methodString.append(accessModifier).append(nonAccessModifier);
-
-                String methodName = method.name.equals("<init>") ? className : method.name;
-
-                String methodInfo = method.signature == null ?
-                        getMethodInfo(method.desc, method) :
-                        getMethodInfo(method.signature, method);
-
-                methodString.append(methodName).append(methodInfo).append("\n\t");
-            }
-        }
-        return methodString.toString();
-    }
-
-    /**
      * Determines the UML type based on the access flags.
      *
      * @param access Access flags of the class.
      * @return A string representing the UML type.
      */
-    private String getClassType(int access) {
+    protected String getClassType(int access) {
         if((access & MyOpcodes.ACC_INTERFACE) != 0){
             return "interface";
         } else if((access & MyOpcodes.ACC_ABSTRACT) != 0){
@@ -105,7 +53,7 @@ public abstract class UMLConverterBase implements UMLConverter{
      * @param classString StringBuilder to append the class information.
      * @param classType The type of class (e.g., class, abstract class, interface).
      */
-    private void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+    protected void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
         if (classType.equals("enum")) {
             classString.append(classType).append(" ").append(className);
@@ -123,7 +71,7 @@ public abstract class UMLConverterBase implements UMLConverter{
      * @param classString StringBuilder to append the class information.
      * @param classType The type of class (e.g., class, abstract class, interface).
      */
-    private void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+    protected void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
         MyInnerClassNode innerClassNode = findInnerClassNode(myClassNode, myClassNode.name);
         if(innerClassNode != null){
@@ -142,7 +90,7 @@ public abstract class UMLConverterBase implements UMLConverter{
         return null;
     }
 
-    private boolean methodIsUserGenerated(MyMethodNode method) {
+    protected boolean methodIsUserGenerated(MyMethodNode method) {
         if((method.access & MyOpcodes.ACC_SYNTHETIC) != 0 || method.name.startsWith("lambda$")){
             return false;
         }
@@ -153,7 +101,7 @@ public abstract class UMLConverterBase implements UMLConverter{
         return !method.name.equals("<clinit>");
     }
 
-    private void appendFieldInfo(StringBuilder fieldString, MyFieldNode field, String className) {
+    protected void appendFieldInfo(StringBuilder fieldString, MyFieldNode field, String className, RelationsManager relationsManager) {
         if (isSynthetic(field.access)) {
             return;
         }
@@ -173,7 +121,7 @@ public abstract class UMLConverterBase implements UMLConverter{
 
         if(!isJavaAPIClass(fullDesc, className)){
             String cleanedDescName = removeBracketsFromDesc(descName);
-            //addAHasARelationship(cleanedDescName, className, isCollectionType(descName));
+            relationsManager.addAHasARelationship(cleanedDescName, className, isCollectionType(descName));
         }
         fieldString.append(" ").append(field.name).append(": ").append(descName).append("\n\t");
     }
@@ -213,7 +161,7 @@ public abstract class UMLConverterBase implements UMLConverter{
      * @param methodNode MyASM methodNode
      * @return UML method declaration
      */
-    private String getMethodInfo(String desc, MyMethodNode methodNode) {
+    protected String getMethodInfo(String desc, MyMethodNode methodNode) {
         int startParams = desc.indexOf('(');
         int endParams = desc.indexOf(')');
 
@@ -406,7 +354,7 @@ public abstract class UMLConverterBase implements UMLConverter{
      */
     private String getCollectionHoldTypes(String collected) {
         List<String> collectionHoldTypeList = cleanCollectionParsing(parseGenericTypes(collected));
-        return "WHATTT";
+        return generateCollectedTypes(collectionHoldTypeList);
     }
 
     /**
@@ -518,7 +466,7 @@ public abstract class UMLConverterBase implements UMLConverter{
                 return null;
         }
     }
-    private String getAccessModifier(int access) {
+    protected String getAccessModifier(int access) {
         StringBuilder modifiers = new StringBuilder();
 
         if ((access & MyOpcodes.ACC_PUBLIC) != 0) {
@@ -533,7 +481,7 @@ public abstract class UMLConverterBase implements UMLConverter{
         return modifiers.toString();
     }
 
-    private String getNonAccessModifiers(int access){
+    protected String getNonAccessModifiers(int access){
         StringBuilder modifiers = new StringBuilder();
         if ((access & MyOpcodes.ACC_STATIC) != 0) {
             modifiers.append("{static}");

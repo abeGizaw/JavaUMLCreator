@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 public class LintResultSaver implements Saver {
     private PrintStream logStream;
-    private String basePath;
+    private final String basePath;
 
     public LintResultSaver(String path) {
         this.basePath = path.endsWith(File.separator) ? path : path + File.separator;

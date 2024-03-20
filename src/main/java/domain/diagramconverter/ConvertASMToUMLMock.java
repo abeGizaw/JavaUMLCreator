@@ -24,9 +24,9 @@ public class ConvertASMToUMLMock implements Diagram{
     }
 
     private void addConverters() {
+        converters.add(new ClassNameUMLConverter());
         converters.add(new ClassFieldsUMLConverter());
         converters.add(new ClassMethodsUMLConverter());
-        converters.add(new ClassNameUMLConverter());
     }
 
     /**
@@ -38,22 +38,9 @@ public class ConvertASMToUMLMock implements Diagram{
      */
     public void generateDiagramByNode(MyClassNode myClassNode, StringBuilder pumlContent) {
         for(UMLConverter converter: converters){
-            converter.convert(myClassNode, this.relationManager);
+            classUmlContent.append(converter.convert(myClassNode, this.relationManager));
         }
-//        pumlContent.append(convertClassInfo(myClassNode));
-//        pumlContent.append("{\n\t");
-//
-//        String cleanClassName = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-//
-//        pumlContent.append(convertClassFields(myClassNode.fields, myClassNode.name));
-//        pumlContent.append(convertClassMethods(myClassNode.methods, cleanClassName));
-//
-//        pumlContent.append("}\n");
 
-
-//        allHasARelationships.addAll(convertKeyNames(hasARelationShipByClass));
-//        addExtendsAndImplementsRelation(myClassNode, cleanClassName);
-//        hasARelationShipByClass.clear();
     }
 
     /**
@@ -80,13 +67,13 @@ public class ConvertASMToUMLMock implements Diagram{
                 classUmlContent.append("}\n");
             }
         }
-//        for(String relationship: allHasARelationships){
-//            classUmlContent.append(relationship).append("\n");
-//        }
+
+        classUmlContent.append(this.relationManager.addAllRelations());
+
+
         classUmlContent.append("@enduml");
         return classUmlContent;
     }
-
 
 
 }

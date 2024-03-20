@@ -24,7 +24,11 @@ public class RelationsManager {
                 }
             }
         }
+    }
+    protected void addDependsOnARelationShip(MyClassNode myClassNode, String cleanClassName){
 
+    }
+    protected void addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName){
         // Adds the extends relations
         String abstractClass = myClassNode.superName;
         if(!abstractClass.isEmpty()){
@@ -34,17 +38,27 @@ public class RelationsManager {
             }
         }
     }
-    public void addDependsOnARelationShip(){}
-    public void addExtendsRelationShip(){}
-    public String getAllRelationships(){
-        return "";
+
+    private Set<String> convertHasAKeyNames(){
+        Set<String> results = new HashSet<>();
+
+        for(String relation: this.hasARelationShipByClass.keySet()){
+            if(this.hasARelationShipByClass.get(relation) == 1){
+                results.add(relation);
+            } else {
+                int count = this.hasARelationShipByClass.get(relation);
+                String relWithNum = relation.substring(0, relation.indexOf('>') + 1)
+                        + "\"" + count + "\"" +
+                        relation.substring(relation.indexOf('>') + 1);
+
+                results.add(relWithNum);
+            }
+        }
+        return results;
+
     }
 
-    private Set<String> convertKeyNames(){
-        return null;
-    }
-
-    private void addAHasARelationship(String descName, String className, boolean collectionType) {
+    protected void addAHasARelationship(String descName, String className, boolean collectionType) {
         for (String field: descName.split(",")){
             String cleanClassName = className.substring(className.lastIndexOf("/") + 1);
             String baseRelationShip = cleanClassName + "-->";
@@ -67,4 +81,13 @@ public class RelationsManager {
         }
     }
 
+    protected String addAllRelations() {
+        StringBuilder relationshipContent = new StringBuilder();
+        allRelationships.addAll(convertHasAKeyNames());
+        for(String relationship: allRelationships){
+            relationshipContent.append(relationship).append("\n");
+        }
+
+        return relationshipContent.toString();
+    }
 }

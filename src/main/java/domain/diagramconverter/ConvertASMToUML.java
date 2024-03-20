@@ -517,7 +517,7 @@ public class ConvertASMToUML implements Diagram{
      */
     private String getCollectionHoldTypes(String collected) {
         List<String> collectionHoldTypeList = cleanCollectionParsing(parseGenericTypes(collected));
-        return "WHATTT";
+        return generateCollectedTypes(collectionHoldTypeList);
     }
 
     /**
