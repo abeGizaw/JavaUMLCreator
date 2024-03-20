@@ -15,7 +15,7 @@ public class RelationsManager {
 
     }
 
-    public void addImplementsRelationShip(MyClassNode myClassNode, String cleanClassName){
+    protected void addImplementsRelationShip(MyClassNode myClassNode, String cleanClassName){
         if(!myClassNode.interfaces.isEmpty()){
             for(String classInterface : myClassNode.interfaces){
                 if(!classInterface.startsWith("java")){
