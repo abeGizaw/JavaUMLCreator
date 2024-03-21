@@ -10,7 +10,7 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
     @Override
     public String convert(MyClassNode myClassNode, RelationsManager relationsManager) {
         List<MyMethodNode> methods = myClassNode.methods;
-        String cleanClassName = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
+        String cleanClassName = cleanClassName(myClassNode.name);
 
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
