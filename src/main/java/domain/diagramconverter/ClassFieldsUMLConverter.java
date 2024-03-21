@@ -40,6 +40,7 @@ public class ClassFieldsUMLConverter extends UMLConverterBase{
         String descName = getFieldType(fullDesc);
 
 
+
         if(!isJavaAPIClass(fullDesc, className)){
             String cleanedDescName = removeBracketsFromDesc(descName);
             relationsManager.addAHasARelationship(cleanedDescName, className, isCollectionType(descName));
