@@ -55,6 +55,25 @@ public class ClassUmlTest {
         assertArrayEquals(correctPUMLBytes, testPUMLBytes, "The files content should be the same");
     }
 
+    @Test
+    public void compareExtendsAndImplementsFiles() throws IOException {
+        //Set Up
+        LinterMain linterMain = new LinterMain();
+
+        Path pathOfTarget = Path.of("C:\\Users\\hueyee\\csse375\\JavaUMLCreator\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses\\ExtendsAndImplements");
+        Path pathOfCorrectPUML =  Path.of("C:\\Users\\hueyee\\csse375\\JavaUMLCreator\\ExtendsAndImplementsCorrect\\ExtendsAndImplementsCorrect.puml");
+        Path pathOfTestPUML =  Path.of("C:\\Users\\hueyee\\csse375\\JavaUMLCreator\\ExtendsAndImplementsTest\\ExtendsAndImplementsTest.puml");
+
+        //Execute Test
+        linterMain.generateUMLFromPath(pathOfTarget, "ExtendsAndImplementsTest", "ExtendsAndImplementsTest");
+
+        byte[] correctPUMLBytes = Files.readAllBytes(pathOfCorrectPUML);
+        byte[] testPUMLBytes = Files.readAllBytes(pathOfTestPUML);
+
+        //Validate
+        assertArrayEquals(correctPUMLBytes, testPUMLBytes, "The files content should be the same");
+    }
+
 
 
 }
