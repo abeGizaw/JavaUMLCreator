@@ -1,0 +1,57 @@
+@startuml
++class Dog{
+	+Dog():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	+saveMessage(message:String):void
+	+writeToFile(info:String, fileType:String, outputPath:String):void
+	}
+
++class Cat{
+	+Cat():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
++class Boss{
+	+Boss():void
+	}
+
++abstract class Pet{
+	+Pet():void
+	}
+
++interface Sound{
+	}
+
++class Student{
+	+Student():void
+	}
+
++class Iguana{
+	+Iguana():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
++abstract class Person{
+	+Person():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	+append(csq:CharSequence):Appendable
+	+append(csq:CharSequence, start:int, end:int):Appendable
+	+append(c:char):Appendable
+	}
+
+Boss--|>Person
+Iguana..|>Sound
+Cat..|>Sound
+Person..|>Sound
+Cat--|>Pet
+Sound..|>MockInterface
+Student--|>Person
+Dog--|>Pet
+Iguana--|>Pet
+Dog..|>Sound
+Dog..|>Saver
+@enduml
