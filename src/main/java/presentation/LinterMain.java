@@ -152,4 +152,21 @@ public class LinterMain {
             saver.writeToFile(stringBuilder.toString(), PUML_TYPE, fileOutput);
         }
     }
+
+    public void generateUMLFromPath(Path inputPath, String outputPath, String fileName) {
+        Map<String, String> fileToPackage = parseDirectory(inputPath);
+        Map<DiagramType, String> diagrams = new HashMap<>();
+        diagrams.put(DiagramType.UML_CONVERTER, fileName);
+
+        List<String> files = new ArrayList<>(fileToPackage.keySet());
+
+        MyClassNodeCreator creator = new MyASMClassNodeCreator(inputPath);
+        Linter linter = new Linter(files, creator, outputPath, fileToPackage);
+
+        Saver saver = new LintResultSaver(outputPath);
+        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+    }
+
+
+
 }
