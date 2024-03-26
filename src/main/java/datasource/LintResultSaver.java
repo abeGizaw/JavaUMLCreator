@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 
 public class LintResultSaver implements Saver {
-    private PrintStream logStream;
     private final String basePath;
 
     public LintResultSaver(String path) {
@@ -19,7 +18,7 @@ public class LintResultSaver implements Saver {
     }
 
     public void saveMessage(String message) {
-        logStream.println(message);
+        System.out.println(message);
     }
 
     public void writeToFile(String info, String fileType, String outputPath) {
