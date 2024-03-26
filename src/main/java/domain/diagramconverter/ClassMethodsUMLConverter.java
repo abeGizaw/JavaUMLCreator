@@ -216,7 +216,7 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
 
     private void handleDependencyRelation(String objectDesc, String objType, RelationsManager relationsManager) {
         if(!isJavaAPIClass(objectDesc, this.className)){
-            relationsManager.addDependsOnARelationShip(this.cleanedClassName, objType);
+            relationsManager.addDependsOnARelationShip(this.cleanedClassName, removeBracketsFromDesc(objType));
         }
     }
 }
