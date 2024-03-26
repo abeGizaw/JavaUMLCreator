@@ -150,28 +150,8 @@ public abstract class UMLConverterBase implements UMLConverter{
      * @return java primitive type
      */
     private String getPrimitiveFieldType(String desc) {
-        switch(desc){
-            case "B":
-                return "byte";
-            case "C":
-                return "char";
-            case "D":
-                return "double";
-            case "F":
-                return "float";
-            case "I":
-                return "int";
-            case "J":
-                return "long";
-            case "S":
-                return "short";
-            case "Z":
-                return "boolean";
-            case "V":
-                return "void";
-            default:
-                return null;
-        }
+        PrimitiveStringFactory primitiveStringFactory = new PrimitiveStringFactory();
+        return primitiveStringFactory.getPrimitiveFieldType(desc);
     }
     protected String getAccessModifier(int access) {
         StringBuilder modifiers = new StringBuilder();
