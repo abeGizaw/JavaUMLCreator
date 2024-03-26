@@ -72,8 +72,6 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
         String parsedParams = analyzeForParams(params, paramNames, relationsManager);
         String returnType = getFieldType(returnDesc);
 
-        System.out.println("getMethodInfo sending(return desc, return type): " + returnDesc + " " + returnType);
-
         handleDependencyRelation(returnDesc, returnType, relationsManager);
 
 
@@ -205,11 +203,7 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
     private void appendParamInfo(StringBuilder paramsBuilder, String param, String parameterName, RelationsManager relationsManager) {
         String fieldType = getFieldType(param);
 
-        System.out.println("appendParamInfo sending(param, field type): " + param + " " + fieldType);
-
         handleDependencyRelation(param, fieldType, relationsManager);
-
-
 
         paramsBuilder.append(parameterName).append(":").append(fieldType);
     }
