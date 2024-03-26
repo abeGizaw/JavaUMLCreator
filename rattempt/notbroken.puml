@@ -1,0 +1,31 @@
+@startuml
+package .. {
+	+class DependsOnRelations{
+	+DependsOnRelations():void
+	+hasParams(r:RelationsManager):void
+	+hasParams2(r:ImplementingClass):void
+	+hasParams3(r:ParameterTypeVariety):void
+	+returnsParams():ReturnTypeVariety
+	+returnsParams2():ArrayFieldsConverter
+	+returnsParams3():AccessModifierVariety
+	+returnList():List<ReturnTypeVariety>
+	+hasMap(hash:HashMap<PrimitiveFieldsConverter,ObjectFieldsConverter>):void
+	+returnJavaLis():MockInterface[]
+	+hasLotsOfCollections(mockEnumSet:Set<MockEnum>, mockAbstracts:MockAbstract[], implementingClasses:ArrayList<HasATest>):void
+	+testDontAdd(s:String, d:double):String
+	}
+
+}
+DependsOnRelations..>AccessModifierVariety
+DependsOnRelations..>ParameterTypeVariety
+DependsOnRelations..>ReturnTypeVariety
+DependsOnRelations..>MockEnum
+DependsOnRelations..>HasATest
+DependsOnRelations..>ArrayFieldsConverter
+DependsOnRelations..>MockInterface
+DependsOnRelations..>RelationsManager
+DependsOnRelations..>ImplementingClass
+DependsOnRelations..>ObjectFieldsConverter
+DependsOnRelations..>PrimitiveFieldsConverter
+DependsOnRelations..>MockAbstract
+@enduml

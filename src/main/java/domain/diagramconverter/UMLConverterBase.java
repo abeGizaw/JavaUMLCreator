@@ -210,6 +210,29 @@ public abstract class UMLConverterBase implements UMLConverter{
         return fieldClassName.startsWith("java/");
     }
 
+    /**
+     *
+     * @param descName exmaple: Set<MockAbstract>
+     *                          HashMap<MockEnum,MockInterface>
+     *                          AccessModifierVariety[]
+     * @return example: MockAbstract
+     *                  MockEnum,MockInterface
+     *                  AccessModifierVariety
+     */
+    protected String removeBracketsFromDesc(String descName) {
+        if(descName.endsWith("[]")){
+            return removeBracketsFromDesc(descName.substring(0, descName.length() - 2));
+        } else if(descName.contains("<")){
+            while(descName.contains("<")){
+                descName = descName.substring(descName.indexOf("<") + 1);
+            }
+            descName = descName.substring(0, descName.indexOf(">"));
+            descName = descName.replace("[]", "");
+        }
+
+        return descName;
+    }
+
     protected boolean isCollectionType(String descName) {
         return descName.contains("[") || descName.contains("<");
     }
