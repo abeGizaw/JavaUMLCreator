@@ -1,0 +1,201 @@
+@startuml
++class CollectionFieldsConverter{
+	+ stringList: List<String>
+	+ doubleSet: Set<Double>
+	- map: Map<String,Integer>
+	+ charQueue: Queue<Character>
+	+ booleanStack: Stack<Boolean>
+	+ advancedMap: Map<List<Set<String>>,Map<String,String>>
+	+CollectionFieldsConverter():void
+	}
+
++class PrimitiveFieldsConverter{
+	+{final} anInt: int
+	- aByte: byte
+	# aBoolean: boolean
+	~{static} aChar: char
+	~ aLong: long
+	#{static} aShort: short
+	+ aFloat: float
+	+ aDouble: double
+	+PrimitiveFieldsConverter():void
+	}
+
++class ObjectFieldsConverter{
+	+ date: Date
+	+ stringBuilder: StringBuilder
+	- stringBuffer: StringBuffer
+	# genericObject: Object
+	- string: String
+	- aBoolean: Boolean
+	+ObjectFieldsConverter():void
+	}
+
++abstract class MockAbstract{
+	- model: String
+	- year: int
+	+MockAbstract(model:String, year:int):void
+	+{abstract}startEngine():void
+	+{abstract}stopEngine():void
+	+honk():void
+	+getModel():String
+	+setModel(model:String):void
+	}
+
++interface MockInterface{
+	+{abstract}calculate(param1:double):double
+	+{abstract}transform(param1:String):String
+	+show():void
+	+{static}helper():void
+	}
+
++class HasATest{
+	- singleAccessModifierVariety: AccessModifierVariety
+	- firstArrayFieldsConverter: ArrayFieldsConverter
+	- secondArrayFieldsConverter: ArrayFieldsConverter
+	- thirdArrayFieldsConverter: ArrayFieldsConverter
+	- arrayOfCollectionFieldsConverters: CollectionFieldsConverter[]
+	- listOfListsImplementingClass: List<List<ImplementingClass>>
+	- setOfMockAbstracts: Set<MockAbstract>
+	- enumToInterfaceMap: HashMap<MockEnum,MockInterface>
+	- listOfAccessModifierVarieties: ArrayList<AccessModifierVariety>
+	- mapOfMapsEnumToAbstractToInterface: Map<HashMap<MockEnum,MockAbstract>,MockInterface>
+	- setOfHashSetObjectFieldConverters: Set<HashSet<ObjectFieldsConverter>>
+	- listOfIntegers: List<Integer>
+	- stringToIntegerMap: HashMap<ParameterTypeVariety,PrimitiveFieldsConverter[]>
+	+HasATest():void
+	}
+
++class ReturnTypeVariety{
+	+ReturnTypeVariety():void
+	+returnInt():int
+	+returnString():String
+	-returnList():List<Integer>
+	#returnSet():Set<Character>
+	~returnCharacter():Character
+	+returnArray():double[]
+	+returnMap():Map<String,List<Double>>
+	}
+
++class ImplementingClass{
+	+ImplementingClass():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
++class ArrayFieldsConverter{
+	+ intArray: int[]
+	- string2DArray: String[][]
+	# charArray: char[]
+	+ double3DArray: double[][][]
+	- enumArray: MockEnum[][]
+	+ arrayListList: List<String>[][][][]
+	+ArrayFieldsConverter():void
+	}
+
+enum MockEnum{
+	RED
+	BLUE
+	GREEN
+	-{final} description: String
+	-{final} code: int
+	+{static}values():MockEnum[]
+	+{static}valueOf(name:String):MockEnum
+	-MockEnum(description:String, code:int):void
+	+getDescription():String
+	+getCode():int
+	}
+
++class ParameterTypeVariety{
+	+ParameterTypeVariety():void
+	+singlePrimitive(a:int):void
+	+multiplePrimitives(a:int, b:double, c:char):void
+	+singleObject(s:String):void
+	+multipleObjects(s:String, num:Integer, d:Double):void
+	+mixPrimitiveAndObject(a:int, b:String, c:double):void
+	-withCollections(list:List<String>, set:Set<Character>, map:Map<String,Double>):void
+	#withArrayAndList(nums:int[], doubles:List<Double>):void
+	~complexParameters(a:int, b:String, nums:List<List<Integer>>, arr:double[], map:Map<String,Set<Character>>):void
+	}
+
++class AccessModifierVariety{
+	+AccessModifierVariety():void
+	+publicMethod():void
+	#protectedMethod():void
+	-privateMethod():void
+	~defaultMethod():void
+	+{static}publicStaticMethod():void
+	-{static}privateStaticMethod():void
+	#{static}protectedStaticMethod():void
+	}
+
+package ExtendsAndImplements {
+	+class Iguana{
+	+Iguana():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
++class Dog{
+	+Dog():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	+saveMessage(message:String):void
+	+writeToFile(info:String, fileType:String, outputPath:String):void
+	}
+
++class Cat{
+	+Cat():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
++class Boss{
+	+Boss():void
+	}
+
++abstract class Pet{
+	+Pet():void
+	}
+
++interface Sound{
+	}
+
++class Student{
+	+Student():void
+	}
+
++abstract class Person{
+	+Person():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	+append(csq:CharSequence):Appendable
+	+append(csq:CharSequence, start:int, end:int):Appendable
+	+append(c:char):Appendable
+	}
+
+}
+HasATest-->"*"ParameterTypeVariety
+Iguana..|>Sound
+HasATest-->"*"MockInterface
+ImplementingClass..|>MockInterface
+Cat--|>Pet
+HasATest-->"*"ObjectFieldsConverter
+HasATest-->"*"MockEnum
+HasATest-->"*"CollectionFieldsConverter
+Dog..|>Sound
+Dog..|>Saver
+HasATest-->"*"AccessModifierVariety
+Boss--|>Person
+Cat..|>Sound
+Person..|>Sound
+HasATest-->"*"PrimitiveFieldsConverter
+Sound..|>MockInterface
+ArrayFieldsConverter-->"*"MockEnum
+HasATest-->"*"ImplementingClass
+HasATest-->"*"MockAbstract
+Student--|>Person
+Dog--|>Pet
+Iguana--|>Pet
+HasATest-->"3"ArrayFieldsConverter
+@enduml

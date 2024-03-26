@@ -1,0 +1,16 @@
+@startuml
+package .. {
+	+class PrimitiveFieldsConverter{
+	+{final} anInt: int
+	- aByte: byte
+	# aBoolean: boolean
+	~{static} aChar: char
+	~ aLong: long
+	#{static} aShort: short
+	+ aFloat: float
+	+ aDouble: double
+	+PrimitiveFieldsConverter():void
+	}
+
+}
+@enduml

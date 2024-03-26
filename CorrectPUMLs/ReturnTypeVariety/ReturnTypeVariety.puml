@@ -1,0 +1,15 @@
+@startuml
+package .. {
+	+class ReturnTypeVariety{
+	+ReturnTypeVariety():void
+	+returnInt():int
+	+returnString():String
+	-returnList():List<Integer>
+	#returnSet():Set<Character>
+	~returnCharacter():Character
+	+returnArray():double[]
+	+returnMap():Map<String,List<Double>>
+	}
+
+}
+@enduml

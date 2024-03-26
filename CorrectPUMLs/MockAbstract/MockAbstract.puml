@@ -1,0 +1,15 @@
+@startuml
+package .. {
+	+abstract class MockAbstract{
+	- model: String
+	- year: int
+	+MockAbstract(model:String, year:int):void
+	+{abstract}startEngine():void
+	+{abstract}stopEngine():void
+	+honk():void
+	+getModel():String
+	+setModel(model:String):void
+	}
+
+}
+@enduml
