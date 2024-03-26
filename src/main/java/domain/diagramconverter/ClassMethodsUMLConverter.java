@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassMethodsUMLConverter extends UMLConverterBase{
+    private String className;
+    private String cleanedClassName;
 
     @Override
     public String convert(MyClassNode myClassNode, RelationsManager relationsManager) {
         List<MyMethodNode> methods = myClassNode.methods;
-        String cleanClassName = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
+        setNames(myClassNode.name);
 
         StringBuilder methodString = new StringBuilder();
         for(MyMethodNode method: methods){
@@ -19,11 +21,11 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
                 String nonAccessModifier = getNonAccessModifiers(method.access);
                 methodString.append(accessModifier).append(nonAccessModifier);
 
-                String methodName = method.name.equals("<init>") ? cleanClassName : method.name;
+                String methodName = method.name.equals("<init>") ? this.cleanedClassName : method.name;
 
                 String methodInfo = method.signature == null ?
-                        getMethodInfo(method.desc, method) :
-                        getMethodInfo(method.signature, method);
+                        getMethodInfo(method.desc, method, relationsManager) :
+                        getMethodInfo(method.signature, method, relationsManager);
 
                 methodString.append(methodName).append(methodInfo).append("\n\t");
             }
@@ -32,6 +34,11 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
 
         methodString.append("}\n");
         return methodString.toString();
+    }
+
+    private void setNames(String name) {
+        this.className = name;
+        this.cleanedClassName = cleanClassName(name);
     }
 
     private boolean methodIsUserGenerated(MyMethodNode method) {
@@ -46,22 +53,29 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
     }
 
     /**
-     * @param desc format:
-     *     ()V for void methods with no params
-     *     (Ljava/lang/String;)V params are passed within the ()
-     * @param methodNode MyASM methodNode
+     * @param desc             format:
+     *                         ()V for void methods with no params
+     *                         (Ljava/lang/String;)V params are passed within the ()
+     * @param methodNode       MyASM methodNode
+     * @param relationsManager Passed along to analyzeForParams
      * @return UML method declaration
      */
-    private String getMethodInfo(String desc, MyMethodNode methodNode) {
+    private String getMethodInfo(String desc, MyMethodNode methodNode, RelationsManager relationsManager) {
         int startParams = desc.indexOf('(');
         int endParams = desc.indexOf(')');
+        String returnDesc = desc.substring(endParams+ 1);
 
         List<String> params = new ArrayList<>();
         generateListOfParams(desc.substring(startParams + 1, endParams), params);
         List<String> paramNames = getParameterNames(methodNode, params);
 
-        String parsedParams = analyzeForParams(params, paramNames);
-        String returnType = getFieldType(desc.substring(endParams+ 1));
+        String parsedParams = analyzeForParams(params, paramNames, relationsManager);
+        String returnType = getFieldType(returnDesc);
+
+        System.out.println("getMethodInfo sending(return desc, return type): " + returnDesc + " " + returnType);
+
+        handleDependencyRelation(returnDesc, returnType, relationsManager);
+
 
         return "(" + parsedParams + "):" + returnType;
     }
@@ -157,11 +171,13 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
 
     /**
      * Helps of mapping from type to name
-     * @param paramInfo example: [I, Ljava/lang/String;, D]
-     * @param paramNames example: [a, b, c]
+     *
+     * @param paramInfo        example: [I, Ljava/lang/String;, D]
+     * @param paramNames       example: [a, b, c]
+     * @param relationsManager passed along to appendParamInfo
      * @return example: a:int, b:String, c:double
      */
-    private String analyzeForParams(List<String> paramInfo, List<String> paramNames) {
+    private String analyzeForParams(List<String> paramInfo, List<String> paramNames, RelationsManager relationsManager) {
         if (paramInfo.isEmpty()) {
             return "";
         }
@@ -169,7 +185,7 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
 
         for (int i = 0; i < paramInfo.size(); i++) {
             String parameterName = paramNames.get(i);
-            appendParamInfo(paramsBuilder, paramInfo.get(i), parameterName);
+            appendParamInfo(paramsBuilder, paramInfo.get(i), parameterName, relationsManager);
             if (i < paramInfo.size() - 1) {
                 paramsBuilder.append(", ");
             }
@@ -179,15 +195,28 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
     }
 
     /**
-     *
-     * @param paramsBuilder String of built param list. Example: a:int, b:double,
-     * @param param type param to be added example: Ljava/lang/String;
-     * @param parameterName name of param being added: param name s
-     *
-     * ensures: paramsBuilder -> a:int, b:double, s:String (using above example)
+     * @param paramsBuilder    String of built param list. Example: a:int, b:double,
+     * @param param            type param to be added example: Ljava/lang/String;
+     * @param parameterName    name of param being added: param name s
+     *                         <p>
+     *                         ensures: paramsBuilder -> a:int, b:double, s:String (using above example)
+     * @param relationsManager adds depends on relations for user made classes
      */
-    private void appendParamInfo(StringBuilder paramsBuilder, String param, String parameterName) {
+    private void appendParamInfo(StringBuilder paramsBuilder, String param, String parameterName, RelationsManager relationsManager) {
         String fieldType = getFieldType(param);
+
+        System.out.println("appendParamInfo sending(param, field type): " + param + " " + fieldType);
+
+        handleDependencyRelation(param, fieldType, relationsManager);
+
+
+
         paramsBuilder.append(parameterName).append(":").append(fieldType);
+    }
+
+    private void handleDependencyRelation(String objectDesc, String objType, RelationsManager relationsManager) {
+        if(!isJavaAPIClass(objectDesc, this.className)){
+            relationsManager.addDependsOnARelationShip(this.cleanedClassName, objType);
+        }
     }
 }

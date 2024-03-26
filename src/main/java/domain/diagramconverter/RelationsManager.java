@@ -10,11 +10,7 @@ import java.util.Set;
 public class RelationsManager {
     Map<String, Integer> hasARelationShipByClass = new HashMap<>();
     Set<String> allRelationships = new HashSet<>();
-
-    public RelationsManager() {
-
-    }
-
+    
     protected void addImplementsRelationShip(MyClassNode myClassNode, String cleanClassName){
         if(!myClassNode.interfaces.isEmpty()){
             for(String classInterface : myClassNode.interfaces){
@@ -25,8 +21,8 @@ public class RelationsManager {
             }
         }
     }
-    protected void addDependsOnARelationShip(MyClassNode myClassNode, String cleanClassName){
-
+    protected void addDependsOnARelationShip(String className, String dependent){
+        allRelationships.add(className + "..>" + dependent);
     }
     protected void addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName){
         // Adds the extends relations

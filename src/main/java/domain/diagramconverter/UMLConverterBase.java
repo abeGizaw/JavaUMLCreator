@@ -182,4 +182,41 @@ public abstract class UMLConverterBase implements UMLConverter{
         return modifiers.toString();
     }
 
+    /**
+     *
+     * @param desc format: Ljava/util/List<Ljava/lang/Integer;>;
+     *                     [Ldomain/diagramconverter/ClassUmlMockTestClasses/CollectionFieldsConverter;
+     *                     Ldomain/diagramconverter/ClassUmlMockTestClasses/ArrayFieldsConverter;
+     *
+     * @param originalClassName format: <pathFromPackage>/<classname>
+     *                                  domain/diagramconverter/ClassUmlMockTestClasses/HasATest
+     * @return T/F if it's a javaAPIclass
+     */
+    protected boolean isJavaAPIClass(String desc, String originalClassName) {
+        if(isPrimitive(desc)){
+            return true;
+        }
+
+        String classNameDirectory = originalClassName.substring(0, originalClassName.lastIndexOf('/'));
+        if (isCollectionType(desc)) {
+            if(desc.startsWith("[")){
+                return isJavaAPIClass(desc.substring(1), originalClassName);
+            } else if (desc.contains(classNameDirectory)) {
+                return false;
+            }
+        }
+
+        String fieldClassName = desc.substring(1, desc.length() - 1);
+        return fieldClassName.startsWith("java/");
+    }
+
+    protected boolean isCollectionType(String descName) {
+        return descName.contains("[") || descName.contains("<");
+    }
+
+
+    protected String cleanClassName(String fullClassName){
+        return fullClassName.substring(fullClassName.lastIndexOf("/") + 1);
+    }
+
 }

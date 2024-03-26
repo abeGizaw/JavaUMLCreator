@@ -1,0 +1,17 @@
+@startuml
+package .. {
+	+class DependsOnRelations{
+	+DependsOnRelations():void
+	+hasParams(r:RelationsManager, a:AccessModifierVariety):void
+	+hasParams2(r:ImplementingClass, a:MockInterface):void
+	+hasParams3(r:ParameterTypeVariety, a:ReturnTypeVariety):void
+	}
+
+}
+DependsOnRelations..>AccessModifierVariety
+DependsOnRelations..>ParameterTypeVariety
+DependsOnRelations..>ReturnTypeVariety
+DependsOnRelations..>MockInterface
+DependsOnRelations..>RelationsManager
+DependsOnRelations..>ImplementingClass
+@enduml
