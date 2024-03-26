@@ -9,35 +9,28 @@ import java.util.*;
 
 public class Linter {
     private final MyClassNodeCreator creator;
-    private final List<MyClassNode> myClassNodes;
     private final Map<DiagramType, Diagram> diagramTypeToDiagram;
     private final Map<String, List<MyClassNode>> packageToMyClassNode = new HashMap<>();
 
-    public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator, String outputPath, Map<String, String> fileToPackage) {
+    public Linter(List<String> classPaths, MyClassNodeCreator myClassNodeCreator, Map<String, String> fileToPackage) {
         this.creator = myClassNodeCreator;
-        this.myClassNodes = createClassNodes(classPaths, fileToPackage);
+        createClassNodes(classPaths, fileToPackage);
         this.diagramTypeToDiagram = new HashMap<>();
-        populateMaps();
-    }
-
-    private void populateMaps() {
         populateDiagramMap();
     }
+
     private void populateDiagramMap() {
         diagramTypeToDiagram.put(DiagramType.UML_CONVERTER, new ConvertASMToUML(new RelationsManager(), new StringBuilder()));
     }
 
-    private List<MyClassNode> createClassNodes(List<String> classPaths, Map<String, String> fileToPackage) {
-        List<MyClassNode> myNodes = new ArrayList<>();
+    private void createClassNodes(List<String> classPaths, Map<String, String> fileToPackage) {
         for (String path : classPaths) {
             String packageName = fileToPackage.get(path);
             packageToMyClassNode.putIfAbsent(packageName, new ArrayList<>());
             Path p = Path.of(path);
             MyClassNode myClassNode = creator.createMyClassNodeFromFile(p.toFile());
-            myNodes.add(myClassNode);
             packageToMyClassNode.get(packageName).add(myClassNode);
         }
-        return myNodes;
     }
 
     public Map<StringBuilder, DiagramType> generateDiagrams(Set<DiagramType> diagrams) {

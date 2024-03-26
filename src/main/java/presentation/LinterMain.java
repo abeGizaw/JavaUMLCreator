@@ -29,7 +29,7 @@ public class LinterMain {
         List<String> files = new ArrayList<>(fileToPackage.keySet());
 
         MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
-        Linter linter = new Linter(files, creator, outputPath, fileToPackage);
+        Linter linter = new Linter(files, creator, fileToPackage);
 
         Saver saver = new LintResultSaver(outputPath);
         generateAndSaveDiagramsToFile(linter, diagrams, saver);
