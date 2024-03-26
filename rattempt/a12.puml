@@ -1,0 +1,302 @@
+@startuml
+{
+	-{final} cards: ArrayList<WHATTT>
+	- deployableTroops: int
+	- territories: HashSet<WHATTT>
+	- color: Color
+	+mainApp/domain/Player(initialTroops:int, playerColor:Color, starterCards:ArrayList<WHATTT>):void
+	+addDeployableTroops(addTroops:int):void
+	+removeDeployableTroops(removeTroops:int):void
+	+ownsTerritory(territory:Territory):boolean
+	+addTerritory(territory:Territory):void
+	+removeTerritory(territory:Territory):void
+	-validateTerritoryToRemove(territory:Territory):void
+	+toString():String
+	+territoryCount():int
+	+getDeployableTroops():int
+	+getColor():Color
+	+getCards():ArrayList<WHATTT>
+	+addCard(cardToAdd:Card):void
+	+removeCards(cardsToTurnIn:ArrayList<WHATTT>):void
+	}
++class Player
+{
+	ASIA
+	NORTH_AMERICA
+	SOUTH_AMERICA
+	EUROPE
+	AFRICA
+	AUSTRALIA
+	-{final} value: int
+	-{final} territoryCount: int
+	+{static}values():Continent[]
+	+{static}valueOf(name:String):Continent
+	-mainApp/domain/Continent(valueInput:int, territoryCountInput:int):void
+	+value():int
+	+territoryCount():int
+	}
+enum Continent
+{
+	-{final} message: ResourceBundle
+	- maneuveringPlayer: Player
+	- maneuveringFrom: Territory
+	- maneuveringTo: Territory
+	+mainApp/domain/Maneuver(locale:ResourceBundle):void
+	+validateManeuverFrom(player:Player, maneuveringFromTerritory:Territory):boolean
+	+validateManeuverTo(maneuveringToTerritory:Territory):boolean
+	-CheckForConnectingPath(maneuveringToTerritory:Territory):boolean
+	+maneuverTroopAmount(troopAmount:int):void
+	+getManeuverableTroops():int
+	+getManeuverFromName():String
+	+getManeuverToName():String
+	#setManeuveringFrom(territory:Territory):void
+	#setManeuveringTo(territory:Territory):void
+	}
++class Maneuver
+{
+	SETUP
+	DEPLOY
+	ATTACK
+	CHOOSE
+	NEWATTACK
+	MANEUVER
+	WIN
+	+{static}values():GameState[]
+	+{static}valueOf(name:String):GameState
+	-mainApp/domain/GameState():void
+	}
+enum GameState
+{
+	ATTACKFROM
+	DEFENDWITH
+	CHOOSETROOPS
+	+{static}values():AttackPhase[]
+	+{static}valueOf(name:String):AttackPhase
+	-mainApp/domain/AttackPhase():void
+	}
+enum AttackPhase
+{
+	MANEUVERFROM
+	MANEUVERTO
+	CHOOSETROOPSTOMANEUVER
+	+{static}values():ManeuverPhase[]
+	+{static}valueOf(name:String):ManeuverPhase
+	-mainApp/domain/ManeuverPhase():void
+	}
+enum ManeuverPhase
+{
+	-{final} players: ArrayList<WHATTT>
+	-{final} territories: Collection<WHATTT>
+	-{final} territoriesByContinentMap: HashMap<WHATTT>
+	- riskCards: RiskDeck
+	-{final} secretMissionDeck: SecretMissionDeck
+	-{final} secretMissionMode: boolean
+	- messages: ResourceBundle
+	- secretMissionCardsByPlayer: ArrayList<WHATTT>
+	- gameState: GameState
+	- attackState: AttackPhase
+	- maneuverState: ManeuverPhase
+	- turnIndex: int
+	- territoryInPlay: Territory
+	- canDrawCard: boolean
+	-{final} recentAttack: Attack
+	-{final} maneuver: Maneuver
+	+mainApp/domain/Game(playersInput:ArrayList<WHATTT>, allTerritories:Collection<WHATTT>, continentMapInput:HashMap<WHATTT>, allRiskCards:RiskDeck, attack:Attack, maneuverInput:Maneuver, secretMissionCards:SecretMissionDeck):void
+	+clickedOnPoint(point:Point):void
+	-deployFlow(territory:Territory):void
+	+updateDeployableTroops(deployedTroops:int, currentTerritory:Territory):void
+	-attackFlow(territory:Territory):void
+	-maneuverFlow(territory:Territory):void
+	-handleValidateManeuverFrom(territory:Territory):void
+	-handleValidateManeuverTo(territory:Territory):void
+	-setupFlow(territory:Territory):void
+	-placeRestOfTroops(territory:Territory):void
+	+drawSecretMissionCards():void
+	-generateUnusedPlayerColors():ArrayList<WHATTT>
+	-placeFirstTroops(territory:Territory):void
+	+checkIfTerritoryEmpty(territoryToFind:Territory):boolean
+	+allTerritoriesAssigned():boolean
+	+placedAllInitialTroops():boolean
+	+allocatePlayerTroops(player:Player):void
+	+calculateContinentBonus(player:Player):int
+	+calculateBonus(continents:ArrayList<WHATTT>):int
+	+calculateContinentsPlayerOwns(player:Player):ArrayList<WHATTT>
+	+playerOwnsContinent(continent:Continent, player:Player):boolean
+	+convertTerritoryNameToObject(name:String):Territory
+	+getCurrentPlayerColor():String
+	-getPlayerColor(playerIndex:int, messageBundle:ResourceBundle):String
+	+attack(attackCount:int, defendCount:int):ArrayList<WHATTT>
+	-checkForWin():void
+	#checkForSecretMissionWin():void
+	-removePlayer():void
+	-transferCards(currentPlayer:Player, elimPlayer:Player):void
+	+turnCardsIn(cardsToTurnIn:ArrayList<WHATTT>):int
+	+allSetsOfValidCards():ArrayList<WHATTT>
+	+maneuverTroops(maneuverableTroopAmount:AtomicInteger):void
+	+transitionFromManeuverToDeploy():void
+	-drawCardForPlayer():void
+	+owns24Territories(player:Player):boolean
+	+checkDestroyMission(secretMissionCard:Card, playerIndex:int):void
+	-validateSecretMissionCard(secretMissionCard:Card, type:String):void
+	+checkConquerMission(secretMissionCard:Card):void
+	+checkControlMission(secretMissionCard:Card):void
+	-nameToContinent(continentName:String):Continent
+	+getGameState():GameState
+	+getCurrentTerritory():Territory
+	+getAttackState():AttackPhase
+	+setGameState(state:GameState):void
+	+getAttackingTerritory():Territory
+	+getDefendingTerritory():Territory
+	+updateGameState(newGameState:GameState, newAttackState:AttackPhase):void
+	+forceTurnInSetup():void
+	+getManeuverableTroops():int
+	+getManeuverState():ManeuverPhase
+	+attackMax():int
+	+defendMax():int
+	+getManeuverFromName():String
+	+getManeuverToName():String
+	+setTurnIndex(index:int):void
+	+setRiskDeck(newRiskCards:RiskDeck):void
+	+setAttackState(newAttackPhase:AttackPhase):void
+	+getDrawCard():boolean
+	+assignSecretMissionCards(cardsInput:ArrayList<WHATTT>):void
+	+getMissionCards():ArrayList<WHATTT>
+	+canTurnInCards():boolean
+	+getDeployableTroops():int
+	+getCurrentPlayerCards():ArrayList<WHATTT>
+	+setResourceBundle(messagesInput:ResourceBundle):void
+	+getBoardState():DisplayTerritoryData[]
+	-findOwnerColor(territory:Territory):Color
+	+convertTerritoryNameToCard(territoryNames:String[]):int
+	+canAttack():boolean
+	}
++class Game
+{
+	~mainApp/domain/SecretMissionDeck(riskCards:ArrayList<WHATTT>):void
+	+canTurnInCards(cardsToBeTurnedIn:ArrayList<WHATTT>):boolean
+	}
++class SecretMissionDeck
+{
+	-{final} type: String
+	-{final} value: String
+	-{final} filePath: String
+	+mainApp/domain/Card(typeInput:String, valueInput:String, filePathInput:String):void
+	+type():String
+	+value():String
+	+filePath():String
+	+equals(o:Object):boolean
+	}
++class Card
+{
+	-{final} dice: Dice
+	- attackingTerritory: Territory
+	- defendingTerritory: Territory
+	- attacker: Player
+	- defender: Player
+	+mainApp/domain/Attack(diceInput:Dice):void
+	+validateAttackingTerritory(attackTerritoryInput:Territory, attackerInput:Player):boolean
+	~borderingPlayers(attackerInput:Player, territoryToCheck:Territory):boolean
+	+validateDefendingTerritory(defendingTerritoryInput:Territory, defenderInput:Player):boolean
+	+generateRolls(attackTroopCount:int, defendTroopCount:int):ArrayList<WHATTT>
+	-generateRollsValidateHelper(attackTroopCount:int, defendTroopCount:int):void
+	+attackLogic(allRolls:ArrayList<WHATTT>):ArrayList<WHATTT>
+	+updatePlayerTroopAndTerritory(troopLosses:ArrayList<WHATTT>, attackTroopCount:int):boolean
+	+attackerWins(attackTroopCount:int, defendTroopCount:int):ArrayList<WHATTT>
+	+attackMax():int
+	+defendMax():int
+	+getAttackingTerritory():Territory
+	+getDefendingTerritory():Territory
+	}
++class Attack
+{
+	- troops: int
+	-{final} adjacentTerritories: Set<WHATTT>
+	-{final} territoryName: String
+	-{final} xPos: double
+	-{final} yPos: double
+	-{final} hitboxWidth: double
+	-{final} hitboxHeight: double
+	+mainApp/domain/Territory(name:String, xPosition:double, yPosition:double, width:double, height:double):void
+	+getCurrentNumberOfTroops():int
+	+addAdditionalTroops(additionalTroops:int):void
+	+removeFromCurrentTroops(removableTroops:int):void
+	+isAdjacentTerritory(territory:Territory):boolean
+	+setAdjacentTerritories(adjacentTerritoriesSet:Territory[]):void
+	+clickedOnTerritory(pointClicked:Point):boolean
+	+getTerritoryName():String
+	+maxDeployableAttackTroops():int
+	+maxDeployableDefendTroops():int
+	+getAdjacentTerritories():Set<WHATTT>
+	}
++class Territory
+{
+	#{final} deckOfCards: ArrayList<WHATTT>
+	# maximumDeckSize: int
+	~mainApp/domain/Deck(cards:ArrayList<WHATTT>):void
+	~{final}containsCard(card:Card):boolean
+	~{final}size():int
+	+{final}drawOneCard():Card
+	+{abstract}canTurnInCards(param1:ArrayList<WHATTT>):boolean
+	+{final}turnInCards(cardsToBeTurnedIn:ArrayList<WHATTT>):int
+	-shuffleCardsBackIntoDeck(cardsToBeTurnedIn:ArrayList<WHATTT>):void
+	+turnInCard(card:Card):void
+	#calculateValueOfCards(cardsToBeTurnedIn:ArrayList<WHATTT>):int
+	#verifyCardsCanBeTurnedIn(cardsToBeTurnedIn:ArrayList<WHATTT>):void
+	+setCardOrder(cardsInReverseOrder:ArrayList<WHATTT>):void
+	}
++abstract class Deck
+{
+	-{final} allTerritories: HashMap<WHATTT>
+	-{final} territoryNeighborMap: HashMap<WHATTT>
+	-{final} territoriesByContinentMap: HashMap<WHATTT>
+	-{final} riskCards: ArrayList<WHATTT>
+	-{final} missionCards: ArrayList<WHATTT>
+	-{final} screenSize: Dimension
+	-{final} diceRollRandom: Random
+	- messages: ResourceBundle
+	+mainApp/domain/Initializer(screenDimension:Dimension):void
+	-createAllTerritories():void
+	-createTerritoryNeighbors():void
+	+setAllAdjacentTerritoryFields():void
+	+createAllEntities():void
+	-createRiskCards():void
+	-createMissionCards():void
+	-createContinentByTerritoryMap():void
+	-nameToContinent(continentName:String):Continent
+	+getTerritories():Collection<WHATTT>
+	+makePlayers(amountOfPlayers:int, allPlayerColors:ArrayList<WHATTT>):ArrayList<WHATTT>
+	-convertColor(colorToConvert:String):Color
+	-calculateInitialTroopCount(amountOfPlayers:int):int
+	+makeGame(players:ArrayList<WHATTT>, secretMissionMode:boolean, locale:ResourceBundle):Game
+	+getRiskCards():RiskDeck
+	+getSecretMissionCards():SecretMissionDeck
+	+getSecretMissionCardsArray():ArrayList<WHATTT>
+	+getTerritoriesByContinentMap():HashMap<WHATTT>
+	+setMessages(messagesInput:ResourceBundle):void
+	}
++class Initializer
+{
+	-{final} random: Random
+	+mainApp/domain/Dice(rand:Random):void
+	+rollUnique(previousRolls:ArrayList):int
+	+rollDice(numOfDice:int):ArrayList<WHATTT>
+	}
++class Dice
+{
+	- currentValueOfCards: int
+	~mainApp/domain/RiskDeck(cards:ArrayList<WHATTT>):void
+	+canTurnInCards(cardsToBeTurnedIn:ArrayList<WHATTT>):boolean
+	-determineCountsOfCardTypes(cardsToBeTurnedIn:ArrayList<WHATTT>):int[]
+	-ensureCorrectNumberOfCardTypes(cardTypes:int[]):boolean
+	#calculateValueOfCards(cardsToBeTurnedIn:ArrayList<WHATTT>):int
+	#verifyCardsCanBeTurnedIn(cardsToBeTurnedIn:ArrayList<WHATTT>):void
+	}
++class RiskDeck
+{
+	+ troopCount: String
+	+ territoryName: String
+	+ playerColor: Color
+	+mainApp/domain/DisplayTerritoryData(troops:String, name:String, color:Color):void
+	}
++class DisplayTerritoryData
+@enduml

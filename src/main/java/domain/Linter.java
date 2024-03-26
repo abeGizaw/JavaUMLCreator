@@ -2,6 +2,7 @@ package domain;
 
 import domain.diagramconverter.ConvertASMToUML;
 import domain.diagramconverter.Diagram;
+import domain.diagramconverter.RelationsManager;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -23,7 +24,7 @@ public class Linter {
         populateDiagramMap();
     }
     private void populateDiagramMap() {
-        diagramTypeToDiagram.put(DiagramType.UML_CONVERTER, new ConvertASMToUML(new StringBuilder()));
+        diagramTypeToDiagram.put(DiagramType.UML_CONVERTER, new ConvertASMToUML(new RelationsManager(), new StringBuilder()));
     }
 
     private List<MyClassNode> createClassNodes(List<String> classPaths, Map<String, String> fileToPackage) {
@@ -43,7 +44,7 @@ public class Linter {
         Map<StringBuilder, DiagramType> diagramBuilders = new HashMap<>();
         for(DiagramType diagramType : diagrams){
             Diagram diagram = diagramTypeToDiagram.get(diagramType);
-            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(myClassNodes, packageToMyClassNode);
+            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(packageToMyClassNode);
             diagramBuilders.put(diagramBuilder, diagramType);
 
         }
