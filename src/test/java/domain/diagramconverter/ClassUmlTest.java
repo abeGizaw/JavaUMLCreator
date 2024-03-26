@@ -27,10 +27,10 @@ public class ClassUmlTest {
 
         String testPathString = "HasATest";
 
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses\\HasATest.class");
+        Path pathOfTarget = Path.of(System.getProperty("user.dir") + File.separator + "target" + File.separator
+                + "test-classes" + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "HasATest.class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + "\\HasACorrect\\test.puml");
+                File.separator + correctLocation + File.separator + "HasACorrect" + File.separator + "test.puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
@@ -53,12 +53,13 @@ public class ClassUmlTest {
         //Set Up
         LinterMain linterMain = new LinterMain();
 
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") + "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses\\ExtendsAndImplements");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") + "\\CorrectPUMLs\\ExtendsAndImplementsCorrect\\ExtendsAndImplementsCorrect.puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") + "\\TestPUMLS\\ExtendsAndImplementsTest\\ExtendsAndImplementsTest.puml");
+        Path pathOfTarget = Path.of(System.getProperty("user.dir") + File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "ExtendsAndImplements");
+        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") + File.separator + "CorrectPUMLs" + File.separator + "ExtendsAndImplementsCorrect" + File.separator + "ExtendsAndImplementsCorrect.puml");
+        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") + File.separator + "TestPUMLS" + File.separator + "ExtendsAndImplementsTest" + File.separator + "ExtendsAndImplementsTest.puml");
 
         //Execute Test
-        linterMain.generateUMLFromPath(pathOfTarget, "TestPUMLS\\ExtendsAndImplementsTest", "ExtendsAndImplementsTest");
+        linterMain.generateUMLFromPath(pathOfTarget, "TestPUMLS" + File.separator + "ExtendsAndImplementsTest", "ExtendsAndImplementsTest");
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -80,7 +81,8 @@ public class ClassUmlTest {
         String testPathString = "AccessModifierVariety";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -109,7 +111,8 @@ public class ClassUmlTest {
         String testPathString = "ArrayFieldsConverter";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -138,7 +141,8 @@ public class ClassUmlTest {
         String testPathString = "CollectionFieldsConverter";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -167,7 +171,8 @@ public class ClassUmlTest {
         String testPathString = "ImplementingClass";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -196,7 +201,8 @@ public class ClassUmlTest {
         String testPathString = "MockAbstract";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -225,7 +231,8 @@ public class ClassUmlTest {
         String testPathString = "MockEnum";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -254,7 +261,8 @@ public class ClassUmlTest {
         String testPathString = "MockInterface";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -283,7 +291,8 @@ public class ClassUmlTest {
         String testPathString = "ObjectFieldsConverter";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -312,7 +321,8 @@ public class ClassUmlTest {
         String testPathString = "ParameterTypeVariety";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -341,7 +351,8 @@ public class ClassUmlTest {
         String testPathString = "PrimitiveFieldsConverter";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
@@ -370,7 +381,8 @@ public class ClassUmlTest {
         String testPathString = "ReturnTypeVariety";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                "\\target\\test-classes\\domain\\diagramconverter\\ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
         Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
                 File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
