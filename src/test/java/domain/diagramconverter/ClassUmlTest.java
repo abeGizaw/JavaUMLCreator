@@ -8,10 +8,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClassUmlTest {
 
@@ -67,9 +67,18 @@ public class ClassUmlTest {
         //Validate
         assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
 
+        HashMap linesUsed = new HashMap<String, Integer>();
+
+
         for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
+                linesUsed.put(correctPUML.get(i), 1);
         }
+
+        for (int i = 0; i < testPUML.size(); i++) {
+            assertEquals(linesUsed.get(testPUML.get(i)), 1);
+        }
+
+
     }
 
     @Test

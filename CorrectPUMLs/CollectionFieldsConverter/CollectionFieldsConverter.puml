@@ -6,7 +6,7 @@ package .. {
 	- map: Map<String,Integer>
 	+ charQueue: Queue<Character>
 	+ booleanStack: Stack<Boolean>
-	+ advancedMap: Map<List<Set<String>>,Map<String,String>>
+	+ advancedMap: Map<List<Set<String>>,List<String>>
 	+CollectionFieldsConverter():void
 	}
 
