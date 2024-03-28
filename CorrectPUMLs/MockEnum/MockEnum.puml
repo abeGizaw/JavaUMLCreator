@@ -1,0 +1,17 @@
+@startuml
+package .. {
+	enum MockEnum{
+	RED
+	BLUE
+	GREEN
+	-{final} description: String
+	-{final} code: int
+	+{static}values():MockEnum[]
+	+{static}valueOf(name:String):MockEnum
+	-MockEnum(description:String, code:int):void
+	+getDescription():String
+	+getCode():int
+	}
+
+}
+@enduml

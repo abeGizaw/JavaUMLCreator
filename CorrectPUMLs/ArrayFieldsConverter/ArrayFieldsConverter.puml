@@ -1,0 +1,15 @@
+@startuml
+package .. {
+	+class ArrayFieldsConverter{
+	+ intArray: int[]
+	- string2DArray: String[][]
+	# charArray: char[]
+	+ double3DArray: double[][][]
+	- enumArray: MockEnum[][]
+	+ arrayListList: List<String>[][][][]
+	+ArrayFieldsConverter():void
+	}
+
+}
+ArrayFieldsConverter-->"*"MockEnum
+@enduml

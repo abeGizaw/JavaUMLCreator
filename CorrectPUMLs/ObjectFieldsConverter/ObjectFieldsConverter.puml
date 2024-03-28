@@ -1,0 +1,14 @@
+@startuml
+package .. {
+	+class ObjectFieldsConverter{
+	+ date: Date
+	+ stringBuilder: StringBuilder
+	- stringBuffer: StringBuffer
+	# genericObject: Object
+	- string: String
+	- aBoolean: Boolean
+	+ObjectFieldsConverter():void
+	}
+
+}
+@enduml

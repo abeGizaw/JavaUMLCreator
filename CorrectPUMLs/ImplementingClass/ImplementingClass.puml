@@ -1,0 +1,11 @@
+@startuml
+package .. {
+	+class ImplementingClass{
+	+ImplementingClass():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
+}
+ImplementingClass..|>MockInterface
+@enduml

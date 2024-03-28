@@ -1,0 +1,15 @@
+@startuml
+package .. {
+	+class AccessModifierVariety{
+	+AccessModifierVariety():void
+	+publicMethod():void
+	#protectedMethod():void
+	-privateMethod():void
+	~defaultMethod():void
+	+{static}publicStaticMethod():void
+	-{static}privateStaticMethod():void
+	#{static}protectedStaticMethod():void
+	}
+
+}
+@enduml

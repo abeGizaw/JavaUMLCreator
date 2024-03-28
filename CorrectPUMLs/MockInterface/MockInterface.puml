@@ -1,0 +1,11 @@
+@startuml
+package .. {
+	+interface MockInterface{
+	+{abstract}calculate(param1:double):double
+	+{abstract}transform(param1:String):String
+	+show():void
+	+{static}helper():void
+	}
+
+}
+@enduml
