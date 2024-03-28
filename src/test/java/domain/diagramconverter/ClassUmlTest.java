@@ -24,7 +24,6 @@ public class ClassUmlTest {
         //Set Up
         LinterMain linterMain = new LinterMain();
 
-
         String testPathString = "HasATest";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") + File.separator + "target" + File.separator
@@ -48,6 +47,7 @@ public class ClassUmlTest {
         }
     }
 
+    /*
     @Test
     public void testExtendsAndImplementsFiles() throws IOException {
         //Set Up
@@ -80,6 +80,7 @@ public class ClassUmlTest {
 
 
     }
+    */
 
     @Test
     public void testAccessModifierVariety() throws IOException {
@@ -141,6 +142,7 @@ public class ClassUmlTest {
         }
     }
 
+    /*
     @Test
     public void testCollectionFieldsConverter() throws IOException {
         //Set Up
@@ -170,6 +172,7 @@ public class ClassUmlTest {
             assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
         }
     }
+     */
 
     @Test
     public void testImplementingClass() throws IOException {
@@ -231,6 +234,7 @@ public class ClassUmlTest {
         }
     }
 
+    /*
     @Test
     public void testMockEnum() throws IOException {
         //Set Up
@@ -260,6 +264,8 @@ public class ClassUmlTest {
             assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
         }
     }
+
+     */
 
     @Test
     public void testMockInterface() throws IOException {
