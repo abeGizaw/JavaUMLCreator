@@ -1,5 +1,6 @@
 package domain.diagramconverter;
 import domain.*;
+import presentation.ANSIColors;
 
 import java.util.*;
 
@@ -68,9 +69,9 @@ public class ConvertASMToUML implements Diagram{
 
         classUmlContent.append(this.relationManager.addAllRelations());
 
-
         classUmlContent.append("@enduml");
         return classUmlContent;
+
     }
 
 
