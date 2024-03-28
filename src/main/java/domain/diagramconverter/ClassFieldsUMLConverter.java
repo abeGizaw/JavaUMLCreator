@@ -3,6 +3,7 @@ package domain.diagramconverter;
 import domain.MyClassNode;
 import domain.MyFieldNode;
 import domain.MyOpcodes;
+import presentation.ANSIColors;
 
 import java.util.List;
 
@@ -38,8 +39,6 @@ public class ClassFieldsUMLConverter extends UMLConverterBase{
 
         String fullDesc = (field.signature != null) ? field.signature : field.desc;
         String descName = getFieldType(fullDesc);
-
-
 
         if(!isJavaAPIClass(fullDesc, className)){
             String cleanedDescName = removeBracketsFromDesc(descName);

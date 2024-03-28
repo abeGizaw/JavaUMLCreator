@@ -312,17 +312,14 @@ Game..>Territory
 Game..>RiskDeck
 Game..>DisplayTerritoryData
 Game-->SecretMissionDeck
-GameState..>GameState
 Attack-->"2"Player
 Game..>Attack
 Initializer..>Territory
 Maneuver-->Player
 Game-->Maneuver
 Game-->"*"Player
-Continent..>Continent
 Initializer-->"*"String
 Maneuver..>Player
-Territory..>Territory
 Deck-->"*"Card
 Player-->"*"Card
 Game-->"*"Continent
@@ -343,7 +340,6 @@ Initializer..>Player
 Initializer-->"*"Continent
 Player-->"*"Territory
 Game-->Attack
-AttackPhase..>AttackPhase
 Initializer-->"*"Card
 RiskDeck--|>Deck
 Player..>Card
@@ -357,6 +353,5 @@ Initializer..>Game
 Territory-->"*"Territory
 Deck..>Card
 Game..>SecretMissionDeck
-ManeuverPhase..>ManeuverPhase
 Game..>Card
 @enduml

@@ -417,6 +417,36 @@ public class ClassUmlTest {
         }
     }
 
+    @Test
+    public void testDependsOnRelations() throws IOException {
+        //Set Up
+        LinterMain linterMain = new LinterMain();
+
+
+        String testPathString = "DependsOnRelations";
+
+        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
+                File.separator + "target" + File.separator + "test-classes"
+                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + testPathString + ".class");
+        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
+                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
+        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
+                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
+
+        //Execute Test
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+
+        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
+        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
+
+        //Validate
+        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
+
+        for (int i = 0; i < correctPUML.size(); i++) {
+            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
+        }
+    }
+
 
 
 
