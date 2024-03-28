@@ -22,7 +22,12 @@ public class RelationsManager {
         }
     }
     protected void addDependsOnARelationShip(String className, String dependent){
-        allRelationships.add(className + "..>" + dependent);
+        for (String field: dependent.split(",")) {
+            if(!className.equals(field)){
+                allRelationships.add(className + "..>" + field);
+            }
+        }
+
     }
     protected void addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName){
         // Adds the extends relations

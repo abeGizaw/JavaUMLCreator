@@ -49,28 +49,6 @@ public class ClassFieldsUMLConverter extends UMLConverterBase{
     }
 
 
-    /**
-     *
-     * @param descName exmaple: Set<MockAbstract>
-     *                          HashMap<MockEnum,MockInterface>
-     *                          AccessModifierVariety[]
-     * @return example: MockAbstract
-     *                  MockEnum,MockInterface
-     *                  AccessModifierVariety
-     */
-    private String removeBracketsFromDesc(String descName) {
-        if(descName.endsWith("[]")){
-            return removeBracketsFromDesc(descName.substring(0, descName.length() - 2));
-        } else if(descName.contains("<")){
-            while(descName.contains("<")){
-                descName = descName.substring(descName.indexOf("<") + 1);
-            }
-            descName = descName.substring(0, descName.indexOf(">"));
-            descName = descName.replace("[]", "");
-        }
-
-        return descName;
-    }
 
 
     private boolean isSynthetic(int access) {
