@@ -30,7 +30,6 @@ public class RelationsManager {
 
     }
     protected void addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName){
-        // Adds the extends relations
         String abstractClass = myClassNode.superName;
         if(!abstractClass.isEmpty()){
             if(!abstractClass.startsWith("java")){
@@ -60,7 +59,10 @@ public class RelationsManager {
     }
 
     protected void addAHasARelationship(String descName, String className, boolean collectionType) {
-        for (String field: descName.split(",")){
+        for (String field: descName.split(",") ){
+            if(field.contains("java")){
+                continue;
+            }
             String cleanClassName = className.substring(className.lastIndexOf("/") + 1);
             String baseRelationShip = cleanClassName + "-->";
             String relationship = baseRelationShip + field;
