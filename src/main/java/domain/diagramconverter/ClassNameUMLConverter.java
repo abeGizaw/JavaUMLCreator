@@ -32,13 +32,15 @@ public class ClassNameUMLConverter extends UMLConverterBase{
      * @return A string representing the UML type.
      */
     private String getClassType(int access) {
-        if((access & MyOpcodes.ACC_INTERFACE) != 0){
-            return "interface";
+        if((access & MyOpcodes.ACC_ANNOTATION) != 0){
+            return "annotation";
         } else if((access & MyOpcodes.ACC_ABSTRACT) != 0){
             return "abstract class";
         } else if((access & MyOpcodes.ACC_ENUM) != 0){
             return "enum";
-        } else {
+        } else if((access & MyOpcodes.ACC_INTERFACE) != 0){
+            return "interface";
+        }else {
             return "class";
         }
     }

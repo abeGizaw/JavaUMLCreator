@@ -1,0 +1,10 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+annotation hi{
+ + String value
+ + int priority = 1
+ + String[] tags = {}
+}
+
+@enduml
