@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static domain.constants.Constants.INVALID_ARRAY_ENTRY;
+
 public abstract class UMLConverterBase implements UMLConverter{
 
     abstract public String convert(MyClassNode myclassNode, RelationsManager relationsManager);
@@ -97,7 +99,7 @@ public abstract class UMLConverterBase implements UMLConverter{
     private List<String> cleanCollectionParsing(List<String> originalList){
         List<String> modifiedList = new ArrayList<>();
         for (String entry : originalList) {
-            if (entry.equals(">;")) {
+            if (entry.equals(INVALID_ARRAY_ENTRY)) {
                 break;
             } else {
                 modifiedList.add(entry + ";");
