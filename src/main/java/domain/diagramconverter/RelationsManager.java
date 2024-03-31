@@ -1,11 +1,9 @@
 package domain.diagramconverter;
 
 import domain.MyClassNode;
+import domain.myasm.MyASMAnnotationNode;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RelationsManager {
     Map<String, Integer> hasARelationShipByClass = new HashMap<>();
@@ -92,5 +90,13 @@ public class RelationsManager {
         }
 
         return relationshipContent.toString();
+    }
+
+
+    public void addAnnotationRelationship(List<String> annotationNames, String cleanClassName) {
+        for (String annotationName:annotationNames){
+            String cleanAnnName = annotationName.substring(0, annotationName.length() - 1);
+            allRelationships.add(cleanClassName + "..>" + cleanAnnName + " : << uses >>");
+        }
     }
 }

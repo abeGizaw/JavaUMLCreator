@@ -13,5 +13,5 @@ public abstract class MyClassNode {
     public String superName;
     public List<MyInnerClassNode> innerClasses;
 
-    protected List<MyASMAnnotationNode> annotations;
+    public List<MyASMAnnotationNode> annotations;
 }

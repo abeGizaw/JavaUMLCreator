@@ -7,4 +7,5 @@ public class Constants {
     public static final String ABBREVIATION_ERROR = "Invalid Input. Please Enter Abbreviations. ";
     public static final String INVALID_PACKAGE = "Invalid package";
     public static final String INVALID_ARRAY_ENTRY = ">;";
+
 }

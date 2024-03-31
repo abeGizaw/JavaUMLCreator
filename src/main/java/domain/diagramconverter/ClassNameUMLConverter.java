@@ -1,27 +1,40 @@
 package domain.diagramconverter;
 
+import domain.MyAnnotationNode;
 import domain.MyClassNode;
 import domain.MyInnerClassNode;
 import domain.MyOpcodes;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClassNameUMLConverter extends UMLConverterBase{
     @Override
     public String convert(MyClassNode myClassNode, RelationsManager relationsManager) {
         StringBuilder classString = new StringBuilder();
-        String cleanClassName = cleanClassName(myClassNode.name);
-
-        String classType = getClassType(myClassNode.access);
+        ClassType classType = ClassType.getClassType(myClassNode.access);
 
         if(myClassNode.name.contains("$")){
-            convertInnerClassInfo(myClassNode, classString, classType);
+            convertInnerClassInfo(myClassNode, classString, classType.getDescription());
         } else {
-            convertOuterClassInfo(myClassNode, classString, classType);
+            convertOuterClassInfo(myClassNode, classString, classType.getDescription());
         }
 
+        handleRelations(relationsManager, myClassNode, classType);
+        return classString.toString();
+    }
+
+    private void handleRelations(RelationsManager relationsManager, MyClassNode myClassNode, ClassType classType) {
+        String cleanClassName = cleanClassName(myClassNode.name);
         relationsManager.addExtendsRelationShip(myClassNode, cleanClassName);
         relationsManager.addImplementsRelationShip(myClassNode, cleanClassName);
 
-        return classString.toString();
+        if(classType != ClassType.ANNOTATION){
+            List<String> annotationNames = myClassNode.annotations.stream()
+                    .map(ann -> cleanClassName(ann.desc))
+                    .collect(Collectors.toList());
+            relationsManager.addAnnotationRelationship(annotationNames, cleanClassName);
+        }
     }
 
 
