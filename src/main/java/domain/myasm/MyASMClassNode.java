@@ -4,10 +4,7 @@ import domain.MyClassNode;
 import domain.MyFieldNode;
 import domain.MyInnerClassNode;
 import domain.MyMethodNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.InnerClassNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +21,22 @@ public class MyASMClassNode extends MyClassNode {
         super.fields = convertFields();
         super.methods = convertMethods();
         super.innerClasses = convertInnerClasses();
+        super.annotations = convertAnnotations();
+    }
+
+    private List<MyASMAnnotationNode> convertAnnotations() {
+        List<MyASMAnnotationNode> annotations = new ArrayList<>();
+        if (classNode.visibleAnnotations != null) {
+            for (AnnotationNode visibleAnnot : classNode.visibleAnnotations) {
+                annotations.add(new MyASMAnnotationNode(visibleAnnot));
+            }
+        }
+        if (classNode.invisibleAnnotations != null) {
+            for (AnnotationNode invisibleAnnot : classNode.invisibleAnnotations) {
+                annotations.add(new MyASMAnnotationNode(invisibleAnnot));
+            }
+        }
+        return annotations;
     }
 
     private List<MyInnerClassNode> convertInnerClasses() {

@@ -1,0 +1,12 @@
+@startuml
++class UsingTheAnnotation{
+	+UsingTheAnnotation():void
+	}
+
++annotation MyAnnotation{
+	+{abstract}value():String
+	+{abstract}priority():int
+	+{abstract}tags():String[]
+	}
+
+@enduml
