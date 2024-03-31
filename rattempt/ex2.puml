@@ -1,0 +1,20 @@
+@startuml
++class UsingTheAnnotation{
+	+UsingTheAnnotation():void
+	}
+
++class MyCustomException{
+	+MyCustomException():void
+	+MyCustomException(message:String):void
+	+MyCustomException(message:String, cause:Throwable):void
+	+MyCustomException(cause:Throwable):void
+	}
+
++annotation MyAnnotation{
+	+{abstract}value():String
+	+{abstract}priority():int
+	+{abstract}tags():String[]
+	}
+
+UsingTheAnnotation..>MyAnnotation : << uses >>
+@enduml

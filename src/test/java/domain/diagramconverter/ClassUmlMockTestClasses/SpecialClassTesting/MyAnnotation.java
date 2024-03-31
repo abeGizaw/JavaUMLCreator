@@ -1,4 +1,4 @@
-package domain.diagramconverter.ClassUmlMockTestClasses.AnnotationTesting;
+package domain.diagramconverter.ClassUmlMockTestClasses.SpecialClassTesting;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

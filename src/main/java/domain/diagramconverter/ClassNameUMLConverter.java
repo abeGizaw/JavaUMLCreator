@@ -1,6 +1,5 @@
 package domain.diagramconverter;
 
-import domain.MyAnnotationNode;
 import domain.MyClassNode;
 import domain.MyInnerClassNode;
 import domain.MyOpcodes;
@@ -9,26 +8,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ClassNameUMLConverter extends UMLConverterBase{
+    private ClassType classType;
     @Override
     public String convert(MyClassNode myClassNode, RelationsManager relationsManager) {
         StringBuilder classString = new StringBuilder();
-        ClassType classType = ClassType.getClassType(myClassNode.access);
+        this.classType = ClassType.getClassType(myClassNode.access);
+
+        handleRelations(relationsManager, myClassNode);
 
         if(myClassNode.name.contains("$")){
-            convertInnerClassInfo(myClassNode, classString, classType.getDescription());
+            convertInnerClassInfo(myClassNode, classString);
         } else {
-            convertOuterClassInfo(myClassNode, classString, classType.getDescription());
+            convertOuterClassInfo(myClassNode, classString);
         }
 
-        handleRelations(relationsManager, myClassNode, classType);
         return classString.toString();
     }
 
-    private void handleRelations(RelationsManager relationsManager, MyClassNode myClassNode, ClassType classType) {
+    private void handleRelations(RelationsManager relationsManager, MyClassNode myClassNode) {
         String cleanClassName = cleanClassName(myClassNode.name);
-        relationsManager.addExtendsRelationShip(myClassNode, cleanClassName);
-        relationsManager.addImplementsRelationShip(myClassNode, cleanClassName);
+        this.classType = relationsManager.addExtendsRelationShip(myClassNode, cleanClassName, classType);
 
+        relationsManager.addImplementsRelationShip(myClassNode, cleanClassName);
         if(classType != ClassType.ANNOTATION){
             List<String> annotationNames = myClassNode.annotations.stream()
                     .map(ann -> cleanClassName(ann.desc))
@@ -64,15 +65,14 @@ public class ClassNameUMLConverter extends UMLConverterBase{
      *
      * @param myClassNode MyClassNode representing the class.
      * @param classString StringBuilder to append the class information.
-     * @param classType The type of class (e.g., class, abstract class, interface).
      */
-    private void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+    private void convertOuterClassInfo(MyClassNode myClassNode, StringBuilder classString) {
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("/") + 1);
-        if (classType.equals("enum")) {
+        if (classType == ClassType.ENUM) {
             classString.append(classType).append(" ").append(className);
         } else {
             String classModifier = getAccessModifier(myClassNode.access);
-            classString.append(classModifier).append(classType).append(" ").append(className);
+            classString.append(classModifier).append(classType.getDescription()).append(" ").append(className);
         }
     }
 
@@ -82,14 +82,13 @@ public class ClassNameUMLConverter extends UMLConverterBase{
      *
      * @param myClassNode MyClassNode representing the class.
      * @param classString StringBuilder to append the class information.
-     * @param classType The type of class (e.g., class, abstract class, interface).
      */
-    private void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString, String classType) {
+    private void convertInnerClassInfo(MyClassNode myClassNode, StringBuilder classString) {
         String className = myClassNode.name.substring(myClassNode.name.lastIndexOf("$") + 1);
         MyInnerClassNode innerClassNode = findInnerClassNode(myClassNode, myClassNode.name);
         if(innerClassNode != null){
             String classModifier = getAccessModifier(innerClassNode.access);
-            classString.append(classModifier).append(classType).append(" ").append(className);
+            classString.append(classModifier).append(classType.getDescription()).append(" ").append(className);
         }
     }
 

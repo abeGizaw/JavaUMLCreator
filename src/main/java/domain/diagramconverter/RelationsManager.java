@@ -1,7 +1,6 @@
 package domain.diagramconverter;
 
 import domain.MyClassNode;
-import domain.myasm.MyASMAnnotationNode;
 
 import java.util.*;
 
@@ -27,14 +26,19 @@ public class RelationsManager {
         }
 
     }
-    protected void addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName){
+    protected ClassType addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName, ClassType classType){
         String abstractClass = myClassNode.superName;
         if(!abstractClass.isEmpty()){
+            if ("java/lang/Exception".equals(abstractClass) || "java/lang/RuntimeException".equals(abstractClass)) {
+                classType = ClassType.EXCEPTION;
+            }
             if(!abstractClass.startsWith("java")){
                 String abstractClassName = abstractClass.substring(abstractClass.lastIndexOf('/') + 1);
                 allRelationships.add(cleanClassName + "--|>" + abstractClassName);
             }
         }
+
+        return classType;
     }
 
     private Set<String> convertHasAKeyNames(){
@@ -99,4 +103,5 @@ public class RelationsManager {
             allRelationships.add(cleanClassName + "..>" + cleanAnnName + " : << uses >>");
         }
     }
+
 }

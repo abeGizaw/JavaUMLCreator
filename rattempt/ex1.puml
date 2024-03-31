@@ -3,13 +3,18 @@
 	+UsingTheAnnotation():void
 	}
 
++class MyCustomException{
+	+MyCustomException():void
+	+MyCustomException(message:String):void
+	+MyCustomException(message:String, cause:Throwable):void
+	+MyCustomException(cause:Throwable):void
+	}
+
 +annotation MyAnnotation{
 	+{abstract}value():String
 	+{abstract}priority():int
 	+{abstract}tags():String[]
 	}
 
-MyAnnotation..>Target : << uses >>
 UsingTheAnnotation..>MyAnnotation : << uses >>
-MyAnnotation..>Retention : << uses >>
 @enduml

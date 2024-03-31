@@ -1,9 +1,0 @@
-@startuml
-package .. {
-	+class UsingTheAnnotation{
-	+UsingTheAnnotation():void
-	}
-
-}
-UsingTheAnnotation..>MyAnnotation : << uses >>
-@enduml

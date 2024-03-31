@@ -7,6 +7,7 @@ public enum ClassType {
     ABSTRACT_CLASS(MyOpcodes.ACC_ABSTRACT, "abstract class"),
     ENUM(MyOpcodes.ACC_ENUM, "enum"),
     INTERFACE(MyOpcodes.ACC_INTERFACE, "interface"),
+    EXCEPTION(0, "exception"),
     CLASS(0, "class"); // Assuming there's no specific opcode for class
 
     private final int opcode;
