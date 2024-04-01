@@ -11,5 +11,6 @@ public interface MyOpcodes {
     public static final int ACC_SYNTHETIC = 4096;
     public static final int ACC_ENUM = 16384;
     public static final int ACC_ANNOTATION = 8192;
+    public static final int ACC_RECORD = 65536;
 
 }

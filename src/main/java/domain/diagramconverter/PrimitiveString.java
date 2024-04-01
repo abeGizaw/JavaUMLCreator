@@ -2,7 +2,7 @@ package domain.diagramconverter;
 
 import java.util.ArrayList;
 import java.util.List;
-
+// TODO CHANGE THIS TO BE AN ENUM
 public interface PrimitiveString {
     String getType();
     boolean checkDesc(String desc);

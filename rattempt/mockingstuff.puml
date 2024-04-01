@@ -10,4 +10,8 @@ annotation hi{
 exception hi2{
 }
 
+class PersonRecord <<record>> {
+    -String name
+    -int age
+}
 @enduml

@@ -73,6 +73,10 @@ public class ClassNameUMLConverter extends UMLConverterBase{
         } else {
             String classModifier = getAccessModifier(myClassNode.access);
             classString.append(classModifier).append(classType.getDescription()).append(" ").append(className);
+
+            if(classType == ClassType.RECORD){
+                classString.append(" <<record>>");
+            }
         }
     }
 

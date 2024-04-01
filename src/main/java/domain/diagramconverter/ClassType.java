@@ -7,6 +7,7 @@ public enum ClassType {
     ABSTRACT_CLASS(MyOpcodes.ACC_ABSTRACT, "abstract class"),
     ENUM(MyOpcodes.ACC_ENUM, "enum"),
     INTERFACE(MyOpcodes.ACC_INTERFACE, "interface"),
+    RECORD(MyOpcodes.ACC_RECORD, "class"),
     EXCEPTION(0, "exception"),
     CLASS(0, "class"); // Assuming there's no specific opcode for class
 
@@ -28,7 +29,6 @@ public enum ClassType {
                 return type;
             }
         }
-        return CLASS; // Default return value if no other flag is set
+        return CLASS;
     }
-
 }
