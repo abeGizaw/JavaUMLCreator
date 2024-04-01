@@ -27,7 +27,7 @@ public class ClassNameUMLConverter extends UMLConverterBase{
 
     private void handleRelations(RelationsManager relationsManager, MyClassNode myClassNode) {
         String cleanClassName = cleanClassName(myClassNode.name);
-        this.classType = relationsManager.addExtendsRelationShip(myClassNode, cleanClassName, classType);
+        this.classType = relationsManager.addExtendsRelationShip(myClassNode, cleanClassName, this.classType);
 
         relationsManager.addImplementsRelationShip(myClassNode, cleanClassName);
         if(classType != ClassType.ANNOTATION){

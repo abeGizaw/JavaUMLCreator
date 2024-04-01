@@ -1,0 +1,13 @@
+@startuml
+package .. {
+	+class UsesTheException{
+	+UsesTheException():void
+	+whattt():void
+	+noooo():void
+	+haaaaa():UsingTheAnnotation
+	}
+
+}
+MyCustomException..>UsesTheException : << throws >>
+UsesTheException..>UsingTheAnnotation
+@enduml

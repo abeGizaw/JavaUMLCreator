@@ -29,12 +29,12 @@ public class RelationsManager {
     protected ClassType addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName, ClassType classType){
         String abstractClass = myClassNode.superName;
         if(!abstractClass.isEmpty()){
-            if ("java/lang/Exception".equals(abstractClass) || "java/lang/RuntimeException".equals(abstractClass)) {
-                classType = ClassType.EXCEPTION;
-            }
             if(!abstractClass.startsWith("java")){
                 String abstractClassName = abstractClass.substring(abstractClass.lastIndexOf('/') + 1);
                 allRelationships.add(cleanClassName + "--|>" + abstractClassName);
+            }
+            if ("java/lang/Exception".equals(abstractClass) || "java/lang/RuntimeException".equals(abstractClass)) {
+                return ClassType.EXCEPTION;
             }
         }
 
@@ -104,4 +104,7 @@ public class RelationsManager {
         }
     }
 
+    public void addExceptionRelation(String cleanClassName, String exception) {
+        allRelationships.add(cleanClassName + "..>" + exception + " : << throws >>");
+    }
 }

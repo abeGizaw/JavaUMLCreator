@@ -9,4 +9,5 @@ public abstract class MyMethodNode {
     public List<MyLocalVariableNode> localVariables;
     public String name;
     public String signature;
+    public List<String> exceptions;
 }
