@@ -36,6 +36,21 @@ public class MyASMClassNode extends MyClassNode {
                 annotations.add(new MyASMAnnotationNode(invisibleAnnot));
             }
         }
+
+        if (classNode.invisibleTypeAnnotations != null) {
+            for (AnnotationNode invisibleAnnot : classNode.invisibleTypeAnnotations) {
+                annotations.add(new MyASMAnnotationNode(invisibleAnnot));
+            }
+        }
+
+
+        if (classNode.visibleTypeAnnotations != null) {
+            for (AnnotationNode invisibleAnnot : classNode.visibleTypeAnnotations) {
+                annotations.add(new MyASMAnnotationNode(invisibleAnnot));
+            }
+        }
+
+
         return annotations;
     }
 

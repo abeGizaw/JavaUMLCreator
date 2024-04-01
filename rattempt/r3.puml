@@ -1,0 +1,63 @@
+@startuml
++class MyRecord <<record>>{
+	-{final} time: int
+	-{final} some: String
+	-{final} relationsManager: RelationsManager
+	+MyRecord(time:int, some:String, relationsManager:RelationsManager):void
+	+{final}toString():String
+	+{final}hashCode():int
+	+{final}equals(o:Object):boolean
+	+time():int
+	+some():String
+	+relationsManager():RelationsManager
+	}
+
++annotation MyOtherAnnotation{
+	+{abstract}name():String
+	+{abstract}age():int
+	}
+
++class UsesTheException{
+	+UsesTheException():void
+	+whattt():void
+	+noooo():void
+	+haaaaa():UsingTheAnnotation
+	}
+
++class UsingTheAnnotation{
+	+UsingTheAnnotation():void
+	+nun():MyRecord
+	}
+
++exception MyCustomException{
+	+MyCustomException():void
+	+MyCustomException(message:String):void
+	+MyCustomException(message:String, cause:Throwable):void
+	+MyCustomException(cause:Throwable):void
+	}
+
++annotation MyAnnotation{
+	+{abstract}value():String
+	+{abstract}priority():int
+	+{abstract}tags():String[]
+	}
+
++class UsesRecord{
+	-{final} record: MyRecord
+	+UsesRecord():void
+	+removeYellowLines():void
+	}
+
++exception MyOtherException{
+	+MyOtherException():void
+	}
+
+UsesRecord-->MyRecord
+UsingTheAnnotation..>MyRecord
+UsesTheException..>MyCustomException : << throws >>
+UsesTheException..>UsingTheAnnotation
+UsesTheException..>MyOtherException : << throws >>
+MyRecord-->RelationsManager
+MyRecord..>RelationsManager
+UsingTheAnnotation..>MyAnnotation : << uses >>
+@enduml
