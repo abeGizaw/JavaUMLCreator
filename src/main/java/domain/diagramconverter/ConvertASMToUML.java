@@ -22,6 +22,7 @@ public class ConvertASMToUML implements Diagram{
         addConverters();
     }
 
+
     private void addConverters() {
         converters.add(new ClassNameUMLConverter());
         converters.add(new ClassFieldsUMLConverter());
@@ -49,7 +50,7 @@ public class ConvertASMToUML implements Diagram{
      * @param packageToMyClassNode  A map associating package names with lists of MyClassNode instances belonging to each package.
      * @return                      A StringBuilder containing the complete UML diagram content.
      */
-    public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode) {
+    public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode, String jsonPackage) {
         classUmlContent.append("@startuml\n");
         for(String packageName : packageToMyClassNode.keySet()){
             if (!packageName.isEmpty()) {
@@ -65,6 +66,13 @@ public class ConvertASMToUML implements Diagram{
             if (!packageName.isEmpty()) {
                 classUmlContent.append("}\n");
             }
+        }
+
+        if(!jsonPackage.isEmpty()){
+            JsonFilesReader jsonFilesReader = new JsonFilesReader(jsonPackage);
+            List<String> lines = jsonFilesReader.readJsonFilesInDirectory();
+            jsonFilesReader.parse(lines);
+            jsonFilesReader.convertJsonToUML(classUmlContent);
         }
 
         classUmlContent.append(this.relationManager.addAllRelations());

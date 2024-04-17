@@ -20,11 +20,17 @@ import static domain.constants.Constants.*;
 public class LinterMain {
 
     public static void main(String[] args) {
+        String jsonPackage = "";
         Path directoryPath = promptUserForDirectory();
         Map<String, String> fileToPackage = parseDirectory(directoryPath);
         String outputPath = promptUser(OUTPUT_DIRECTORY_FOR_CHECKS);
 
         Map<DiagramType, String> diagrams = promptUserForDiagrams();
+        Boolean includeJson = promptUserForJson();
+        if (includeJson){
+            jsonPackage = promptUser(JSON_PACKAGE);
+        }
+
 
         List<String> files = new ArrayList<>(fileToPackage.keySet());
 
@@ -32,17 +38,21 @@ public class LinterMain {
         Linter linter = new Linter(files, creator, fileToPackage);
 
         Saver saver = new LintResultSaver(outputPath);
-        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+        generateAndSaveDiagramsToFile(linter, diagrams, saver, jsonPackage);
     }
+
+
 
     /**
      * Generates and saves diagrams to files.
-     * @param linter The linter to use for generating diagrams.
-     * @param diagrams A map of diagram types to their respective output paths.
-     * @param saver The saver object to use for writing diagrams to files.
+     *
+     * @param linter      The linter to use for generating diagrams.
+     * @param diagrams    A map of diagram types to their respective output paths.
+     * @param saver       The saver object to use for writing diagrams to files.
+     * @param includeJson Generate Json
      */
-    private static void generateAndSaveDiagramsToFile(Linter linter, Map<DiagramType, String> diagrams, Saver saver) {
-        Map<StringBuilder, DiagramType> diagramBuilders = linter.generateDiagrams(diagrams.keySet());
+    private static void generateAndSaveDiagramsToFile(Linter linter, Map<DiagramType, String> diagrams, Saver saver, String includeJson) {
+        Map<StringBuilder, DiagramType> diagramBuilders = linter.generateDiagrams(diagrams.keySet(), includeJson);
         for(StringBuilder stringBuilder: diagramBuilders.keySet()){
             DiagramType diagramType = diagramBuilders.get(stringBuilder);
             String fileOutput = diagrams.get(diagramType);
@@ -112,12 +122,12 @@ public class LinterMain {
      * @return A map of selected diagram types to their output file names.
      */
     private static Map<DiagramType, String> promptUserForDiagrams() {
-        String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UMLCLASS), NONE");
+        String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UC), NONE");
 
         Map<DiagramType, String> diagrams = new HashMap<>();
 
         switch (userInput.toUpperCase()) {
-            case "UMLCLASS":
+            case "UC":
                 diagrams.put(DiagramType.UML_CONVERTER, promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM));
             case "NONE":
                 break;
@@ -127,6 +137,12 @@ public class LinterMain {
         }
         return diagrams;
 
+    }
+
+    private static Boolean promptUserForJson() {
+        String userInput = promptUser(CHOICE_FOR_JSON);
+
+        return userInput.equalsIgnoreCase("Y");
     }
 
     /**
@@ -164,7 +180,7 @@ public class LinterMain {
         Linter linter = new Linter(files, creator, fileToPackage);
 
         Saver saver = new LintResultSaver(outputPath);
-        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+        generateAndSaveDiagramsToFile(linter, diagrams, saver, "");
     }
 
 
