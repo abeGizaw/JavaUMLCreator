@@ -4,9 +4,9 @@ import domain.MyOpcodes;
 
 public enum ClassType {
     ANNOTATION(MyOpcodes.ACC_ANNOTATION, "annotation"),
+    INTERFACE(MyOpcodes.ACC_INTERFACE, "interface"),
     ABSTRACT_CLASS(MyOpcodes.ACC_ABSTRACT, "abstract class"),
     ENUM(MyOpcodes.ACC_ENUM, "enum"),
-    INTERFACE(MyOpcodes.ACC_INTERFACE, "interface"),
     RECORD(MyOpcodes.ACC_RECORD, "class"),
     EXCEPTION(0, "exception"),
     CLASS(0, "class"); // Assuming there's no specific opcode for class
