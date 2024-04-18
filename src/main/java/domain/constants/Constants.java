@@ -12,7 +12,7 @@ public class Constants {
 
     public static final String END_JSON_CHAR = "]";
 
-    public static final String END_JSON_DIAGRAM = "@enduml";
-    public static final String START_JSON_DIAGRAM = "@startuml";
+    public static final String END_JSON_DIAGRAM = "@endjson";
+    public static final String START_JSON_DIAGRAM = "@startjson";
 
 }

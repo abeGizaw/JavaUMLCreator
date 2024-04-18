@@ -1,5 +1,6 @@
 package datasource;
 
+import java.awt.event.WindowFocusListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -53,7 +54,7 @@ public class LintResultSaver implements Saver {
         }
 
         // Adjust endIndex to include the endKey
-        endIndex += "@endjson".length();
+        endIndex += "endjson".length();
 
         String extracted = input.substring(startIndex, endIndex);
         String remaining = input.substring(0, startIndex) + input.substring(endIndex);
