@@ -1,0 +1,11 @@
+@startuml
+package .. {
+	+class UsesRecord{
+	-{final} record: MyRecord
+	+UsesRecord():void
+	+removeYellowLines():void
+	}
+
+}
+UsesRecord-->MyRecord
+@enduml

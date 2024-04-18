@@ -1,0 +1,9 @@
+@startuml
+package .. {
+	+annotation MyOtherAnnotation{
+	+{abstract}name():String
+	+{abstract}age():int
+	}
+
+}
+@enduml

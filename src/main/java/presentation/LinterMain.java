@@ -26,13 +26,7 @@ public class LinterMain {
 
         Map<DiagramType, String> diagrams = promptUserForDiagrams();
 
-        List<String> files = new ArrayList<>(fileToPackage.keySet());
-
-        MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
-        Linter linter = new Linter(files, creator, fileToPackage);
-
-        Saver saver = new LintResultSaver(outputPath);
-        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+        generateUMLFromData(directoryPath, outputPath, fileToPackage, diagrams);
     }
 
     /**
@@ -55,7 +49,7 @@ public class LinterMain {
      * @param directoryPath The path to the directory to parse.
      * @return A map of file paths to package names.
      */
-    private static Map<String, String> parseDirectory(Path directoryPath) {
+    static Map<String, String> parseDirectory(Path directoryPath) {
         Map<String, String> fileToPackage = new HashMap<>();
 
         try (Stream<Path> stream = Files.walk(directoryPath)) {
@@ -153,11 +147,7 @@ public class LinterMain {
         }
     }
 
-    public void generateUMLFromPath(Path inputPath, String outputPath, String fileName) {
-        Map<String, String> fileToPackage = parseDirectory(inputPath);
-        Map<DiagramType, String> diagrams = new HashMap<>();
-        diagrams.put(DiagramType.UML_CONVERTER, fileName);
-
+    static void generateUMLFromData(Path inputPath, String outputPath, Map<String, String> fileToPackage, Map<DiagramType, String> diagrams) {
         List<String> files = new ArrayList<>(fileToPackage.keySet());
 
         MyClassNodeCreator creator = new MyASMClassNodeCreator(inputPath);
@@ -166,7 +156,6 @@ public class LinterMain {
         Saver saver = new LintResultSaver(outputPath);
         generateAndSaveDiagramsToFile(linter, diagrams, saver);
     }
-
 
 
 }
