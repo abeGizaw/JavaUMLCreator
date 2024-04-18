@@ -1,0 +1,11 @@
+@startuml
+package .. {
+	+exception MyCustomException{
+	+MyCustomException():void
+	+MyCustomException(message:String):void
+	+MyCustomException(message:String, cause:Throwable):void
+	+MyCustomException(cause:Throwable):void
+	}
+
+}
+@enduml

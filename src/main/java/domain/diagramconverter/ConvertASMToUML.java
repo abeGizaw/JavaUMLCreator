@@ -12,7 +12,7 @@ import java.util.*;
 public class ConvertASMToUML implements Diagram{
 
     private final RelationsManager relationManager;
-    private final StringBuilder classUmlContent;
+    final StringBuilder classUmlContent;
     private final List<UMLConverter> converters = new ArrayList<>();
 
 
