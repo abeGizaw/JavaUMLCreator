@@ -32,7 +32,7 @@ public class ConvertASMToUMLTester extends ConvertASMToUML {
     }
 
     public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode) {
-        return super.generateDiagramByPackage(packageToMyClassNode);
+        return super.generateDiagramByPackage(packageToMyClassNode, "");
 
     }
 }

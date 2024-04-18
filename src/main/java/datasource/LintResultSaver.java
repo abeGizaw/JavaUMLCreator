@@ -35,10 +35,12 @@ public class LintResultSaver implements Saver {
         }
 
         // Writing to the JSON file
-        try (FileWriter fileWriter = new FileWriter(jsonFilePath)) {
-            fileWriter.write(jsonInfo);
-        } catch (IOException e) {
-            System.err.println("Error writing " + fileType + " to output file " + jsonFilePath);
+        if(!jsonInfo.isEmpty()){
+            try (FileWriter fileWriter = new FileWriter(jsonFilePath)) {
+                fileWriter.write(jsonInfo);
+            } catch (IOException e) {
+                System.err.println("Error writing " + fileType + " to output file " + jsonFilePath);
+            }
         }
     }
 

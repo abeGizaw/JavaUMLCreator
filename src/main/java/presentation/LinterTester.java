@@ -16,6 +16,6 @@ public class LinterTester extends LinterMain {
         Map<DiagramType, String> diagrams = new HashMap<>();
         diagrams.put(DiagramType.UML_CONVERTER, fileName);
 
-        generateUMLFromData(inputPath, outputPath, fileToPackage, diagrams);
+        generateUMLFromData(inputPath, outputPath, fileToPackage, diagrams, "");
     }
 }
