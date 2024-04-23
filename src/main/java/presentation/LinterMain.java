@@ -80,7 +80,7 @@ public class LinterMain {
      * @return The path to the valid directory input by the user.
      */
     private static Path promptUserForDirectory() {
-        String userInput = promptUser("Enter Directory/Package: ");
+        String userInput = promptUser("Enter Absolute path to the jar of Directory/Package: ");
         if (!isValidPath(userInput)) {
             System.err.println(INVALID_PACKAGE);
             return promptUserForDirectory();

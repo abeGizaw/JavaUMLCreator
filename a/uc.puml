@@ -1,0 +1,330 @@
+@startuml
+package diagramconverter.ClassUmlMockTestClasses {
+	+class PrimitiveFieldsConverter{
+	+{final} anInt: int
+	- aByte: byte
+	# aBoolean: boolean
+	~{static} aChar: char
+	~ aLong: long
+	#{static} aShort: short
+	+ aFloat: float
+	+ aDouble: double
+	+PrimitiveFieldsConverter():void
+	}
+
++abstract class MockAbstract{
+	- model: String
+	- year: int
+	+MockAbstract(model:String, year:int):void
+	+{abstract}startEngine():void
+	+{abstract}stopEngine():void
+	+honk():void
+	+getModel():String
+	+setModel(model:String):void
+	}
+
++class AccessModifierVariety{
+	+AccessModifierVariety():void
+	+publicMethod():void
+	#protectedMethod():void
+	-privateMethod():void
+	~defaultMethod():void
+	+{static}publicStaticMethod():void
+	-{static}privateStaticMethod():void
+	#{static}protectedStaticMethod():void
+	}
+
++class ObjectFieldsConverter{
+	+ date: Date
+	+ stringBuilder: StringBuilder
+	- stringBuffer: StringBuffer
+	# genericObject: Object
+	- string: String
+	- aBoolean: Boolean
+	+ObjectFieldsConverter():void
+	}
+
++class ArrayFieldsConverter{
+	+ intArray: int[]
+	- string2DArray: String[][]
+	# charArray: char[]
+	+ double3DArray: double[][][]
+	- enumArray: MockEnum[][]
+	+ arrayListList: List<String>[][][][]
+	+ArrayFieldsConverter():void
+	}
+
++class DependsOnRelations{
+	+DependsOnRelations():void
+	+hasParams(r:RelationsManager):void
+	+hasParams2(r:ImplementingClass):void
+	+hasParams3(r:ParameterTypeVariety):void
+	+returnsParams():ReturnTypeVariety
+	+returnsParams2():ArrayFieldsConverter
+	+returnsParams3():AccessModifierVariety
+	+returnList():List<ReturnTypeVariety>
+	+hasMap(hash:HashMap<PrimitiveFieldsConverter,ObjectFieldsConverter>):void
+	+returnJavaLis():MockInterface[]
+	+hasLotsOfCollections(mockEnumSet:Set<MockEnum>, mockAbstracts:MockAbstract[], implementingClasses:ArrayList<HasATest>):void
+	+testDontAdd(s:String, d:double):String
+	}
+
++interface MockInterface{
+	+{abstract}calculate(param1:double):double
+	+{abstract}transform(param1:String):String
+	+show():void
+	+{static}helper():void
+	}
+
++class ReturnTypeVariety{
+	+ReturnTypeVariety():void
+	+returnInt():int
+	+returnString():String
+	-returnList():List<Integer>
+	#returnSet():Set<Character>
+	~returnCharacter():Character
+	+returnArray():double[]
+	+returnMap():Map<String,List<Double>>
+	}
+
++class HasATest{
+	- singleAccessModifierVariety: AccessModifierVariety
+	- firstArrayFieldsConverter: ArrayFieldsConverter
+	- secondArrayFieldsConverter: ArrayFieldsConverter
+	- thirdArrayFieldsConverter: ArrayFieldsConverter
+	- arrayOfCollectionFieldsConverters: CollectionFieldsConverter[]
+	- listOfListsImplementingClass: List<List<ImplementingClass>>
+	- setOfMockAbstracts: Set<MockAbstract>
+	- enumToInterfaceMap: HashMap<MockEnum,MockInterface>
+	- listOfAccessModifierVarieties: ArrayList<AccessModifierVariety>
+	- mapOfMapsEnumToAbstractToInterface: Map<HashMap<MockEnum,MockAbstract>,MockInterface>
+	- setOfHashSetObjectFieldConverters: Set<HashSet<ObjectFieldsConverter>>
+	- listOfIntegers: List<Integer>
+	- stringToIntegerMap: HashMap<ParameterTypeVariety,PrimitiveFieldsConverter[]>
+	+HasATest():void
+	}
+
++class CollectionFieldsConverter{
+	+ stringList: List<String>
+	+ doubleSet: Set<Double>
+	- map: Map<String,Integer>
+	+ charQueue: Queue<Character>
+	+ booleanStack: Stack<Boolean>
+	+ advancedMap: Map<List<Set<String>>,List<String>>
+	+CollectionFieldsConverter():void
+	}
+
++class ParameterTypeVariety{
+	+ParameterTypeVariety():void
+	+singlePrimitive(a:int):void
+	+multiplePrimitives(a:int, b:double, c:char):void
+	+singleObject(s:String):void
+	+multipleObjects(s:String, num:Integer, d:Double):void
+	+mixPrimitiveAndObject(a:int, b:String, c:double):void
+	-withCollections(list:List<String>, set:Set<Character>, map:Map<String,Double>):void
+	#withArrayAndList(nums:int[], doubles:List<Double>):void
+	~complexParameters(a:int, b:String, nums:List<List<Integer>>, arr:double[], map:Map<String,Set<Character>>):void
+	}
+
++class ImplementingClass{
+	+ImplementingClass():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
+ENUM MockEnum{
+	RED
+	BLUE
+	GREEN
+	-{final} description: String
+	-{final} code: int
+	+{static}values():MockEnum[]
+	+{static}valueOf(name:String):MockEnum
+	-MockEnum(description:String, code:int):void
+	+getDescription():String
+	+getCode():int
+	}
+
+}
+package diagramconverter {
+	+class ClassUmlTest{
+	- testLocation: String
+	- correctLocation: String
+	+ClassUmlTest():void
+	+testHasATestFiles():void
+	+testAccessModifierVariety():void
+	+testArrayFieldsConverter():void
+	+testImplementingClass():void
+	+testMockAbstract():void
+	+testMockInterface():void
+	+testObjectFieldsConverter():void
+	+testParameterTypeVariety():void
+	+testPrimitiveFieldsConverter():void
+	+testReturnTypeVariety():void
+	+testDependsOnRelations():void
+	+testMyAnnotation():void
+	+testMyCustomException():void
+	+testMyOtherAnnotation():void
+	+testMyOtherException():void
+	+testMyRecord():void
+	+testUsesRecord():void
+	+testUsesTheException():void
+	+testUsingTheAnnotation():void
+	}
+
++class ConvertASMToUMLTest{
+	+ConvertASMToUMLTest():void
+	+generateDiagramByNodeNullClassNode():void
+	+generateDiagramByNodeNullPackage():void
+	+generateDiagramByFileEmptyString():void
+	+generateDiagramByNodePartialString():void
+	}
+
+}
+package diagramconverter.ClassUmlMockTestClasses.SpecialClassTesting {
+	+class UsingTheAnnotation{
+	+UsingTheAnnotation():void
+	+nun():MyRecord
+	}
+
++annotation MyAnnotation{
+	+{abstract}value():String
+	+{abstract}priority():int
+	+{abstract}tags():String[]
+	}
+
++class UsesRecord{
+	-{final} record: MyRecord
+	+UsesRecord():void
+	+removeYellowLines():void
+	}
+
++exception MyOtherException{
+	+MyOtherException():void
+	}
+
++class MyRecord <<record>>{
+	-{final} time: int
+	-{final} some: String
+	-{final} relationsManager: RelationsManager
+	+MyRecord(time:int, some:String, relationsManager:RelationsManager):void
+	+{final}toString():String
+	+{final}hashCode():int
+	+{final}equals(o:Object):boolean
+	+time():int
+	+some():String
+	+relationsManager():RelationsManager
+	}
+
++class UsesTheException{
+	+UsesTheException():void
+	+whattt():void
+	+noooo():void
+	+haaaaa():UsingTheAnnotation
+	}
+
++annotation MyOtherAnnotation{
+	+{abstract}name():String
+	+{abstract}age():int
+	}
+
++exception MyCustomException{
+	+MyCustomException():void
+	+MyCustomException(message:String):void
+	+MyCustomException(message:String, cause:Throwable):void
+	+MyCustomException(cause:Throwable):void
+	}
+
+}
+package diagramconverter.ClassUmlMockTestClasses.ExtendsAndImplements {
+	+interface Sound{
+	}
+
++class Iguana{
+	+Iguana():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
++class Student{
+	+Student():void
+	}
+
++class Boss{
+	+Boss():void
+	}
+
++abstract class Pet{
+	+Pet():void
+	}
+
++class Dog{
+	+Dog():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	+saveMessage(message:String):void
+	+writeToFile(info:String, fileType:String, outputPath:String):void
+	}
+
++abstract class Person{
+	+Person():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	+append(csq:CharSequence):Appendable
+	+append(csq:CharSequence, start:int, end:int):Appendable
+	+append(c:char):Appendable
+	}
+
++class Cat{
+	+Cat():void
+	+calculate(input:double):double
+	+transform(input:String):String
+	}
+
+}
+HasATest-->"*"MockInterface
+UsesRecord-->MyRecord
+DependsOnRelations..>MockEnum
+UsesTheException..>MyCustomException : << throws >>
+Cat--|>Pet
+DependsOnRelations..>ArrayFieldsConverter
+Person..>IOException : << throws >>
+HasATest-->"*"CollectionFieldsConverter
+DependsOnRelations..>AccessModifierVariety
+Person..|>Sound
+Sound..|>MockInterface
+ClassUmlTest..>IOException : << throws >>
+DependsOnRelations..>ImplementingClass
+DependsOnRelations..>ObjectFieldsConverter
+DependsOnRelations..>PrimitiveFieldsConverter
+Iguana--|>Pet
+HasATest-->"3"ArrayFieldsConverter
+Iguana..|>Sound
+HasATest-->"*"ParameterTypeVariety
+ImplementingClass..|>MockInterface
+UsingTheAnnotation..>MyRecord
+DependsOnRelations..>ReturnTypeVariety
+UsesTheException..>UsingTheAnnotation
+DependsOnRelations..>HasATest
+DependsOnRelations..>MockInterface
+UsesTheException..>MyOtherException : << throws >>
+DependsOnRelations..>RelationsManager
+DependsOnRelations..>MockAbstract
+HasATest-->"*"ObjectFieldsConverter
+MyRecord..>RelationsManager
+HasATest-->"*"MockEnum
+Dog..|>Sound
+Dog..|>Saver
+Boss--|>Person
+HasATest-->"*"AccessModifierVariety
+Cat..|>Sound
+HasATest-->"*"PrimitiveFieldsConverter
+DependsOnRelations..>ParameterTypeVariety
+ArrayFieldsConverter-->"*"MockEnum
+MyRecord-->RelationsManager
+Student--|>Person
+HasATest-->"*"ImplementingClass
+HasATest-->"*"MockAbstract
+Dog--|>Pet
+UsingTheAnnotation..>MyAnnotation : << uses >>
+@enduml
