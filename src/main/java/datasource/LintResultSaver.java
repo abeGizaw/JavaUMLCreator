@@ -54,7 +54,7 @@ public class LintResultSaver implements Saver {
         }
 
         // Adjust endIndex to include the endKey
-        endIndex += "endjson".length();
+        endIndex += END_JSON_DIAGRAM.length();
 
         String extracted = input.substring(startIndex, endIndex);
         String remaining = input.substring(0, startIndex) + input.substring(endIndex);

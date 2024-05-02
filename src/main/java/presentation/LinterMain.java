@@ -20,18 +20,39 @@ import static domain.constants.Constants.*;
 public class LinterMain {
 
     public static void main(String[] args) {
-        String jsonPackage = "";
-        Path directoryPath = promptUserForDirectory();
-        Map<String, String> fileToPackage = parseDirectory(directoryPath);
-        String outputPath = promptUser(OUTPUT_DIRECTORY_FOR_CHECKS);
+        String jsonPackage;
 
-        Map<DiagramType, String> diagrams = promptUserForDiagrams();
+        Path directoryPath = promptUserForDirectory(ASK_FOR_JSON_PATH);
+        Map<String, String> fileToPackage = parseDirectory(directoryPath);
+
+        boolean wantsDefault = promptUser(ASK_FOR_DEFAULT).equalsIgnoreCase("Y");
+        String outputPath = wantsDefault ? "UMLOutput" : promptUser(OUTPUT_DIRECTORY_FOR_CHECKS);
+
+        if(outputPath.contains(""+File.separatorChar)){
+            System.out.println(ANSIColors.YELLOW + getWarningMessage(outputPath) + ANSIColors.RESET);
+        }
+
+        Map<DiagramType, String> diagrams = setupDiagrams(wantsDefault);
+
+
         Boolean includeJson = promptUserForJson();
         if (includeJson){
-            jsonPackage = promptUser(JSON_PACKAGE);
+            jsonPackage = String.valueOf(promptUserForDirectory(JSON_PACKAGE));
+        } else {
+            jsonPackage = "";
         }
 
         generateUMLFromData(directoryPath, outputPath, fileToPackage, diagrams, jsonPackage);
+    }
+
+    private static Map<DiagramType, String> setupDiagrams(boolean wantsDefault) {
+        if (wantsDefault) {
+            Map<DiagramType, String> defaultDiagrams = new HashMap<>();
+            defaultDiagrams.put(DiagramType.UML_CONVERTER, "UMLDiagram");
+            return defaultDiagrams;
+        } else {
+            return promptUserForDiagrams();
+        }
     }
 
 
@@ -79,11 +100,11 @@ public class LinterMain {
      * Prompts the user for a directory and validates the input.
      * @return The path to the valid directory input by the user.
      */
-    private static Path promptUserForDirectory() {
-        String userInput = promptUser("Enter Absolute path to the jar of Directory/Package: ");
+    private static Path promptUserForDirectory(String pathType) {
+        String userInput = promptUser(pathType);
         if (!isValidPath(userInput)) {
             System.err.println(INVALID_PACKAGE);
-            return promptUserForDirectory();
+            return promptUserForDirectory(pathType);
         } else {
             return Path.of(userInput);
         }
@@ -121,14 +142,30 @@ public class LinterMain {
 
         switch (userInput.toUpperCase()) {
             case "UC":
-                diagrams.put(DiagramType.UML_CONVERTER, promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM));
+                String outputPath = getOutputPathPUML();
+                diagrams.put(DiagramType.UML_CONVERTER, outputPath);
             case "NONE":
                 break;
             default:
                 System.out.println(ABBREVIATION_ERROR);
-                promptUserForDiagrams();
+                return promptUserForDiagrams();
         }
         return diagrams;
+
+    }
+
+    private static String getOutputPathPUML() {
+        boolean isValidPath;
+        String outputPath;
+        do {
+            outputPath = promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM);
+            isValidPath = !outputPath.contains(File.separator);
+            if (!isValidPath){
+                System.out.println(ANSIColors.RED + INVALID_PUML_PATH + ANSIColors.RESET);
+            }
+        } while (!isValidPath);
+
+        return outputPath;
 
     }
 
