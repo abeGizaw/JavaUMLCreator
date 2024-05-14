@@ -4,7 +4,10 @@ import domain.MyClassNode;
 import domain.MyFieldNode;
 import domain.MyInnerClassNode;
 import domain.MyMethodNode;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InnerClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,37 +24,6 @@ public class MyASMClassNode extends MyClassNode {
         super.fields = convertFields();
         super.methods = convertMethods();
         super.innerClasses = convertInnerClasses();
-        super.annotations = convertAnnotations();
-    }
-
-    private List<MyASMAnnotationNode> convertAnnotations() {
-        List<MyASMAnnotationNode> annotations = new ArrayList<>();
-        if (classNode.visibleAnnotations != null) {
-            for (AnnotationNode visibleAnnot : classNode.visibleAnnotations) {
-                annotations.add(new MyASMAnnotationNode(visibleAnnot));
-            }
-        }
-        if (classNode.invisibleAnnotations != null) {
-            for (AnnotationNode invisibleAnnot : classNode.invisibleAnnotations) {
-                annotations.add(new MyASMAnnotationNode(invisibleAnnot));
-            }
-        }
-
-        if (classNode.invisibleTypeAnnotations != null) {
-            for (AnnotationNode invisibleAnnot : classNode.invisibleTypeAnnotations) {
-                annotations.add(new MyASMAnnotationNode(invisibleAnnot));
-            }
-        }
-
-
-        if (classNode.visibleTypeAnnotations != null) {
-            for (AnnotationNode invisibleAnnot : classNode.visibleTypeAnnotations) {
-                annotations.add(new MyASMAnnotationNode(invisibleAnnot));
-            }
-        }
-
-
-        return annotations;
     }
 
     private List<MyInnerClassNode> convertInnerClasses() {
@@ -76,5 +48,16 @@ public class MyASMClassNode extends MyClassNode {
             methods.add(new MyASMMethodNode(methodNode));
         }
         return methods;
+    }
+
+    /**
+     * NOTE: This getter is only used for transformations.
+     * This is done so that I do not need to create adapters for all visitors.
+     * Transformations will rely on ASM classNodes.
+     *
+     * @return
+     */
+    public ClassNode getClassNode() {
+        return classNode;
     }
 }

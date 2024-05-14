@@ -136,7 +136,7 @@ public abstract class UMLConverterBase implements UMLConverter{
                 currentType.append(currentChar);
             }
         }
-        if (!currentType.isEmpty()) {
+        if (currentType.length() > 0) {
             types.add(currentType.toString());
         }
 
@@ -153,8 +153,8 @@ public abstract class UMLConverterBase implements UMLConverter{
      * @return java primitive type
      */
     private String getPrimitiveFieldType(String desc) {
-        PrimitiveType primitiveType = PrimitiveType.fromDescriptor(desc);
-        return primitiveType.getType();
+        PrimitiveStringFactory primitiveStringFactory = new PrimitiveStringFactory();
+        return primitiveStringFactory.getPrimitiveFieldType(desc);
     }
     protected String getAccessModifier(int access) {
         StringBuilder modifiers = new StringBuilder();

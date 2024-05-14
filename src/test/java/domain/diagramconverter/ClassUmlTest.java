@@ -2,7 +2,6 @@ package domain.diagramconverter;
 
 import org.junit.jupiter.api.Test;
 import presentation.LinterMain;
-import presentation.LinterTester;
 
 
 import java.io.*;
@@ -23,7 +22,7 @@ public class ClassUmlTest {
     @Test
     public void testHasATestFiles() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
         String testPathString = "HasATest";
 
@@ -35,7 +34,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -52,7 +51,7 @@ public class ClassUmlTest {
     @Test
     public void testExtendsAndImplementsFiles() throws IOException {
         //Set Up
-         LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") + File.separator + "target" + File.separator + "test-classes"
                 + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "ExtendsAndImplements");
@@ -60,7 +59,7 @@ public class ClassUmlTest {
         Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") + File.separator + "TestPUMLS" + File.separator + "ExtendsAndImplementsTest" + File.separator + "ExtendsAndImplementsTest.puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, "TestPUMLS" + File.separator + "ExtendsAndImplementsTest", "ExtendsAndImplementsTest");
+        linterMain.generateUMLFromPath(pathOfTarget, "TestPUMLS" + File.separator + "ExtendsAndImplementsTest", "ExtendsAndImplementsTest");
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -86,7 +85,7 @@ public class ClassUmlTest {
     @Test
     public void testAccessModifierVariety() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "AccessModifierVariety";
@@ -100,7 +99,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -116,7 +115,7 @@ public class ClassUmlTest {
     @Test
     public void testArrayFieldsConverter() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "ArrayFieldsConverter";
@@ -130,7 +129,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -147,7 +146,7 @@ public class ClassUmlTest {
     @Test
     public void testCollectionFieldsConverter() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "CollectionFieldsConverter";
@@ -161,7 +160,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -178,7 +177,7 @@ public class ClassUmlTest {
     @Test
     public void testImplementingClass() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "ImplementingClass";
@@ -192,7 +191,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -208,7 +207,7 @@ public class ClassUmlTest {
     @Test
     public void testMockAbstract() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "MockAbstract";
@@ -222,7 +221,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -239,7 +238,7 @@ public class ClassUmlTest {
     @Test
     public void testMockEnum() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "MockEnum";
@@ -253,7 +252,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -271,7 +270,7 @@ public class ClassUmlTest {
     @Test
     public void testMockInterface() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "MockInterface";
@@ -285,7 +284,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -301,7 +300,7 @@ public class ClassUmlTest {
     @Test
     public void testObjectFieldsConverter() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "ObjectFieldsConverter";
@@ -315,7 +314,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -331,7 +330,7 @@ public class ClassUmlTest {
     @Test
     public void testParameterTypeVariety() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "ParameterTypeVariety";
@@ -345,7 +344,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -361,7 +360,7 @@ public class ClassUmlTest {
     @Test
     public void testPrimitiveFieldsConverter() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "PrimitiveFieldsConverter";
@@ -375,7 +374,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -391,7 +390,7 @@ public class ClassUmlTest {
     @Test
     public void testReturnTypeVariety() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
 
 
         String testPathString = "ReturnTypeVariety";
@@ -405,7 +404,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -421,7 +420,9 @@ public class ClassUmlTest {
     @Test
     public void testDependsOnRelations() throws IOException {
         //Set Up
-        LinterTester linterTester = new LinterTester();
+        LinterMain linterMain = new LinterMain();
+
+
         String testPathString = "DependsOnRelations";
 
         Path pathOfTarget = Path.of(System.getProperty("user.dir") +
@@ -433,7 +434,7 @@ public class ClassUmlTest {
                 File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
 
         //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
+        linterMain.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
 
         List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
         List<String> testPUML = Files.readAllLines(pathOfTestPUML);
@@ -446,229 +447,7 @@ public class ClassUmlTest {
         }
     }
 
-    @Test
-    public void testMyAnnotation() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "MyAnnotation";
 
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
-
-    @Test
-    public void testMyCustomException() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "MyCustomException";
-
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
-
-    @Test
-    public void testMyOtherAnnotation() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "MyOtherAnnotation";
-
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
-
-    @Test
-    public void testMyOtherException() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "MyOtherException";
-
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
-
-    @Test
-    public void testMyRecord() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "MyRecord";
-
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
-
-    @Test
-    public void testUsesRecord() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "UsesRecord";
-
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
-
-    @Test
-    public void testUsesTheException() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "UsesTheException";
-
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
-
-    @Test
-    public void testUsingTheAnnotation() throws IOException {
-        //Set Up
-        LinterTester linterTester = new LinterTester();
-        String testPathString = "UsingTheAnnotation";
-
-        Path pathOfTarget = Path.of(System.getProperty("user.dir") +
-                File.separator + "target" + File.separator + "test-classes"
-                + File.separator + "domain" + File.separator + "diagramconverter" + File.separator + "ClassUmlMockTestClasses" + File.separator + "SpecialClassTesting" + File.separator + testPathString + ".class");
-        Path pathOfCorrectPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + correctLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-        Path pathOfTestPUML =  Path.of(System.getProperty("user.dir") +
-                File.separator + testLocation + File.separator + testPathString + File.separator + testPathString + ".puml");
-
-        //Execute Test
-        linterTester.generateUMLFromPath(pathOfTarget, testLocation + File.separator + testPathString, testPathString);
-
-        List<String> correctPUML = Files.readAllLines(pathOfCorrectPUML);
-        List<String> testPUML = Files.readAllLines(pathOfTestPUML);
-
-        //Validate
-        assertEquals(correctPUML.size(), testPUML.size(), "Files should have the same number of lines");
-
-        for (int i = 0; i < correctPUML.size(); i++) {
-            assertEquals(correctPUML.get(i), testPUML.get(i), "Mismatch at line " + (i + 1));
-        }
-    }
 
 
 

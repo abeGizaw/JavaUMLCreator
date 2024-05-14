@@ -33,11 +33,11 @@ public class Linter {
         }
     }
 
-    public Map<StringBuilder, DiagramType> generateDiagrams(Set<DiagramType> diagrams, String jsonPackage) {
+    public Map<StringBuilder, DiagramType> generateDiagrams(Set<DiagramType> diagrams) {
         Map<StringBuilder, DiagramType> diagramBuilders = new HashMap<>();
         for(DiagramType diagramType : diagrams){
             Diagram diagram = diagramTypeToDiagram.get(diagramType);
-            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(packageToMyClassNode, jsonPackage);
+            StringBuilder diagramBuilder = diagram.generateDiagramByPackage(packageToMyClassNode);
             diagramBuilders.put(diagramBuilder, diagramType);
 
         }

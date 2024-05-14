@@ -74,9 +74,6 @@ public class ClassMethodsUMLConverter extends UMLConverterBase{
         String returnType = getFieldType(returnDesc);
 
         handleDependencyRelation(returnDesc, returnType, relationsManager);
-        for(String exception: methodNode.exceptions){
-            relationsManager.addExceptionRelation(cleanedClassName, cleanClassName(exception));
-        }
 
 
         return "(" + parsedParams + "):" + returnType;

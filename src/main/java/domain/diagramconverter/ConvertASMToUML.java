@@ -12,7 +12,7 @@ import java.util.*;
 public class ConvertASMToUML implements Diagram{
 
     private final RelationsManager relationManager;
-    final StringBuilder classUmlContent;
+    private final StringBuilder classUmlContent;
     private final List<UMLConverter> converters = new ArrayList<>();
 
 
@@ -21,7 +21,6 @@ public class ConvertASMToUML implements Diagram{
         this.classUmlContent = classUmlContent;
         addConverters();
     }
-
 
     private void addConverters() {
         converters.add(new ClassNameUMLConverter());
@@ -50,7 +49,7 @@ public class ConvertASMToUML implements Diagram{
      * @param packageToMyClassNode  A map associating package names with lists of MyClassNode instances belonging to each package.
      * @return                      A StringBuilder containing the complete UML diagram content.
      */
-    public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode, String jsonPackage) {
+    public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode) {
         classUmlContent.append("@startuml\n");
         for(String packageName : packageToMyClassNode.keySet()){
             if (!packageName.isEmpty()) {
@@ -66,13 +65,6 @@ public class ConvertASMToUML implements Diagram{
             if (!packageName.isEmpty()) {
                 classUmlContent.append("}\n");
             }
-        }
-
-        if(!jsonPackage.isEmpty()){
-            JsonFilesReader jsonFilesReader = new JsonFilesReader(jsonPackage);
-            List<String> lines = jsonFilesReader.readJsonFilesInDirectory();
-            jsonFilesReader.parse(lines);
-            jsonFilesReader.convertJsonToUML(classUmlContent);
         }
 
         classUmlContent.append(this.relationManager.addAllRelations());
