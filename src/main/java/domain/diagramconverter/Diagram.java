@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface Diagram {
     public void generateDiagramByNode(MyClassNode myClassNode, StringBuilder pumlContent);
-    public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode);
+    public StringBuilder generateDiagramByPackage(Map<String, List<MyClassNode>> packageToMyClassNode, String jsonPackage);
 }

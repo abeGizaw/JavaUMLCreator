@@ -1,5 +1,7 @@
 package domain;
 
+import domain.myasm.MyASMAnnotationNode;
+
 import java.util.List;
 
 public abstract class MyClassNode {
@@ -11,4 +13,5 @@ public abstract class MyClassNode {
     public String superName;
     public List<MyInnerClassNode> innerClasses;
 
+    public List<MyASMAnnotationNode> annotations;
 }

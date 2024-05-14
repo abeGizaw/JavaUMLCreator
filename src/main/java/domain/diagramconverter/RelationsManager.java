@@ -2,10 +2,7 @@ package domain.diagramconverter;
 
 import domain.MyClassNode;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RelationsManager {
     Map<String, Integer> hasARelationShipByClass = new HashMap<>();
@@ -29,14 +26,19 @@ public class RelationsManager {
         }
 
     }
-    protected void addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName){
+    protected ClassType addExtendsRelationShip(MyClassNode myClassNode, String cleanClassName, ClassType classType){
         String abstractClass = myClassNode.superName;
         if(!abstractClass.isEmpty()){
             if(!abstractClass.startsWith("java")){
                 String abstractClassName = abstractClass.substring(abstractClass.lastIndexOf('/') + 1);
                 allRelationships.add(cleanClassName + "--|>" + abstractClassName);
             }
+            if ("java/lang/Exception".equals(abstractClass) || "java/lang/RuntimeException".equals(abstractClass)) {
+                return ClassType.EXCEPTION;
+            }
         }
+
+        return classType;
     }
 
     private Set<String> convertHasAKeyNames(){
@@ -92,5 +94,17 @@ public class RelationsManager {
         }
 
         return relationshipContent.toString();
+    }
+
+
+    public void addAnnotationRelationship(List<String> annotationNames, String cleanClassName) {
+        for (String annotationName:annotationNames){
+            String cleanAnnName = annotationName.substring(0, annotationName.length() - 1);
+            allRelationships.add(cleanClassName + "..>" + cleanAnnName + " : << uses >>");
+        }
+    }
+
+    public void addExceptionRelation(String cleanClassName, String exception) {
+        allRelationships.add(cleanClassName + "..>" + exception + " : << throws >>");
     }
 }

@@ -20,29 +20,53 @@ import static domain.constants.Constants.*;
 public class LinterMain {
 
     public static void main(String[] args) {
-        Path directoryPath = promptUserForDirectory();
+        String jsonPackage;
+
+        Path directoryPath = promptUserForDirectory(ASK_FOR_JSON_PATH);
         Map<String, String> fileToPackage = parseDirectory(directoryPath);
-        String outputPath = promptUser(OUTPUT_DIRECTORY_FOR_CHECKS);
 
-        Map<DiagramType, String> diagrams = promptUserForDiagrams();
+        boolean wantsDefault = promptUser(ASK_FOR_DEFAULT).equalsIgnoreCase("Y");
+        String outputPath = wantsDefault ? "UMLOutput" : promptUser(OUTPUT_DIRECTORY_FOR_CHECKS);
 
-        List<String> files = new ArrayList<>(fileToPackage.keySet());
+        if(outputPath.contains(""+File.separatorChar)){
+            System.out.println(ANSIColors.YELLOW + getWarningMessage(outputPath) + ANSIColors.RESET);
+        }
 
-        MyClassNodeCreator creator = new MyASMClassNodeCreator(directoryPath);
-        Linter linter = new Linter(files, creator, fileToPackage);
+        Map<DiagramType, String> diagrams = setupDiagrams(wantsDefault);
 
-        Saver saver = new LintResultSaver(outputPath);
-        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+
+        Boolean includeJson = promptUserForJson();
+        if (includeJson){
+            jsonPackage = String.valueOf(promptUserForDirectory(JSON_PACKAGE));
+        } else {
+            jsonPackage = "";
+        }
+
+        generateUMLFromData(directoryPath, outputPath, fileToPackage, diagrams, jsonPackage);
     }
+
+    private static Map<DiagramType, String> setupDiagrams(boolean wantsDefault) {
+        if (wantsDefault) {
+            Map<DiagramType, String> defaultDiagrams = new HashMap<>();
+            defaultDiagrams.put(DiagramType.UML_CONVERTER, "UMLDiagram");
+            return defaultDiagrams;
+        } else {
+            return promptUserForDiagrams();
+        }
+    }
+
+
 
     /**
      * Generates and saves diagrams to files.
-     * @param linter The linter to use for generating diagrams.
-     * @param diagrams A map of diagram types to their respective output paths.
-     * @param saver The saver object to use for writing diagrams to files.
+     *
+     * @param linter      The linter to use for generating diagrams.
+     * @param diagrams    A map of diagram types to their respective output paths.
+     * @param saver       The saver object to use for writing diagrams to files.
+     * @param includeJson Generate Json
      */
-    private static void generateAndSaveDiagramsToFile(Linter linter, Map<DiagramType, String> diagrams, Saver saver) {
-        Map<StringBuilder, DiagramType> diagramBuilders = linter.generateDiagrams(diagrams.keySet());
+    private static void generateAndSaveDiagramsToFile(Linter linter, Map<DiagramType, String> diagrams, Saver saver, String includeJson) {
+        Map<StringBuilder, DiagramType> diagramBuilders = linter.generateDiagrams(diagrams.keySet(), includeJson);
         for(StringBuilder stringBuilder: diagramBuilders.keySet()){
             DiagramType diagramType = diagramBuilders.get(stringBuilder);
             String fileOutput = diagrams.get(diagramType);
@@ -55,7 +79,7 @@ public class LinterMain {
      * @param directoryPath The path to the directory to parse.
      * @return A map of file paths to package names.
      */
-    private static Map<String, String> parseDirectory(Path directoryPath) {
+    static Map<String, String> parseDirectory(Path directoryPath) {
         Map<String, String> fileToPackage = new HashMap<>();
 
         try (Stream<Path> stream = Files.walk(directoryPath)) {
@@ -76,11 +100,11 @@ public class LinterMain {
      * Prompts the user for a directory and validates the input.
      * @return The path to the valid directory input by the user.
      */
-    private static Path promptUserForDirectory() {
-        String userInput = promptUser("Enter Directory/Package: ");
+    private static Path promptUserForDirectory(String pathType) {
+        String userInput = promptUser(pathType);
         if (!isValidPath(userInput)) {
             System.err.println(INVALID_PACKAGE);
-            return promptUserForDirectory();
+            return promptUserForDirectory(pathType);
         } else {
             return Path.of(userInput);
         }
@@ -112,21 +136,43 @@ public class LinterMain {
      * @return A map of selected diagram types to their output file names.
      */
     private static Map<DiagramType, String> promptUserForDiagrams() {
-        String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UMLCLASS), NONE");
+        String userInput = promptUser("Enter Diagrams to generate: \n UML Class Diagram (UC), NONE");
 
         Map<DiagramType, String> diagrams = new HashMap<>();
 
         switch (userInput.toUpperCase()) {
-            case "UMLCLASS":
-                diagrams.put(DiagramType.UML_CONVERTER, promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM));
+            case "UC":
+                String outputPath = getOutputPathPUML();
+                diagrams.put(DiagramType.UML_CONVERTER, outputPath);
             case "NONE":
                 break;
             default:
                 System.out.println(ABBREVIATION_ERROR);
-                promptUserForDiagrams();
+                return promptUserForDiagrams();
         }
         return diagrams;
 
+    }
+
+    private static String getOutputPathPUML() {
+        boolean isValidPath;
+        String outputPath;
+        do {
+            outputPath = promptUser(OUTPUT_FOR_PUML_CLASSDIAGRAM);
+            isValidPath = !outputPath.contains(File.separator);
+            if (!isValidPath){
+                System.out.println(ANSIColors.RED + INVALID_PUML_PATH + ANSIColors.RESET);
+            }
+        } while (!isValidPath);
+
+        return outputPath;
+
+    }
+
+    private static Boolean promptUserForJson() {
+        String userInput = promptUser(CHOICE_FOR_JSON);
+
+        return userInput.equalsIgnoreCase("Y");
     }
 
     /**
@@ -153,20 +199,15 @@ public class LinterMain {
         }
     }
 
-    public void generateUMLFromPath(Path inputPath, String outputPath, String fileName) {
-        Map<String, String> fileToPackage = parseDirectory(inputPath);
-        Map<DiagramType, String> diagrams = new HashMap<>();
-        diagrams.put(DiagramType.UML_CONVERTER, fileName);
-
+    static void generateUMLFromData(Path inputPath, String outputPath, Map<String, String> fileToPackage, Map<DiagramType, String> diagrams, String jsonPackage) {
         List<String> files = new ArrayList<>(fileToPackage.keySet());
 
         MyClassNodeCreator creator = new MyASMClassNodeCreator(inputPath);
         Linter linter = new Linter(files, creator, fileToPackage);
 
         Saver saver = new LintResultSaver(outputPath);
-        generateAndSaveDiagramsToFile(linter, diagrams, saver);
+        generateAndSaveDiagramsToFile(linter, diagrams, saver, jsonPackage);
     }
-
 
 
 }

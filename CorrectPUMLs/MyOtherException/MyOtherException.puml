@@ -1,0 +1,8 @@
+@startuml
+package .. {
+	+exception MyOtherException{
+	+MyOtherException():void
+	}
+
+}
+@enduml

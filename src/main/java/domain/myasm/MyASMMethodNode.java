@@ -23,6 +23,7 @@ public class MyASMMethodNode extends MyMethodNode {
         super.localVariables = methodNode.localVariables == null ? null : convertLocalVariableNodes();
         super.name = methodNode.name;
         super.signature = methodNode.signature;
+        super.exceptions = methodNode.exceptions;
     }
     private List<MyAbstractInsnNode> convertInstructionNodes() {
         List<MyAbstractInsnNode> instructions = new ArrayList<>();
