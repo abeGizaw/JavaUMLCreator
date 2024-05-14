@@ -8,7 +8,7 @@ public class Constants {
     private static final String MULTIPLE_DIR_WARNING = "The name %s will create multiple folders due to the " + File.separatorChar;
     public static final String INVALID_PUML_PATH = "The path cannot contain a file seperator. Please try again";
     public static final String PUML_TYPE = ".puml";
-    public static final String OUTPUT_DIRECTORY_FOR_CHECKS = "Please enter an output NAME for the DIRECTORY you want to put the diagrams in(not the path):";
+    public static final String OUTPUT_DIRECTORY_FOR_CHECKS = "Please enter an output NAME for the DIRECTORY you want to put the diagrams in (not the path):";
     public static final String OUTPUT_FOR_PUML_CLASSDIAGRAM = "Please enter a name for the PUML class diagram file:";
     public static final String CHOICE_FOR_JSON = "Do you want to include Json Files? (y/N)";
     public static final String JSON_PACKAGE = "Enter package where json files are (Absolute Path)";
