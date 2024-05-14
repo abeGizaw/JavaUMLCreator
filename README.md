@@ -28,6 +28,9 @@ git clone https://github.com/abeGizaw/JavaUMLCreator.git
 
 
 ## How to Run
+Run the program from **src/main/java/presentation/LinterMain.java**  
+
+
 
 #### Input
 Below are the prompts you will encounter when running JavaUMLCreator, along with example inputs.
@@ -56,4 +59,8 @@ Do you want to include Json Files? (Y/N)
 Enter package where json files are (Absolute Path):
 -> G:/My Drive/GitHub/projects/Java/ClassUmlMockTestClasses_JSON
 ```
+
+## Extra Notes  
+Default naming will put your diagrams in a directory named UMLOutput  
+
 
