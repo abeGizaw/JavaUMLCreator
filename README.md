@@ -28,9 +28,11 @@ git clone https://github.com/abeGizaw/JavaUMLCreator.git
 
 
 ## How to Run
-Run the program from **src/main/java/presentation/LinterMain.java**  
+Run the program from **src/main/java/presentation/LinterMain.java**   
 
-
+### *Local Files* (Still need to pass in the absolute paths of these files)  
+Local Json File: **src/test/java/domain/diagramconverter/ClassUmlMockTestClasses/JSON**  
+Local Jar File: **target/classes/domain**  
 
 #### Input
 Below are the prompts you will encounter when running JavaUMLCreator, along with example inputs.
